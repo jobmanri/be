@@ -51,6 +51,6 @@ public class Feed {
 
     public void addComment(FeedComment comment) {
         comment.joinFeed(this);
-        comments.add(comment);
+        this.comments.add(comment);
     }
 }

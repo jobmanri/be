@@ -38,15 +38,4 @@ public class User {
         this.nickname = nickname;
         this.profileImageUrl = profileImageUrl;
     }
-    
-    @Override
-    public String toString() {
-        return "User{" +
-                   "id=" + id +
-                   ", email='" + email + '\'' +
-                   ", password='" + password + '\'' +
-                   ", nickname='" + nickname + '\'' +
-                   ", profileImageUrl='" + profileImageUrl + '\'' +
-                   '}';
-    }
 }

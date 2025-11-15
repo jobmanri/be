@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 
 @Entity(name = "users")
 @Getter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class User {
     

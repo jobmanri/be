@@ -6,5 +6,5 @@ public interface FeedRepository {
 
     List<Feed> findAll();
 
-    Feed save(Feed entity);
+    Feed save(Feed feed);
 }

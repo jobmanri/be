@@ -1,9 +1,9 @@
-package com.example.bak.global.common;
+package com.example.bak.global.common.response;
 
 import lombok.Getter;
 
 @Getter
-public class SuccessApiResponse<T> extends ApiResponse{
+public class SuccessApiResponse<T> extends ApiResponse {
 
     private final T data;
 

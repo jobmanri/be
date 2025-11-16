@@ -25,4 +25,13 @@ public class CompanyCommunity {
 
     @Column(nullable = false)
     private String jobGroup;
+
+    private CompanyCommunity(String name, String jobGroup) {
+        this.name = name;
+        this.jobGroup = jobGroup;
+    }
+
+    public static CompanyCommunity create(String name, String jobGroup) {
+        return new CompanyCommunity(name, jobGroup);
+    }
 }

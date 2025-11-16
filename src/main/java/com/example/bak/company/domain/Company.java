@@ -38,4 +38,24 @@ public class Company {
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CompanyCommunity> communities = new ArrayList<>();
+
+    private Company(String name, String careerLink, String logoUrl, String description) {
+        this.name = name;
+        this.careerLink = careerLink;
+        this.logoUrl = logoUrl;
+        this.description = description;
+    }
+
+    public static Company create(
+            String name,
+            String careerLink,
+            String logoUrl,
+            String description
+    ) {
+        return new Company(name, careerLink, logoUrl, description);
+    }
+
+    public void addCommunity(CompanyCommunity community) {
+        this.communities.add(community);
+    }
 }

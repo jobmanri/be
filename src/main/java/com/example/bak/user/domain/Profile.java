@@ -1,5 +1,6 @@
 package com.example.bak.user.domain;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -28,7 +29,7 @@ public class Profile {
     @Column(nullable = false)
     private String nickname;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true, cascade = CascadeType.REMOVE)
     private User user;
 
     private Profile(String name, String nickname, User user) {

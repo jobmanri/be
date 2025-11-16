@@ -1,4 +1,4 @@
-package com.example.bak.global.common;
+package com.example.bak.global.common.response;
 
 import lombok.experimental.UtilityClass;
 

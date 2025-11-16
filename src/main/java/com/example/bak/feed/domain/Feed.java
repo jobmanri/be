@@ -1,5 +1,6 @@
 package com.example.bak.feed.domain;
 
+import com.example.bak.company.domain.CompanyCommunity;
 import com.example.bak.user.domain.User;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -37,16 +38,25 @@ public class Feed {
     private List<FeedComment> comments = new ArrayList<>();
 
     @ManyToOne(fetch = FetchType.LAZY)
+    private CompanyCommunity community;
+
+    @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 
-    public static Feed create(String title, String content, User author) {
-        return new Feed(title, content, author);
-    }
-
-    private Feed(String title, String content, User author) {
+    private Feed(String title, String content, CompanyCommunity community, User author) {
         this.title = title;
         this.content = content;
+        this.community = community;
         this.author = author;
+    }
+
+    public static Feed create(
+            String title,
+            String content,
+            CompanyCommunity community,
+            User author
+    ) {
+        return new Feed(title, content, community, author);
     }
 
     public void addComment(FeedComment comment) {

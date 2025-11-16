@@ -27,7 +27,7 @@ jobs:
         working-directory: docs
 
       - name: Build VitePress site
-        run: yarn run build
+        run: yarn run docs:build
         working-directory: docs
 
       - name: Install Vercel CLI

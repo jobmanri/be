@@ -35,7 +35,8 @@ public class FeedController {
                 request.userId()
         );
         ApiResponse response = ApiResponseFactory.successVoid("피드를 성공적으로 생성하였습니다.");
-        return ResponseEntity.created(UriUtils.current(feedResult.id())).body(response);
+        return ResponseEntity.created(UriUtils.current(feedResult.id()))
+                .body(response);
     }
 
     @GetMapping()

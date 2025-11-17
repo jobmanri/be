@@ -7,6 +7,8 @@ import com.example.bak.feed.application.dto.FeedResult;
 import com.example.bak.feed.application.dto.FeedSummary;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepository;
+import com.example.bak.global.exception.BusinessException;
+import com.example.bak.global.exception.ErrorCode;
 import com.example.bak.user.domain.User;
 import com.example.bak.user.domain.UserRepository;
 import java.util.List;
@@ -30,10 +32,10 @@ public class FeedService {
     @Transactional
     public FeedResult createFeed(String title, String content, Long communityId, Long userId) {
         User user = userRepository.findUserById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("사용자를 찾을 수 없습니다: " + userId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         CompanyCommunity community = companyCommunityRepository.findById(communityId)
-                .orElseThrow(() -> new IllegalArgumentException("커뮤니티를 찾을 수 없습니다: " + communityId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.COMMUNITY_NOT_FOUND));
 
         Feed newFeed = Feed.create(title, content, community, user);
         Feed savedFeed = feedRepository.save(newFeed);
@@ -44,7 +46,7 @@ public class FeedService {
     @Transactional(readOnly = true)
     public FeedDetail getFeedDetail(Long feedId) {
         Feed feed = feedRepository.findFeedById(feedId)
-                .orElseThrow(() -> new IllegalArgumentException("피드를 찾을 수 없습니다: " + feedId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
 
         return FeedDetail.from(feed);
     }
@@ -52,7 +54,7 @@ public class FeedService {
     @Transactional(readOnly = true)
     public FeedSummary getFeedSummary(Long feedId) {
         Feed feed = feedRepository.findFeedById(feedId)
-                .orElseThrow(() -> new IllegalArgumentException("피드를 찾을 수 없습니다: " + feedId));
+                .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
 
         return FeedSummary.from(feed);
     }

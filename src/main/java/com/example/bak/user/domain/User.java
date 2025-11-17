@@ -36,8 +36,22 @@ public class User {
         this.password = password;
     }
 
+    private User(Long id, String email, String password) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+    }
+
     public static User create(String email, String password, String name, String nickname) {
-        User user = new User(null, email, password, null);
+        User user = new User(email, password);
+        Profile profile = Profile.create(name, nickname, user);
+        user.addProfile(profile);
+        return user;
+    }
+
+    public static User testInstance(Long id, String email, String password, String name,
+            String nickname) {
+        User user = new User(id, email, password);
         Profile profile = Profile.create(name, nickname, user);
         user.addProfile(profile);
         return user;

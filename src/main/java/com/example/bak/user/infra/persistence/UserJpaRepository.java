@@ -19,4 +19,7 @@ public interface UserJpaRepository extends JpaRepository<User, Long>, UserReposi
     @Override
     @Query("select u.profile from users u where u.id = :userId")
     Optional<Profile> findProfileByUserId(Long userId);
+
+    @Override
+    Optional<User> findUserById(Long id);
 }

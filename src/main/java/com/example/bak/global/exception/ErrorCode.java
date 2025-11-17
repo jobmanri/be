@@ -14,7 +14,9 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
-    USER_NOT_FOUND("US001", HttpStatus.NOT_FOUND, "사용자 리소스를 찾을 수 없습니다.");
+    USER_NOT_FOUND("US001", HttpStatus.NOT_FOUND, "사용자 리소스를 찾을 수 없습니다."),
+    FEED_NOT_FOUND("FE001", HttpStatus.NOT_FOUND, "피드 리소스를 찾을 수 없습니다."),
+    COMMUNITY_NOT_FOUND("CO001", HttpStatus.NOT_FOUND, "커뮤니티 리소스를 찾을 수 없습니다.");
 
     private final String code;
     private final HttpStatus status;

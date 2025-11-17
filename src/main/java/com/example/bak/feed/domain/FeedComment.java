@@ -22,18 +22,20 @@ public class FeedComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String author;
+
     @Column(nullable = false)
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Feed feed;
 
-    public static FeedComment create(String comment) {
-        return new FeedComment(comment);
-    }
-
     private FeedComment(String comment) {
         this.comment = comment;
+    }
+
+    public static FeedComment create(String comment) {
+        return new FeedComment(comment);
     }
 
     public void joinFeed(Feed feed) {

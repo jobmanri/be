@@ -18,12 +18,16 @@ public record FeedSummary(
 ) {
 
     public static FeedSummary from(Feed feed) {
+        final UserInfo author = UserInfo.from(feed.getAuthor());
+        final CommunityInfo community = CommunityInfo.from(feed.getCommunity());
+        final int commentCount = feed.getComments().size();
+
         return new FeedSummary(
                 feed.getId(),
                 feed.getTitle(),
-                UserInfo.from(feed.getAuthor()),
-                CommunityInfo.from(feed.getCommunity()),
-                feed.getComments().size()
+                author,
+                community,
+                commentCount
         );
     }
 

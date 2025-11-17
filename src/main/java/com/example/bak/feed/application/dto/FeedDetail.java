@@ -18,15 +18,19 @@ public record FeedDetail(
 ) {
 
     public static FeedDetail from(Feed feed) {
+        final UserInfo author = UserInfo.from(feed.getAuthor());
+        final CommunityInfo community = CommunityInfo.from(feed.getCommunity());
+        final List<CommentInfo> comments = feed.getComments().stream()
+                .map(CommentInfo::from)
+                .toList();
+
         return new FeedDetail(
                 feed.getId(),
                 feed.getTitle(),
                 feed.getContent(),
-                UserInfo.from(feed.getAuthor()),
-                CommunityInfo.from(feed.getCommunity()),
-                feed.getComments().stream()
-                        .map(CommentInfo::from)
-                        .toList()
+                author,
+                community,
+                comments
         );
     }
 }

@@ -14,11 +14,16 @@ import org.springframework.http.HttpStatus;
 @Getter
 @RequiredArgsConstructor
 public enum ErrorCode {
+    // User
     USER_NOT_FOUND("US001", HttpStatus.NOT_FOUND, "사용자 리소스를 찾을 수 없습니다."),
+
+    // Feed
     FEED_NOT_FOUND("FE001", HttpStatus.NOT_FOUND, "피드 리소스를 찾을 수 없습니다."),
-    COMMUNITY_NOT_FOUND("CO001", HttpStatus.NOT_FOUND, "커뮤니티 리소스를 찾을 수 없습니다."),
     COMMENT_NOT_FOUND("CM001", HttpStatus.NOT_FOUND, "댓글 리소스를 찾을 수 없습니다."),
-    UNAUTHORIZED_ACTION("CM002", HttpStatus.FORBIDDEN, "권한이 없는 작업입니다.");
+    UNAUTHORIZED_ACTION("CM002", HttpStatus.FORBIDDEN, "권한이 없는 작업입니다."),
+
+    // Community
+    COMMUNITY_NOT_FOUND("CO001", HttpStatus.NOT_FOUND, "커뮤니티 리소스를 찾을 수 없습니다.");
 
     private final String code;
     private final HttpStatus status;

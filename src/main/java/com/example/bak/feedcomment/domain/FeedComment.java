@@ -1,5 +1,6 @@
-package com.example.bak.feed.domain;
+package com.example.bak.feedcomment.domain;
 
+import com.example.bak.feed.domain.Feed;
 import com.example.bak.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -32,6 +33,13 @@ public class FeedComment {
     @ManyToOne(fetch = FetchType.LAZY)
     private Feed feed;
 
+    private FeedComment(Long id, String comment, User author, Feed feed) {
+        this.id = id;
+        this.comment = comment;
+        this.author = author;
+        this.feed = feed;
+    }
+
     private FeedComment(String comment, User author) {
         this.comment = comment;
         this.author = author;
@@ -39,6 +47,10 @@ public class FeedComment {
 
     public static FeedComment create(String comment, User author) {
         return new FeedComment(comment, author);
+    }
+
+    public static FeedComment testInstance(Long id, String comment, User author, Feed feed) {
+        return new FeedComment(id, comment, author, feed);
     }
 
     public void joinFeed(Feed feed) {

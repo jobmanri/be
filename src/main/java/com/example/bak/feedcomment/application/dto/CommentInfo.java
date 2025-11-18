@@ -1,6 +1,6 @@
-package com.example.bak.feed.application.dto;
+package com.example.bak.feedcomment.application.dto;
 
-import com.example.bak.feed.domain.FeedComment;
+import com.example.bak.feedcomment.domain.FeedComment;
 
 /**
  * FeedComment의 기본 정보를 담는 DTO Feed 상세 조회 시 포함됨

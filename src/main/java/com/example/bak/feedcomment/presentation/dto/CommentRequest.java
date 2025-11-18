@@ -1,4 +1,4 @@
-package com.example.bak.feed.presentation.dto;
+package com.example.bak.feedcomment.presentation.dto;
 
 public record CommentRequest(
         String content,

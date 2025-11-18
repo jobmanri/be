@@ -1,9 +1,9 @@
 package com.example.bak.user.application;
 
+import static com.example.bak.global.utils.AssertionsErrorCode.assertBusiness;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 
-import com.example.bak.global.exception.BusinessException;
+import com.example.bak.global.exception.ErrorCode;
 import com.example.bak.user.domain.User;
 import com.example.bak.user.domain.UserRepositoryStub;
 import org.junit.jupiter.api.BeforeEach;
@@ -82,16 +82,13 @@ class UserServiceUnitTest {
 
         @Test
         @DisplayName("존재하지 않는 사용자는 예외를 던진다")
-        void getUserProfile_notFound() {
+        void getUserProfile_when_notFound() {
 
             // given
             setupUser();
 
             // when & then
-            assertThrows(
-                    BusinessException.class,
-                    () -> userService.getUserProfile(999L)
-            );
+            assertBusiness(() -> userService.getUserProfile(999L), ErrorCode.USER_NOT_FOUND);
         }
     }
 }

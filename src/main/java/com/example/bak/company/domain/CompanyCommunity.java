@@ -2,9 +2,11 @@ package com.example.bak.company.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -26,6 +28,15 @@ public class CompanyCommunity {
     @Column(nullable = false)
     private String jobGroup;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Company company;
+
+    private CompanyCommunity(Long Id, String name, String jobGroup) {
+        this.id = Id;
+        this.name = name;
+        this.jobGroup = jobGroup;
+    }
+
     private CompanyCommunity(String name, String jobGroup) {
         this.name = name;
         this.jobGroup = jobGroup;
@@ -33,5 +44,9 @@ public class CompanyCommunity {
 
     public static CompanyCommunity create(String name, String jobGroup) {
         return new CompanyCommunity(name, jobGroup);
+    }
+
+    public static CompanyCommunity testInstance(Long id, String name, String jobGroup) {
+        return new CompanyCommunity(id, name, jobGroup);
     }
 }

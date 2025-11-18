@@ -1,5 +1,7 @@
-package com.example.bak.feed.domain;
+package com.example.bak.feedcomment.domain;
 
+import com.example.bak.feed.domain.Feed;
+import com.example.bak.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -22,21 +24,40 @@ public class FeedComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private User author;
+
     @Column(nullable = false)
     private String comment;
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Feed feed;
 
-    public static FeedComment create(String comment) {
-        return new FeedComment(comment);
+    private FeedComment(Long id, String comment, User author, Feed feed) {
+        this.id = id;
+        this.comment = comment;
+        this.author = author;
+        this.feed = feed;
     }
 
-    private FeedComment(String comment) {
+    private FeedComment(String comment, User author) {
         this.comment = comment;
+        this.author = author;
+    }
+
+    public static FeedComment create(String comment, User author) {
+        return new FeedComment(comment, author);
+    }
+
+    public static FeedComment testInstance(Long id, String comment, User author, Feed feed) {
+        return new FeedComment(id, comment, author, feed);
     }
 
     public void joinFeed(Feed feed) {
         this.feed = feed;
+    }
+
+    public void updateComment(String comment) {
+        this.comment = comment;
     }
 }

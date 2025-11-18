@@ -19,11 +19,6 @@ public class UserRepositoryStub
     }
 
     @Override
-    public User save(User entity) {
-        return super.save(entity);
-    }
-
-    @Override
     public Optional<Profile> findProfileByUserId(Long userId) {
         return findById(userId).map(User::getProfile);
     }

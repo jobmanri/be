@@ -22,4 +22,9 @@ public class UserRepositoryStub
     public Optional<Profile> findProfileByUserId(Long userId) {
         return findById(userId).map(User::getProfile);
     }
+
+    @Override
+    public Optional<User> findUserById(Long id) {
+        return findById(id);
+    }
 }

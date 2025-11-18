@@ -7,14 +7,16 @@ import com.example.bak.feed.domain.FeedComment;
  */
 public record CommentInfo(
         Long id,
-        String author,
+        Long authorId,
+        String authorName,
         String content
 ) {
 
     public static CommentInfo from(FeedComment comment) {
         return new CommentInfo(
                 comment.getId(),
-                comment.getAuthor(),
+                comment.getAuthor().getId(),
+                comment.getAuthor().getProfile().getNickname(),
                 comment.getComment()
         );
     }

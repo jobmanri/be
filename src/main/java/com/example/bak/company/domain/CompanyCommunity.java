@@ -30,7 +30,13 @@ public class CompanyCommunity {
 
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
-    
+
+    private CompanyCommunity(Long Id, String name, String jobGroup) {
+        this.id = Id;
+        this.name = name;
+        this.jobGroup = jobGroup;
+    }
+
     private CompanyCommunity(String name, String jobGroup) {
         this.name = name;
         this.jobGroup = jobGroup;
@@ -38,5 +44,9 @@ public class CompanyCommunity {
 
     public static CompanyCommunity create(String name, String jobGroup) {
         return new CompanyCommunity(name, jobGroup);
+    }
+
+    public static CompanyCommunity testInstance(Long id, String name, String jobGroup) {
+        return new CompanyCommunity(id, name, jobGroup);
     }
 }

@@ -1,6 +1,6 @@
 package com.example.bak.feed.presentation;
 
-import com.example.bak.feed.application.CommentService;
+import com.example.bak.feed.application.FeedCommentService;
 import com.example.bak.feed.application.dto.CommentInfo;
 import com.example.bak.feed.application.dto.CommentResult;
 import com.example.bak.feed.presentation.dto.CommentRequest;
@@ -20,16 +20,16 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("api/v1/feeds")
 @RequiredArgsConstructor
-public class CommentController {
+public class FeedCommentController {
 
-    private final CommentService commentService;
+    private final FeedCommentService feedCommentService;
 
     @PostMapping("/{feedId}/comments")
     public ResponseEntity<ApiResponse> createComment(
             @PathVariable Long feedId,
             @RequestBody CommentRequest request
     ) {
-        CommentResult result = commentService.createComment(
+        CommentResult result = feedCommentService.createComment(
                 feedId,
                 request.content(),
                 request.userId()
@@ -44,14 +44,14 @@ public class CommentController {
             @PathVariable Long commentId,
             @RequestBody CommentRequest request
     ) {
-        commentService.updateComment(commentId, request.content(), request.userId());
+        feedCommentService.updateComment(commentId, request.content(), request.userId());
         ApiResponse response = ApiResponseFactory.successVoid("댓글을 성공적으로 수정하였습니다.");
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/comments/{commentId}")
     public ResponseEntity<ApiResponse> getComment(@PathVariable Long commentId) {
-        CommentInfo comment = commentService.getComment(commentId);
+        CommentInfo comment = feedCommentService.getComment(commentId);
         ApiResponse response = ApiResponseFactory.success("댓글을 성공적으로 조회하였습니다.", comment);
         return ResponseEntity.ok(response);
     }

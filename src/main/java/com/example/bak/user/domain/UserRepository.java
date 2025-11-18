@@ -8,5 +8,5 @@ public interface UserRepository {
 
     Optional<Profile> findProfileByUserId(Long userId);
 
-    Optional<User> findUserById(Long id);
+    Optional<User> findById(Long userId);
 }

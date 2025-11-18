@@ -13,5 +13,5 @@ public interface FeedRepository {
 
     Feed save(Feed feed);
 
-    Optional<Feed> findFeedById(Long id);
+    Optional<Feed> findById(Long id);
 }

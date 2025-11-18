@@ -20,5 +20,5 @@ public interface FeedJpaRepository extends JpaRepository<Feed, Long>, FeedReposi
     Feed save(Feed feed);
 
     @Override
-    Optional<Feed> findFeedById(Long id);
+    Optional<Feed> findById(Long id);
 }

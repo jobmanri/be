@@ -31,7 +31,7 @@ public class FeedService {
 
     @Transactional
     public FeedResult createFeed(String title, String content, Long communityId, Long userId) {
-        User user = userRepository.findUserById(userId)
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         CompanyCommunity community = companyCommunityRepository.findById(communityId)
@@ -45,7 +45,7 @@ public class FeedService {
 
     @Transactional(readOnly = true)
     public FeedDetail getFeedDetail(Long feedId) {
-        Feed feed = feedRepository.findFeedById(feedId)
+        Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
 
         return FeedDetail.from(feed);
@@ -53,7 +53,7 @@ public class FeedService {
 
     @Transactional(readOnly = true)
     public FeedSummary getFeedSummary(Long feedId) {
-        Feed feed = feedRepository.findFeedById(feedId)
+        Feed feed = feedRepository.findById(feedId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
 
         return FeedSummary.from(feed);

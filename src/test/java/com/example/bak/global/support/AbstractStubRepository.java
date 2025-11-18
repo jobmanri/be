@@ -3,6 +3,9 @@ package com.example.bak.global.support;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
 
 public abstract class AbstractStubRepository<ID, ENTITY> {
 
@@ -31,5 +34,18 @@ public abstract class AbstractStubRepository<ID, ENTITY> {
 
     public List<ENTITY> findAll() {
         return List.copyOf(store);
+    }
+
+    public Page<ENTITY> findAll(Pageable pageable) {
+        int page = pageable.getPageNumber();
+        int size = pageable.getPageSize();
+        int start = page * size;
+        int end = Math.min(start + size, store.size());
+
+        if (start > store.size()) {
+            return new PageImpl<>(List.of(), pageable, store.size());
+        }
+        List<ENTITY> content = store.subList(start, end);
+        return new PageImpl<>(new ArrayList<>(content), pageable, store.size());
     }
 }

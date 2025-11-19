@@ -39,6 +39,14 @@ public class Company {
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, orphanRemoval = true)
     private List<CompanyCommunity> communities = new ArrayList<>();
 
+    public Company(Long id, String name, String careerLink, String logoUrl, String description) {
+        this.id = id;
+        this.name = name;
+        this.careerLink = careerLink;
+        this.logoUrl = logoUrl;
+        this.description = description;
+    }
+
     private Company(String name, String careerLink, String logoUrl, String description) {
         this.name = name;
         this.careerLink = careerLink;
@@ -53,6 +61,16 @@ public class Company {
             String description
     ) {
         return new Company(name, careerLink, logoUrl, description);
+    }
+
+    public static Company testInstance(
+            Long id,
+            String name,
+            String careerLink,
+            String logoUrl,
+            String description
+    ) {
+        return new Company(id, name, careerLink, logoUrl, description);
     }
 
     public void addCommunity(CompanyCommunity community) {

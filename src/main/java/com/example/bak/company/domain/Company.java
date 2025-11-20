@@ -1,5 +1,6 @@
 package com.example.bak.company.domain;
 
+import com.example.bak.community.domain.Community;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -37,7 +38,7 @@ public class Company {
     private String description;
 
     @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<CompanyCommunity> communities = new ArrayList<>();
+    private List<Community> communities = new ArrayList<>();
 
     public Company(Long id, String name, String careerLink, String logoUrl, String description) {
         this.id = id;
@@ -73,7 +74,14 @@ public class Company {
         return new Company(id, name, careerLink, logoUrl, description);
     }
 
-    public void addCommunity(CompanyCommunity community) {
+    public void addCommunity(Community community) {
         this.communities.add(community);
+    }
+
+    public void update(String name, String careerLink, String logoUrl, String description) {
+        this.name = name;
+        this.careerLink = careerLink;
+        this.logoUrl = logoUrl;
+        this.description = description;
     }
 }

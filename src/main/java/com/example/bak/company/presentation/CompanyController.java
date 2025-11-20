@@ -3,8 +3,9 @@ package com.example.bak.company.presentation;
 import com.example.bak.company.application.CompanyService;
 import com.example.bak.company.application.dto.CompanyResult;
 import com.example.bak.company.presentation.dto.CompanyRequest;
-import com.example.bak.global.common.ApiResponse;
-import com.example.bak.global.common.ApiResponseFactory;
+import com.example.bak.global.common.response.ApiResponse;
+import com.example.bak.global.common.response.ApiResponseFactory;
+import com.example.bak.global.common.utils.UriUtils;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -24,36 +25,35 @@ public class CompanyController {
 
     private final CompanyService companyService;
 
-    // 회사 전체 조회
     @GetMapping()
     public ResponseEntity<ApiResponse> getCompanies() {
-        List<CompanyResult> companyResults = companyService.getCompanies();
+        List<CompanyResult.Detail> companyResults = companyService.getCompanies();
         ApiResponse response = ApiResponseFactory.success(
-                "회사 정보를 성공적으로 조회했습니다!", companyResults);
-        return null;
+                "회사 목록을 성공적으로 조회했습니다.", companyResults);
+        return ResponseEntity.ok(response);
     }
 
-    // 회사 단일 조회
     @GetMapping("/{companyId}")
     public ResponseEntity<ApiResponse> getCompany(
             @PathVariable Long companyId
     ) {
-        CompanyResult companyResult = companyService.getCompany(companyId);
-        return null;
+        CompanyResult.Detail companyResult = companyService.getCompany(companyId);
+        ApiResponse response = ApiResponseFactory.success("회사 정보를 성공적으로 조회했습니다.", companyResult);
+        return ResponseEntity.ok(response);
     }
 
-    // 회사 등록
     @PostMapping()
     public ResponseEntity<ApiResponse> createCompany(
             @RequestBody CompanyRequest request
     ) {
-        companyService.createCompany(
+        CompanyResult.ResourcePath resourcePath = companyService.createCompany(
                 request.name(), request.careerLink(), request.logoUrl(), request.description()
         );
-        return null;
+        ApiResponse response = ApiResponseFactory.successVoid("회사 정보를 성공적으로 생성했습니다.");
+        return ResponseEntity.created(UriUtils.current(resourcePath.companyId()))
+                .body(response);
     }
 
-    // 회사 정보 수정
     @PutMapping("/{companyId}")
     public ResponseEntity<ApiResponse> updateCompany(
             @PathVariable Long companyId,
@@ -63,15 +63,16 @@ public class CompanyController {
                 companyId, request.name(), request.careerLink(), request.logoUrl(),
                 request.description()
         );
-        return null;
+        ApiResponse response = ApiResponseFactory.successVoid("회사 정보를 성공적으로 수정했습니다.");
+        return ResponseEntity.ok(response);
     }
 
-    // 회사 삭제
     @DeleteMapping("/{companyId}")
     public ResponseEntity<ApiResponse> deleteCompany(
             @PathVariable Long companyId
     ) {
-
-        return null;
+        companyService.deleteCompany(companyId);
+        ApiResponse response = ApiResponseFactory.successVoid("회사 정보를 성공적으로 삭제했습니다.");
+        return ResponseEntity.ok(response);
     }
 }

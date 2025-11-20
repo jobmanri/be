@@ -8,6 +8,7 @@ import com.example.bak.global.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -15,28 +16,32 @@ public class CompanyService {
 
     private final CompanyRepository companyRepository;
 
-    public List<CompanyResult> getCompanies() {
+    @Transactional(readOnly = true)
+    public List<CompanyResult.Detail> getCompanies() {
         List<Company> companies = companyRepository.findAll();
 
         return companies.stream()
-                .map(CompanyResult::from)
+                .map(CompanyResult.Detail::from)
                 .toList();
     }
 
-    public CompanyResult getCompany(Long companyId) {
+    @Transactional(readOnly = true)
+    public CompanyResult.Detail getCompany(Long companyId) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
 
-        return CompanyResult.from(company);
+        return CompanyResult.Detail.from(company);
     }
 
-    public void createCompany(
+    @Transactional
+    public CompanyResult.ResourcePath createCompany(
             String name, String careerLink, String logoUrl, String description
     ) {
         Company company = Company.create(name, careerLink, logoUrl, description);
-        Company savedCompany = companyRepository.save(company);
+        return CompanyResult.ResourcePath.from(companyRepository.save(company));
     }
 
+    @Transactional
     public void updateCompany(
             Long companyId, String name, String careerLink, String logoUrl, String description
     ) {
@@ -46,6 +51,7 @@ public class CompanyService {
         company.update(name, careerLink, logoUrl, description);
     }
 
+    @Transactional
     public void deleteCompany(Long companyId) {
         companyRepository.deleteById(companyId);
     }

@@ -3,7 +3,7 @@ package com.example.bak.community.presentation;
 import com.example.bak.community.application.CommunityService;
 import com.example.bak.community.application.dto.CommunityResult;
 import com.example.bak.community.presentation.dto.CommunityRequest;
-import com.example.bak.global.common.ApiResponse;
+import com.example.bak.global.common.response.ApiResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;

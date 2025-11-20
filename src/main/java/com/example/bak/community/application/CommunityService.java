@@ -34,8 +34,9 @@ public class CommunityService {
             String jobGroup) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
-        Community community = communityRepository.save(Community.create(name, jobGroup));
-        company.addCommunity(community);
+
+        Community community = communityRepository.save(Community.create(name, jobGroup, company));
+
         return CommunityResult.ResourcePath.from(community);
     }
 

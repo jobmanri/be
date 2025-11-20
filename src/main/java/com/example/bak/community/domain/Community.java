@@ -9,14 +9,12 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "communities")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Community {
 
     @Id
@@ -32,23 +30,25 @@ public class Community {
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    private Community(Long id, String name, String jobGroup) {
+    private Community(Long id, String name, String jobGroup, Company company) {
         this.id = id;
         this.name = name;
         this.jobGroup = jobGroup;
+        this.company = company;
     }
 
-    private Community(String name, String jobGroup) {
+    private Community(String name, String jobGroup, Company company) {
         this.name = name;
         this.jobGroup = jobGroup;
+        this.company = company;
     }
 
-    public static Community create(String name, String jobGroup) {
-        return new Community(name, jobGroup);
+    public static Community create(String name, String jobGroup, Company company) {
+        return new Community(name, jobGroup, company);
     }
 
-    public static Community testInstance(Long id, String name, String jobGroup) {
-        return new Community(id, name, jobGroup);
+    public static Community testInstance(Long id, String name, String jobGroup, Company company) {
+        return new Community(id, name, jobGroup, company);
     }
 
     public void update(String name, String jobGroup) {

@@ -32,17 +32,23 @@ public class Community {
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    public static Community create(String name, String jobGroup) {
-        return new Community(name, jobGroup);
-    }
-
-    public static CompanyCommunity testInstance(Long id, String name, String jobGroup) {
-        return new CompanyCommunity(id, name, jobGroup);
+    private Community(Long id, String name, String jobGroup) {
+        this.id = id;
+        this.name = name;
+        this.jobGroup = jobGroup;
     }
 
     private Community(String name, String jobGroup) {
         this.name = name;
         this.jobGroup = jobGroup;
+    }
+
+    public static Community create(String name, String jobGroup) {
+        return new Community(name, jobGroup);
+    }
+
+    public static Community testInstance(Long id, String name, String jobGroup) {
+        return new Community(id, name, jobGroup);
     }
 
     public void update(String name, String jobGroup) {

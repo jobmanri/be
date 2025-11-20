@@ -48,4 +48,8 @@ public abstract class AbstractStubRepository<ID, ENTITY> {
         List<ENTITY> content = store.subList(start, end);
         return new PageImpl<>(new ArrayList<>(content), pageable, store.size());
     }
+
+    public void deleteById(ID id) {
+        store.removeIf(it -> getId(it).equals(id));
+    }
 }

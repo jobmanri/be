@@ -44,7 +44,7 @@ public class Feed {
     @ManyToOne(fetch = FetchType.LAZY)
     private User author;
 
-    private Feed(Long id, String title, String content, CompanyCommunity community, User author) {
+    private Feed(Long id, String title, String content, Community community, User author) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -52,7 +52,7 @@ public class Feed {
         this.author = author;
     }
 
-    private Feed(String title, String content, CompanyCommunity community, User author) {
+    private Feed(String title, String content, Community community, User author) {
         this.title = title;
         this.content = content;
         this.community = community;
@@ -72,7 +72,7 @@ public class Feed {
             Long id,
             String title,
             String content,
-            CompanyCommunity community,
+            Community community,
             User author
     ) {
         return new Feed(id, title, content, community, author);

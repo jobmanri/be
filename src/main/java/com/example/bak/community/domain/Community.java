@@ -1,5 +1,6 @@
-package com.example.bak.company.domain;
+package com.example.bak.community.domain;
 
+import com.example.bak.company.domain.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -16,7 +17,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class CompanyCommunity {
+public class Community {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -31,22 +32,21 @@ public class CompanyCommunity {
     @ManyToOne(fetch = FetchType.LAZY)
     private Company company;
 
-    private CompanyCommunity(Long Id, String name, String jobGroup) {
-        this.id = Id;
-        this.name = name;
-        this.jobGroup = jobGroup;
-    }
-
-    private CompanyCommunity(String name, String jobGroup) {
-        this.name = name;
-        this.jobGroup = jobGroup;
-    }
-
-    public static CompanyCommunity create(String name, String jobGroup) {
-        return new CompanyCommunity(name, jobGroup);
+    public static Community create(String name, String jobGroup) {
+        return new Community(name, jobGroup);
     }
 
     public static CompanyCommunity testInstance(Long id, String name, String jobGroup) {
         return new CompanyCommunity(id, name, jobGroup);
+    }
+
+    private Community(String name, String jobGroup) {
+        this.name = name;
+        this.jobGroup = jobGroup;
+    }
+
+    public void update(String name, String jobGroup) {
+        this.name = name;
+        this.jobGroup = jobGroup;
     }
 }

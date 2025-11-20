@@ -3,8 +3,8 @@ package com.example.bak.feed.application;
 import static com.example.bak.global.utils.AssertionsErrorCode.assertBusiness;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.bak.company.domain.CompanyCommunity;
-import com.example.bak.company.domain.CompanyCommunityRepositoryStub;
+import com.example.bak.community.domain.Community;
+import com.example.bak.company.domain.CommunityRepositoryStub;
 import com.example.bak.feed.application.dto.FeedDetail;
 import com.example.bak.feed.application.dto.FeedResult;
 import com.example.bak.feed.application.dto.FeedSummary;
@@ -35,19 +35,19 @@ class FeedServiceUnitTest {
     private final User testUser =
             User.testInstance(EXISTING_USER_ID, "user@test.com", "pw", "name", "nick");
 
-    private final CompanyCommunity community =
-            CompanyCommunity.testInstance(EXISTING_COMMUNITY_ID, "community", "jobGroup");
+    private final Community community =
+            Community.testInstance(EXISTING_COMMUNITY_ID, "community", "jobGroup");
 
     private FeedService feedService;
     private FeedRepositoryStub feedRepository;
     private UserRepositoryStub userRepository;
-    private CompanyCommunityRepositoryStub communityRepository;
+    private CommunityRepositoryStub communityRepository;
 
     @BeforeEach
     void setUp() {
         feedRepository = new FeedRepositoryStub();
         userRepository = new UserRepositoryStub();
-        communityRepository = new CompanyCommunityRepositoryStub();
+        communityRepository = new CommunityRepositoryStub();
 
         feedService = new FeedService(feedRepository, userRepository, communityRepository);
 

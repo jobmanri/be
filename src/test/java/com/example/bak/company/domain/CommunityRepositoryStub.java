@@ -1,11 +1,13 @@
 package com.example.bak.company.domain;
 
 import com.example.bak.community.domain.Community;
+import com.example.bak.community.domain.CommunityRepository;
 import com.example.bak.global.support.AbstractStubRepository;
 import java.util.Objects;
 
-public class CompanyCommunityRepositoryStub
-        extends AbstractStubRepository<Long, Community> {
+public class CommunityRepositoryStub
+        extends AbstractStubRepository<Long, Community>
+        implements CommunityRepository {
 
     @Override
     protected Long getId(Community community) {

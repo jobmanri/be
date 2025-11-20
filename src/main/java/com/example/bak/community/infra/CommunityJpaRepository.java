@@ -13,4 +13,7 @@ public interface CommunityJpaRepository extends JpaRepository<Community, Long>,
 
     @Override
     Optional<Community> findById(Long id);
+
+    @Override
+    void deleteById(Long id);
 }

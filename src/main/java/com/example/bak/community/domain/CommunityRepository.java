@@ -7,4 +7,6 @@ public interface CommunityRepository {
     Community save(Community companyCommunity);
 
     Optional<Community> findById(Long id);
+
+    void deleteById(Long id);
 }

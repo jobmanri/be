@@ -5,6 +5,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.bak.community.domain.Community;
 import com.example.bak.company.domain.CommunityRepositoryStub;
+import com.example.bak.company.domain.Company;
 import com.example.bak.feed.application.dto.FeedDetail;
 import com.example.bak.feed.application.dto.FeedResult;
 import com.example.bak.feed.application.dto.FeedSummary;
@@ -24,6 +25,7 @@ import org.junit.jupiter.api.Test;
 class FeedServiceUnitTest {
 
     private static final Long EXISTING_USER_ID = 1L;
+    private static final Long EXISTING_COMPANY_ID = 5L;
     private static final Long EXISTING_COMMUNITY_ID = 10L;
     private static final Long NOT_FOUND_USER_ID = 999L;
     private static final Long NOT_FOUND_COMMUNITY_ID = 888L;
@@ -35,8 +37,12 @@ class FeedServiceUnitTest {
     private final User testUser =
             User.testInstance(EXISTING_USER_ID, "user@test.com", "pw", "name", "nick");
 
+    private final Company company =
+            Company.testInstance(EXISTING_COMPANY_ID, "testDotCom", "test.com", "image.url.com",
+                    "testing company1");
+
     private final Community community =
-            Community.testInstance(EXISTING_COMMUNITY_ID, "community", "jobGroup");
+            Community.testInstance(EXISTING_COMMUNITY_ID, "community", "jobGroup", company);
 
     private FeedService feedService;
     private FeedRepositoryStub feedRepository;

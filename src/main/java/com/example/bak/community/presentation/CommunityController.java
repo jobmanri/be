@@ -25,7 +25,7 @@ public class CommunityController {
 
     private final CommunityService communityService;
 
-    @GetMapping("/company/{companyId}/communities")
+    @GetMapping("/companies/{companyId}/communities")
     public ResponseEntity<ApiResponse> getCommunities(
             @PathVariable Long companyId
     ) {
@@ -35,7 +35,7 @@ public class CommunityController {
         return ResponseEntity.ok(response);
     }
 
-    @PostMapping("/company/{companyId}/communities")
+    @PostMapping("/companies/{companyId}/communities")
     public ResponseEntity<ApiResponse> createCommunity(
             @PathVariable Long companyId,
             @RequestBody CommunityRequest request

@@ -10,6 +10,7 @@ import com.example.bak.global.exception.ErrorCode;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
@@ -18,39 +19,36 @@ public class CommunityService {
     private final CompanyRepository companyRepository;
     private final CommunityRepository communityRepository;
 
-    public List<CommunityResult> getCompanyCommunities(Long companyId) {
+    @Transactional(readOnly = true)
+    public List<CommunityResult.Detail> getCommunities(Long companyId) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
 
         return company.getCommunities().stream()
-                .map(CommunityResult::from)
+                .map(CommunityResult.Detail::from)
                 .toList();
     }
 
-    public void createCompanyCommunity(Long companyId, String name, String jobGroup) {
+    @Transactional
+    public CommunityResult.ResourcePath createCommunity(Long companyId, String name,
+            String jobGroup) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
-
-        Community community = Community.create(name, jobGroup);
-
+        Community community = communityRepository.save(Community.create(name, jobGroup));
         company.addCommunity(community);
+        return CommunityResult.ResourcePath.from(community);
     }
 
-    public void updateCompanyCommunity(
-            Long companyId, Long companyCommunityId, String name, String jobGroup
-    ) {
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
-
-        Community community = company.getCommunities().stream()
-                .filter(target -> target.getId().equals(companyCommunityId))
-                .findFirst()
-                .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
+    @Transactional
+    public void updateCommunity(Long communityId, String name, String jobGroup) {
+        Community community = communityRepository.findById(communityId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.COMMUNITY_NOT_FOUND));
 
         community.update(name, jobGroup);
     }
 
-    public void deleteCompanyCommunity(Long companyId, Long companyCommunityId) {
-
+    @Transactional
+    public void deleteCommunity(Long communityId) {
+        communityRepository.deleteById(communityId);
     }
 }

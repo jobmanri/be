@@ -1,6 +1,6 @@
 package com.example.bak.feed.application.dto;
 
-import com.example.bak.company.application.dto.CommunityInfo;
+import com.example.bak.community.application.dto.CommunityResult;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.user.application.dto.UserInfo;
 import java.util.List;
@@ -13,13 +13,13 @@ public record FeedSummary(
         Long id,
         String title,
         UserInfo author,
-        CommunityInfo community,
+        CommunityResult.Detail community,
         int commentCount
 ) {
 
     public static FeedSummary from(Feed feed) {
         final UserInfo author = UserInfo.from(feed.getAuthor());
-        final CommunityInfo community = CommunityInfo.from(feed.getCommunity());
+        final CommunityResult.Detail community = CommunityResult.Detail.from(feed.getCommunity());
         final int commentCount = feed.getComments().size();
 
         return new FeedSummary(

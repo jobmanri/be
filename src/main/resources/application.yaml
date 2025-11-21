@@ -1,0 +1,27 @@
+spring:
+  config:
+    import: optional:file:.env[.properties]
+  datasource:
+    url: jdbc:h2:mem:testdb
+    driver-class-name: org.h2.Driver
+    username: sa
+    password:
+
+  jpa:
+    hibernate:
+      ddl-auto: create-drop
+    open-in-view: false
+
+  h2:
+    console:
+      enabled: true
+      path: /h2-console
+
+jwt:
+  auth:
+    access:
+      secret-key: ${JWT_ACCESS_KEY}
+      timeToLive: ${JWT_ACCESS_EXPIRATION}
+    refresh:
+      secret-key: ${JWT_REFRESH_KEY}
+      timeToLive: ${JWT_REFRESH_EXPIRATION}

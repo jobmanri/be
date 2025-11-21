@@ -21,7 +21,7 @@ jwt:
   auth:
     access:
       secret-key: ${JWT_ACCESS_KEY}
-      timeToLive: ${JWT_ACCESS_EXPIRATION}
+      time-to-live: ${JWT_ACCESS_EXPIRATION}
     refresh:
       secret-key: ${JWT_REFRESH_KEY}
-      timeToLive: ${JWT_REFRESH_EXPIRATION}
+      time-to-live: ${JWT_REFRESH_EXPIRATION}

@@ -1,24 +1,17 @@
 package com.example.bak.company.domain;
 
-import com.example.bak.community.domain.Community;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "companies")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Company {
 
     @Id
@@ -37,10 +30,7 @@ public class Company {
     @Column(nullable = false)
     private String description;
 
-    @OneToMany(mappedBy = "company", fetch = FetchType.LAZY, orphanRemoval = true)
-    private List<Community> communities = new ArrayList<>();
-
-    public Company(Long id, String name, String careerLink, String logoUrl, String description) {
+    private Company(Long id, String name, String careerLink, String logoUrl, String description) {
         this.id = id;
         this.name = name;
         this.careerLink = careerLink;
@@ -72,10 +62,6 @@ public class Company {
             String description
     ) {
         return new Company(id, name, careerLink, logoUrl, description);
-    }
-
-    public void addCommunity(Community community) {
-        this.communities.add(community);
     }
 
     public void update(String name, String careerLink, String logoUrl, String description) {

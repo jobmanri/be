@@ -21,10 +21,9 @@ public class CommunityService {
 
     @Transactional(readOnly = true)
     public List<CommunityResult.Detail> getCommunities(Long companyId) {
-        Company company = companyRepository.findById(companyId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
+        List<Community> communities = communityRepository.findByCompanyId(companyId);
 
-        return company.getCommunities().stream()
+        return communities.stream()
                 .map(CommunityResult.Detail::from)
                 .toList();
     }

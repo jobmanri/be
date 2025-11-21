@@ -22,4 +22,9 @@ public class UserRepositoryStub
     public Optional<Profile> findProfileByUserId(Long userId) {
         return findById(userId).map(User::getProfile);
     }
+
+    @Override
+    public Optional<User> findByEmail(String email) {
+        return store.stream().filter(u -> Objects.equals(u.getEmail(), email)).findFirst();
+    }
 }

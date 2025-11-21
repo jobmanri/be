@@ -33,7 +33,7 @@ public enum ErrorCode {
 
     // Global
     UNAUTHORIZED_ACTION("CM002", HttpStatus.FORBIDDEN, "권한이 없는 작업입니다.");
-    
+
     private final String code;
     private final HttpStatus status;
     private final String message;

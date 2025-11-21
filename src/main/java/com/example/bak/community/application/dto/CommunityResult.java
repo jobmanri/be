@@ -4,10 +4,10 @@ import com.example.bak.community.domain.Community;
 
 public class CommunityResult {
 
-    public record ResourcePath(Long communityId) {
+    public record CommunityId(Long value) {
 
-        public static ResourcePath from(Community community) {
-            return new ResourcePath(community.getId());
+        public static CommunityId from(Community community) {
+            return new CommunityId(community.getId());
         }
     }
 

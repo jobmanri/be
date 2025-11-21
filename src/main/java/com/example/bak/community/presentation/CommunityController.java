@@ -2,6 +2,7 @@ package com.example.bak.community.presentation;
 
 import com.example.bak.community.application.CommunityService;
 import com.example.bak.community.application.dto.CommunityResult;
+import com.example.bak.community.application.dto.CommunityResult.CommunityId;
 import com.example.bak.community.presentation.dto.CommunityRequest;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
@@ -40,10 +41,10 @@ public class CommunityController {
             @PathVariable Long companyId,
             @RequestBody CommunityRequest request
     ) {
-        CommunityResult.ResourcePath resourcePath = communityService.createCommunity(
-                companyId, request.name(), request.jobGroup());
+        CommunityId communityId = communityService.createCommunity(companyId, request.name(),
+                request.jobGroup());
         ApiResponse response = ApiResponseFactory.successVoid("커뮤니티 정보를 성공적으로 저장했습니다.");
-        return ResponseEntity.created(UriUtils.current(resourcePath.communityId()))
+        return ResponseEntity.created(UriUtils.current(communityId.value()))
                 .body(response);
     }
 

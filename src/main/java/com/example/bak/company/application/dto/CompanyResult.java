@@ -1,6 +1,7 @@
 package com.example.bak.company.application.dto;
 
 import com.example.bak.community.application.dto.CommunityResult;
+import com.example.bak.community.domain.Community;
 import com.example.bak.company.domain.Company;
 import java.util.List;
 
@@ -24,14 +25,14 @@ public class CompanyResult {
             List<CommunityResult.Detail> communityInfos
     ) {
 
-        public static Detail from(Company company) {
+        public static Detail from(Company company, List<Community> communities) {
             return new Detail(
                     company.getId(),
                     company.getName(),
                     company.getCareerLink(),
                     company.getLogoUrl(),
                     company.getDescription(),
-                    company.getCommunities().stream().map(CommunityResult.Detail::from).toList()
+                    communities.stream().map(CommunityResult.Detail::from).toList()
             );
         }
     }

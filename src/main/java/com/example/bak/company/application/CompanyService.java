@@ -1,5 +1,7 @@
 package com.example.bak.company.application;
 
+import com.example.bak.community.domain.Community;
+import com.example.bak.community.domain.CommunityRepository;
 import com.example.bak.company.application.dto.CompanyResult;
 import com.example.bak.company.application.dto.CompanyResult.CompanyId;
 import com.example.bak.company.domain.Company;
@@ -16,13 +18,18 @@ import org.springframework.transaction.annotation.Transactional;
 public class CompanyService {
 
     private final CompanyRepository companyRepository;
+    private final CommunityRepository communityRepository;
 
     @Transactional(readOnly = true)
     public List<CompanyResult.Detail> getCompanies() {
         List<Company> companies = companyRepository.findAll();
 
         return companies.stream()
-                .map(CompanyResult.Detail::from)
+                .map(company -> {
+                    List<Community> communities = communityRepository.findByCompanyId(
+                            company.getId());
+                    return CompanyResult.Detail.from(company, communities);
+                })
                 .toList();
     }
 
@@ -31,7 +38,9 @@ public class CompanyService {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
 
-        return CompanyResult.Detail.from(company);
+        List<Community> communities = communityRepository.findByCompanyId(companyId);
+
+        return CompanyResult.Detail.from(company, communities);
     }
 
     @Transactional

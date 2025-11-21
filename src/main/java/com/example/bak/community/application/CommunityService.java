@@ -48,7 +48,6 @@ public class CommunityService {
         community.update(name, jobGroup);
     }
 
-    @Transactional
     public void deleteCommunity(Long communityId) {
         communityRepository.deleteById(communityId);
     }

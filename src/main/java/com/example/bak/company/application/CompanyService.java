@@ -52,7 +52,6 @@ public class CompanyService {
         company.update(name, careerLink, logoUrl, description);
     }
 
-    @Transactional
     public void deleteCompany(Long companyId) {
         companyRepository.deleteById(companyId);
     }

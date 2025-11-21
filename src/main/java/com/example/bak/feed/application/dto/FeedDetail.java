@@ -1,6 +1,6 @@
 package com.example.bak.feed.application.dto;
 
-import com.example.bak.company.application.dto.CommunityInfo;
+import com.example.bak.community.application.dto.CommunityResult;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.user.application.dto.UserInfo;
 
@@ -12,12 +12,12 @@ public record FeedDetail(
         String title,
         String content,
         UserInfo author,
-        CommunityInfo community
+        CommunityResult.Detail community
 ) {
 
     public static FeedDetail from(Feed feed) {
         final UserInfo author = UserInfo.from(feed.getAuthor());
-        final CommunityInfo community = CommunityInfo.from(feed.getCommunity());
+        final CommunityResult.Detail community = CommunityResult.Detail.from(feed.getCommunity());
 
         return new FeedDetail(
                 feed.getId(),

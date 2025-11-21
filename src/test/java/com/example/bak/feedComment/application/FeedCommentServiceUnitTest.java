@@ -3,7 +3,8 @@ package com.example.bak.feedComment.application;
 import static com.example.bak.global.utils.AssertionsErrorCode.assertBusiness;
 import static org.assertj.core.api.Assertions.assertThat;
 
-import com.example.bak.company.domain.CompanyCommunity;
+import com.example.bak.community.domain.Community;
+import com.example.bak.company.domain.Company;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepositoryStub;
 import com.example.bak.feedComment.domain.FeedCommentRepositoryStub;
@@ -34,8 +35,12 @@ public class FeedCommentServiceUnitTest {
     private final User testUser =
             User.testInstance(EXISTING_USER_ID, "test@test.com", "password", "name", "nickname");
 
-    private final CompanyCommunity community =
-            CompanyCommunity.testInstance(1L, "name", "jobGroup");
+    private final Company company =
+            Company.testInstance(1L, "testDotCom", "test.com", "image.url.com",
+                    "testing company1");
+
+    private final Community community =
+            Community.testInstance(1L, "name", "jobGroup", company);
 
     private final Feed testFeed =
             Feed.testInstance(EXISTING_FEED_ID, "title", COMMENT_CONTENT, community, testUser);

@@ -1,4 +1,4 @@
-package com.example.bak.feedComment.application;
+package com.example.bak.feedcomment.application;
 
 import static com.example.bak.global.utils.AssertionsErrorCode.assertBusiness;
 import static org.assertj.core.api.Assertions.assertThat;
@@ -6,8 +6,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import com.example.bak.company.domain.CompanyCommunity;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepositoryStub;
-import com.example.bak.feedComment.domain.FeedCommentRepositoryStub;
-import com.example.bak.feedcomment.application.FeedCommentService;
+import com.example.bak.feedcomment.domain.FeedCommentRepositoryStub;
 import com.example.bak.feedcomment.domain.FeedComment;
 import com.example.bak.global.exception.ErrorCode;
 import com.example.bak.user.domain.User;

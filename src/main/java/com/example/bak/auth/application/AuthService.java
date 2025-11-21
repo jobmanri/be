@@ -20,7 +20,9 @@ public class AuthService {
     public TokenInfo login(String email, String password) {
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
+
         user.matchPassword(password);
+
         String accessToken = jwtService.publishToken(TokenType.ACCESS, user.getId(), user.getRole());
         String refreshToken = jwtService.publishToken(TokenType.REFRESH, user.getId(), user.getRole());
         return TokenInfo.of(accessToken, refreshToken);

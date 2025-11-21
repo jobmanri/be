@@ -1,16 +1,17 @@
 package com.example.bak.company.application.dto;
 
+import com.example.bak.community.application.dto.CommunityResult;
 import com.example.bak.company.domain.Company;
 import java.util.List;
 
 public class CompanyResult {
 
-    public record ResourcePath(
-            Long companyId
+    public record CompanyId(
+            Long value
     ) {
 
-        public static ResourcePath from(Company company) {
-            return new ResourcePath(company.getId());
+        public static CompanyId from(Company company) {
+            return new CompanyId(company.getId());
         }
     }
 
@@ -20,7 +21,7 @@ public class CompanyResult {
             String careerLink,
             String logoUrl,
             String description,
-            List<CommunityInfo> communityInfos
+            List<CommunityResult.Detail> communityInfos
     ) {
 
         public static Detail from(Company company) {
@@ -30,7 +31,7 @@ public class CompanyResult {
                     company.getCareerLink(),
                     company.getLogoUrl(),
                     company.getDescription(),
-                    company.getCommunities().stream().map(CommunityInfo::from).toList()
+                    company.getCommunities().stream().map(CommunityResult.Detail::from).toList()
             );
         }
     }

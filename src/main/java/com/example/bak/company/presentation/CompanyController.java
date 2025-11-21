@@ -2,6 +2,7 @@ package com.example.bak.company.presentation;
 
 import com.example.bak.company.application.CompanyService;
 import com.example.bak.company.application.dto.CompanyResult;
+import com.example.bak.company.application.dto.CompanyResult.CompanyId;
 import com.example.bak.company.presentation.dto.CompanyRequest;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
@@ -46,11 +47,11 @@ public class CompanyController {
     public ResponseEntity<ApiResponse> createCompany(
             @RequestBody CompanyRequest request
     ) {
-        CompanyResult.ResourcePath resourcePath = companyService.createCompany(
+        CompanyId companyId = companyService.createCompany(
                 request.name(), request.careerLink(), request.logoUrl(), request.description()
         );
         ApiResponse response = ApiResponseFactory.successVoid("회사 정보를 성공적으로 생성했습니다.");
-        return ResponseEntity.created(UriUtils.current(resourcePath.companyId()))
+        return ResponseEntity.created(UriUtils.current(companyId.value()))
                 .body(response);
     }
 

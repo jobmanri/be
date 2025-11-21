@@ -1,6 +1,7 @@
 package com.example.bak.company.application;
 
 import com.example.bak.company.application.dto.CompanyResult;
+import com.example.bak.company.application.dto.CompanyResult.CompanyId;
 import com.example.bak.company.domain.Company;
 import com.example.bak.company.domain.CompanyRepository;
 import com.example.bak.global.exception.BusinessException;
@@ -34,11 +35,11 @@ public class CompanyService {
     }
 
     @Transactional
-    public CompanyResult.ResourcePath createCompany(
+    public CompanyId createCompany(
             String name, String careerLink, String logoUrl, String description
     ) {
         Company company = Company.create(name, careerLink, logoUrl, description);
-        return CompanyResult.ResourcePath.from(companyRepository.save(company));
+        return CompanyId.from(companyRepository.save(company));
     }
 
     @Transactional

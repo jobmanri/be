@@ -3,8 +3,8 @@ package com.example.bak.privatemessage.infra.query;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.bak.global.AbstractMySqlContainerTest;
+import com.example.bak.privatemessage.application.query.dto.MessageCorrespondentResult;
 import com.example.bak.privatemessage.application.query.dto.MessageItemResult;
-import com.example.bak.privatemessage.application.query.dto.MessagePartnerResult;
 import com.example.bak.privatemessage.infra.query.jdbc.MessageJdbcRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
@@ -24,18 +24,18 @@ public class MessageJdbcRepositoryIntegrationTest extends AbstractMySqlContainer
     private MessageJdbcRepository messageJdbcRepository;
 
     @Nested
-    @DisplayName("findPartnersByUserId 메소드 쿼리 테스트")
-    class FindPartnersByUserIdTest {
+    @DisplayName("findCorrespondentsByUserId 메소드 쿼리 테스트")
+    class FindCorrespondentsByUserIdTest {
 
         @Test
         @DisplayName("성공 케이스")
-        public void test_find_partners_by_userid_success() {
-            var result = messageJdbcRepository.findPartnersByUserId(1L);
+        public void test_find_correspondents_by_userid_success() {
+            var result = messageJdbcRepository.findCorrespondentsByUserId(1L);
 
             assertThat(result).isNotEmpty();
             assertThat(result).containsExactly(
-                    new MessagePartnerResult(2L, "u2", true),
-                    new MessagePartnerResult(3L, "u3", false)
+                    new MessageCorrespondentResult(2L, "u2", true),
+                    new MessageCorrespondentResult(3L, "u3", false)
             );
         }
     }

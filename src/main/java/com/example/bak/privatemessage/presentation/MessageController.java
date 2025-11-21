@@ -4,9 +4,6 @@ import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.privatemessage.application.command.MessageCommandService;
 import com.example.bak.privatemessage.application.query.MessageQueryService;
-import com.example.bak.privatemessage.application.query.dto.MessageItemResult;
-import com.example.bak.privatemessage.application.query.dto.MessagePartnerResult;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -44,7 +41,7 @@ public class MessageController {
 
     @GetMapping("/participants")
     public ResponseEntity<ApiResponse> getParticipants(@RequestParam Long userId) {
-        List<MessagePartnerResult> result = queryService.getPartnersByUserId(userId);
+        var result = queryService.getMessageCorrespondentsByUserId(userId);
         return ResponseEntity.ok(ApiResponseFactory.success("쪽지 대화 상대 목록을 조회하였습니다.", result));
     }
 
@@ -53,10 +50,7 @@ public class MessageController {
             @RequestParam Long userId,
             @RequestParam Long participantId
     ) {
-        List<MessageItemResult> result = queryService.getMessagesBetweenUsers(
-                userId,
-                participantId
-        );
+        var result = queryService.getMessagesBetweenUsers(userId, participantId);
         return ResponseEntity.ok(ApiResponseFactory.success("쪽지 내용들을 조회하였습니다.", result));
     }
 

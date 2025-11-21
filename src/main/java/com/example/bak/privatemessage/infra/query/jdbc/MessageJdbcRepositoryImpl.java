@@ -1,7 +1,9 @@
 package com.example.bak.privatemessage.infra.query.jdbc;
 
+import com.example.bak.privatemessage.application.query.dto.MessageCorrespondentResult;
 import com.example.bak.privatemessage.application.query.dto.MessageItemResult;
-import com.example.bak.privatemessage.application.query.dto.MessagePartnerResult;
+import com.example.bak.privatemessage.infra.query.jdbc.mapper.MessageCorrespondentRowMapper;
+import com.example.bak.privatemessage.infra.query.jdbc.mapper.MessageItemRowMapper;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
@@ -15,17 +17,14 @@ public class MessageJdbcRepositoryImpl implements MessageJdbcRepository {
     private final NamedParameterJdbcTemplate jdbc;
 
     @Override
-    public List<MessagePartnerResult> findPartnersByUserId(Long userId) {
+    public List<MessageCorrespondentResult> findCorrespondentsByUserId(Long userId) {
 
         String sql = """
                 SELECT
                     t.partner_id AS partner_id,
                     p.nickname AS nickname,
-                    CASE
-                        WHEN u.unread_count > 0 THEN TRUE
-                        ELSE FALSE
-                    END AS has_unread
-                FROM (
+                    IF(u.unread_count > 0, TRUE, FALSE) AS has_unread
+                    FROM (
                     SELECT pm.partner_id
                     FROM (
                         SELECT receiver_id AS partner_id
@@ -49,26 +48,19 @@ public class MessageJdbcRepositoryImpl implements MessageJdbcRepository {
                     GROUP BY sender_id
                 ) u ON u.partner_id = t.partner_id
                 JOIN profiles p ON p.user_id = t.partner_id
-                
                 """;
 
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("userId", userId);
 
-        return jdbc.query(sql, params, (rs, rowNum) ->
-                new MessagePartnerResult(
-                        rs.getLong("partner_id"),
-                        rs.getString("nickname"),
-                        rs.getInt("has_unread") == 1
-                )
-        );
+        return jdbc.query(sql, params, new MessageCorrespondentRowMapper());
     }
 
     @Override
     public List<MessageItemResult> findMessagesBetweenUsers(Long fromUserId, Long toUserId) {
 
         String sql = """
-                SELECT 
+                SELECT
                     id,
                     sender_id,
                     receiver_id,
@@ -84,16 +76,7 @@ public class MessageJdbcRepositoryImpl implements MessageJdbcRepository {
                 .addValue("fromUserId", fromUserId)
                 .addValue("toUserId", toUserId);
 
-        return jdbc.query(sql, params, (rs, rowNum) ->
-                new MessageItemResult(
-                        rs.getLong("id"),
-                        rs.getLong("sender_id"),
-                        rs.getLong("receiver_id"),
-                        rs.getString("content"),
-                        rs.getTimestamp("read_at") == null ? null
-                                : rs.getTimestamp("read_at").toLocalDateTime()
-                )
-        );
+        return jdbc.query(sql, params, new MessageItemRowMapper());
     }
 
 }

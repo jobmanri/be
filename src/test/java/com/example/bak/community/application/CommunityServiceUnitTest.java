@@ -165,13 +165,21 @@ public class CommunityServiceUnitTest {
 
         @Test
         @DisplayName("삭제 대상 없는 경우에도 멱등하게 보장")
-        void deleteCommunity_when_communityId_notFound() {
+        void deleteCommunity_idempotency() {
+            // given
+            Company company = setUpCompany(1L);
+            Company savedCompany = companyRepository.save(company);
+
+            Community community = Community.testInstance(1L, "커뮤니티", "it 직군", savedCompany);
+            communityRepository.save(community);
+
             // when
+            communityService.deleteCommunity(1L);
             communityService.deleteCommunity(1L);
 
             // then
-            Optional<Community> community = communityRepository.findById(1L);
-            assertThat(community).isEmpty();
+            Optional<Community> savedCommunity = communityRepository.findById(1L);
+            assertThat(savedCommunity).isEmpty();
         }
     }
 }

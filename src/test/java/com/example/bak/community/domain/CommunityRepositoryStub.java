@@ -1,4 +1,4 @@
-package com.example.bak.company.domain;
+package com.example.bak.community.domain;
 
 import com.example.bak.community.domain.Community;
 import com.example.bak.community.domain.CommunityRepository;

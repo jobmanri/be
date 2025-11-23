@@ -4,7 +4,7 @@ import static com.example.bak.global.utils.AssertionsErrorCode.assertBusiness;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.bak.community.domain.Community;
-import com.example.bak.company.domain.CommunityRepositoryStub;
+import com.example.bak.community.domain.CommunityRepositoryStub;
 import com.example.bak.company.domain.Company;
 import com.example.bak.feed.application.dto.FeedDetail;
 import com.example.bak.feed.application.dto.FeedResult;

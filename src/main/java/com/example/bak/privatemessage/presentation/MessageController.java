@@ -34,15 +34,16 @@ public class MessageController {
                 request.content()
         );
 
-        return ResponseEntity.ok(
-                ApiResponseFactory.successVoid("쪽지를 성공적으로 전송했습니다.")
-        );
+        ApiResponse response = ApiResponseFactory.successVoid("쪽지를 성공적으로 전송했습니다.");
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping("/participants")
     public ResponseEntity<ApiResponse> getParticipants(@RequestParam Long userId) {
         var result = queryService.getMessageCorrespondentsByUserId(userId);
-        return ResponseEntity.ok(ApiResponseFactory.success("쪽지 대화 상대 목록을 조회하였습니다.", result));
+
+        ApiResponse response = ApiResponseFactory.success("쪽지 대화 상대 목록을 조회하였습니다.", result);
+        return ResponseEntity.ok(response);
     }
 
     @GetMapping()
@@ -51,7 +52,9 @@ public class MessageController {
             @RequestParam Long participantId
     ) {
         var result = queryService.getMessagesBetweenUsers(userId, participantId);
-        return ResponseEntity.ok(ApiResponseFactory.success("쪽지 내용들을 조회하였습니다.", result));
+
+        ApiResponse response = ApiResponseFactory.success("쪽지 내용들을 조회하였습니다.", result);
+        return ResponseEntity.ok(response);
     }
 
     @PatchMapping("/read")
@@ -60,9 +63,9 @@ public class MessageController {
             @RequestParam Long participantId
     ) {
         commandService.markAsRead(userId, participantId);
-        return ResponseEntity.ok(
-                ApiResponseFactory.successVoid("읽음 처리되었습니다.")
-        );
+
+        ApiResponse response = ApiResponseFactory.successVoid("읽음 처리되었습니다.");
+        return ResponseEntity.ok(response);
     }
 
     @DeleteMapping("/{messageId}")
@@ -71,8 +74,8 @@ public class MessageController {
             @PathVariable Long messageId
     ) {
         commandService.deleteMessage(userId, messageId);
-        return ResponseEntity.ok(
-                ApiResponseFactory.successVoid("쪽지를 삭제했습니다.")
-        );
+
+        ApiResponse response = ApiResponseFactory.successVoid("쪽지를 삭제했습니다.");
+        return ResponseEntity.ok(response);
     }
 }

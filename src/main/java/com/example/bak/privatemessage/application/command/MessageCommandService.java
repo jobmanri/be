@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 public class MessageCommandService {
 
     private final MessageCommandPort messageCommandPort;
-    
+
     public void sendMessage(Long senderId, Long receiverId, String content) {
         Message message = Message.create(senderId, receiverId, content);
         messageCommandPort.save(message);
@@ -26,7 +26,6 @@ public class MessageCommandService {
         messageCommandPort.markAsRead(participants);
     }
 
-    @Transactional
     public void deleteMessage(Long userId, Long messageId) {
         Message message = messageCommandPort.findById(messageId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.MESSAGE_NOT_FOUND));

@@ -1,32 +1,28 @@
-name: Docker Build & Push to GHCR (Organization)
+name: 🚀 Build & Push to GHCR (Org)
 
 on:
   push:
-    branches:
-      - feat/#27
+    branches: [ "feat/#27" ]
 
 jobs:
   build-and-push:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout source
+      - name: Checkout
         uses: actions/checkout@v6
 
-      - name: Log in to GHCR (Organization)
-        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "jobmanri" --password-stdin
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Build Docker image
+      - name: Build Image
         run: |
-          docker build -t ghcr.io/jobmanri/spring-app:latest .
+          docker build -t ghcr.io/${{ github.repository_owner }}/spring-app:latest .
 
-      - name: Tag image with commit SHA
+      - name: Push Image
         run: |
-          docker tag ghcr.io/jobmanri/spring-app:latest \
-                     ghcr.io/jobmanri/spring-app:${{ github.sha }}
-
-      - name: Push latest tag
-        run: docker push ghcr.io/jobmanri/spring-app:latest
-
-      - name: Push SHA tag
-        run: docker push ghcr.io/jobmanri/spring-app:${{ github.sha }}
+          docker push ghcr.io/${{ github.repository_owner }}/spring-app:latest

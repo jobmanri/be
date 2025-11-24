@@ -65,6 +65,7 @@ public class MessageJdbcRepositoryImpl implements MessageJdbcRepository {
                     sender_id,
                     receiver_id,
                     content,
+                    created_at,
                     read_at
                 FROM private_messages
                 WHERE (sender_id = :fromUserId AND receiver_id = :toUserId)

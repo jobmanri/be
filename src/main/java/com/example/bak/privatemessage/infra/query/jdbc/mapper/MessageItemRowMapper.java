@@ -14,6 +14,7 @@ public class MessageItemRowMapper implements RowMapper<MessageItemResult> {
                 rs.getLong("sender_id"),
                 rs.getLong("receiver_id"),
                 rs.getString("content"),
+                rs.getTimestamp("created_at").toLocalDateTime(),
                 rs.getTimestamp("read_at") == null
                         ? null
                         : rs.getTimestamp("read_at").toLocalDateTime()

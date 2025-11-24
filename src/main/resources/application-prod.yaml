@@ -1,0 +1,19 @@
+spring:
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+
+  datasource:
+    url: ${LOCAL_DB_URL}
+    driver-class-name: ${LOCAL_DB_DRIVER}
+    username: ${LOCAL_DB_USERNAME}
+    password: ${LOCAL_DB_PASSWORD}
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate:
+        format_sql: false
+        show_sql: false
+    open-in-view: false

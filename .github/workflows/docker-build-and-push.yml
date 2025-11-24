@@ -1,0 +1,32 @@
+name: Docker Build & Push to GHCR (Organization)
+
+on:
+  push:
+    branches:
+      - feat/#27
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout source
+        uses: actions/checkout@v6
+
+      - name: Log in to GHCR (Organization)
+        run: echo "${{ secrets.GHCR_PAT }}" | docker login ghcr.io -u "jobmanri" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t ghcr.io/jobmanri/spring-app:latest .
+
+      - name: Tag image with commit SHA
+        run: |
+          docker tag ghcr.io/jobmanri/spring-app:latest \
+                     ghcr.io/jobmanri/spring-app:${{ github.sha }}
+
+      - name: Push latest tag
+        run: docker push ghcr.io/jobmanri/spring-app:latest
+
+      - name: Push SHA tag
+        run: docker push ghcr.io/jobmanri/spring-app:${{ github.sha }}

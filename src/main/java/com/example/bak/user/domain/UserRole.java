@@ -1,5 +1,7 @@
 package com.example.bak.user.domain;
 
+import com.example.bak.global.exception.BusinessException;
+
 import static com.example.bak.global.exception.ErrorCode.*;
 
 public enum UserRole {
@@ -12,7 +14,7 @@ public enum UserRole {
         }else if(ADMIN.name().equalsIgnoreCase(role)) {
             return ADMIN;
         }
-        throw new IllegalArgumentException(CANNOT_CONVERT_ROLE.getMessage());
+        throw new BusinessException(CANNOT_CONVERT_ROLE);
     }
 
     public static boolean verify(UserRole role, UserRole standardRole) {

@@ -31,7 +31,7 @@ public class JwtTokenRequestFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         String requestURL = request.getRequestURI();
-        if(!isWhiteList(requestURL)) {
+        if(isWhiteList(requestURL)) {
             filterChain.doFilter(request, response);
             return;
         }
@@ -53,6 +53,6 @@ public class JwtTokenRequestFilter extends OncePerRequestFilter {
     }
 
     private boolean isWhiteList(String requestURL) {
-        return !PatternMatchUtils.simpleMatch(whiteList, requestURL);
+        return PatternMatchUtils.simpleMatch(whiteList, requestURL);
     }
 }

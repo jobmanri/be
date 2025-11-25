@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class CompanyCommandRepositoryAdaptor implements CompanyCommandPort {
+public class CompanyCommandAdaptor implements CompanyCommandPort {
 
     private final CompanyJpaRepository companyJpaRepository;
 

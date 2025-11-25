@@ -71,7 +71,7 @@ jobs:
             echo "${{ secrets.PROD_ENV }}" > ~/.env
             
             echo "profile 등록"
-            export SPRING_PROFILES_ACTIVE="prod"
+            echo SPRING_PROFILES_ACTIVE=prod >> ~/.env
             
             echo "🔐 GHCR 로그인용 PAT 적용"
             export GHCR_PAT="${{ secrets.GHCR_TOKEN }}"

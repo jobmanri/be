@@ -1,7 +1,5 @@
-package com.example.bak.company.domain;
+package com.example.bak.community.domain;
 
-import com.example.bak.community.domain.Community;
-import com.example.bak.community.domain.CommunityRepository;
 import com.example.bak.global.support.AbstractStubRepository;
 import java.util.List;
 import java.util.Objects;

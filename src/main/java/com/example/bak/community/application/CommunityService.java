@@ -21,6 +21,9 @@ public class CommunityService {
 
     @Transactional(readOnly = true)
     public List<CommunityResult.Detail> getCommunities(Long companyId) {
+        Company company = companyRepository.findById(companyId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
+
         List<Community> communities = communityRepository.findByCompanyId(companyId);
 
         return communities.stream()
@@ -30,7 +33,7 @@ public class CommunityService {
 
     @Transactional
     public CommunityResult.CommunityId createCommunity(Long companyId, String name,
-            String jobGroup) {
+                                                       String jobGroup) {
         Company company = companyRepository.findById(companyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
 

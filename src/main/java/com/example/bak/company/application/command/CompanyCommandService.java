@@ -1,7 +1,7 @@
 package com.example.bak.company.application.command;
 
 import com.example.bak.company.application.command.port.CompanyCommandPort;
-import com.example.bak.company.application.dto.CompanyResult.CompanyId;
+import com.example.bak.company.application.query.dto.CompanyResult.CompanyId;
 import com.example.bak.company.domain.Company;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;

@@ -24,29 +24,4 @@ public class JwtProvider implements JwtService {
                 .expiration(DateUtils.getExpirationDate(tokenProvider.getTtl(tokenType)))
                 .compact();
     }
-
-    @Override
-    public Long getId(TokenType tokenType, String token) {
-        return Long.parseLong(
-                Jwts.parser()
-                        .verifyWith(tokenProvider.getSecretKey(tokenType))
-                        .build()
-                        .parseSignedClaims(token)
-                        .getPayload()
-                        .getSubject()
-        );
-    }
-
-    @Override
-    public UserRole getRole(TokenType tokenType, String token) {
-        return UserRole.convert(
-                Jwts.parser()
-                        .verifyWith(tokenProvider.getSecretKey(tokenType))
-                        .build()
-                        .parseSignedClaims(token)
-                        .getPayload()
-                        .get(tokenRoleKey)
-                        .toString()
-        );
-    }
 }

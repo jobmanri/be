@@ -1,4 +1,4 @@
-package com.example.bak.company.infra;
+package com.example.bak.company.infra.command;
 
 import com.example.bak.company.domain.Company;
 import org.springframework.data.jpa.repository.JpaRepository;

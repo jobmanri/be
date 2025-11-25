@@ -2,7 +2,6 @@ package com.example.bak.company.infra.command;
 
 import com.example.bak.company.application.command.port.CompanyCommandPort;
 import com.example.bak.company.domain.Company;
-import com.example.bak.company.infra.CompanyJpaRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;

@@ -2,7 +2,7 @@ name: Build JAR & Push Docker Image to GHCR (Org)
 
 on:
   push:
-    branches: [ "feat/#30" ]
+    branches: [ "develop" ]
   workflow_dispatch:
 jobs:
   build-and-push:

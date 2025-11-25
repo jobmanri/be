@@ -13,7 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final JwtService jwtService;
+    private final JwtPort jwtPort;
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
@@ -23,8 +23,8 @@ public class AuthService {
 
         user.matchPassword(password);
 
-        String accessToken = jwtService.publishToken(TokenType.ACCESS, user.getId(), user.getRole());
-        String refreshToken = jwtService.publishToken(TokenType.REFRESH, user.getId(), user.getRole());
+        String accessToken = jwtPort.publishToken(TokenType.ACCESS, user.getId(), user.getRole());
+        String refreshToken = jwtPort.publishToken(TokenType.REFRESH, user.getId(), user.getRole());
         return TokenInfo.of(accessToken, refreshToken);
     }
 }

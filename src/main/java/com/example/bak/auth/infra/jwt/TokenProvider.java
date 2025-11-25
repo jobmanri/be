@@ -1,6 +1,11 @@
 package com.example.bak.auth.infra.jwt;
 
-import com.example.bak.auth.infra.jwt.persistence.*;
+import com.example.bak.auth.infra.jwt.persistence.TokenType;
+import com.example.bak.auth.infra.jwt.persistence.AccessTokenProperties;
+import com.example.bak.auth.infra.jwt.persistence.JwtProperties;
+import com.example.bak.auth.infra.jwt.persistence.RefreshTokenProperties;
+import com.example.bak.auth.infra.jwt.persistence.Token;
+
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.stereotype.Component;
@@ -14,8 +19,8 @@ public class TokenProvider {
     private final Map<TokenType, Token> tokens = new HashMap<>();
 
     public TokenProvider(JwtProperties tokenProperties) {
-        tokens.put(TokenType.ACCESS, AccessToken.from(tokenProperties.access()));
-        tokens.put(TokenType.REFRESH, RefreshToken.from(tokenProperties.refresh()));
+        tokens.put(TokenType.ACCESS, AccessTokenProperties.from(tokenProperties.access()));
+        tokens.put(TokenType.REFRESH, RefreshTokenProperties.from(tokenProperties.refresh()));
     }
 
     public SecretKey getSecretKey(TokenType tokenType) {

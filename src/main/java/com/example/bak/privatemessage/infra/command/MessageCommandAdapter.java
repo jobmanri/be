@@ -9,7 +9,7 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 @RequiredArgsConstructor
-public class MessageCommandRepositoryAdapter implements MessageCommandPort {
+public class MessageCommandAdapter implements MessageCommandPort {
 
     private final MessageJpaRepository messageJpaRepository;
 

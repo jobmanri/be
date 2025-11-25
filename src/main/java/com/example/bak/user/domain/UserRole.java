@@ -14,4 +14,11 @@ public enum UserRole {
         }
         throw new IllegalArgumentException(CANNOT_CONVERT_ROLE.getMessage());
     }
+
+    public static boolean verify(UserRole role, UserRole standardRole) {
+        if(role.equals(UserRole.ADMIN)){
+            return true;
+        }
+        return role.equals(UserRole.NORMAL) && role.equals(standardRole);
+    }
 }

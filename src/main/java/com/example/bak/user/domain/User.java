@@ -28,7 +28,7 @@ public class User {
     private Profile profile;
 
     @Enumerated(EnumType.STRING)
-    private UserRole role;
+    private UserRole role = UserRole.NORMAL;
 
     private User(String email, String password) {
         this.email = email;

@@ -19,8 +19,8 @@ public class TokenProvider {
     private final Map<TokenType, Token> tokens = new HashMap<>();
 
     public TokenProvider(JwtProperties tokenProperties) {
-        tokens.put(TokenType.ACCESS, AccessTokenProperties.from(tokenProperties.access()));
-        tokens.put(TokenType.REFRESH, RefreshTokenProperties.from(tokenProperties.refresh()));
+        tokens.put(TokenType.ACCESS, AccessTokenProperties.from(tokenProperties.getAccess()));
+        tokens.put(TokenType.REFRESH, RefreshTokenProperties.from(tokenProperties.getRefresh()));
     }
 
     public SecretKey getSecretKey(TokenType tokenType) {

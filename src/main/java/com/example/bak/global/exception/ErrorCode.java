@@ -26,6 +26,7 @@ public enum ErrorCode {
 
     // User
     USER_NOT_FOUND("US001", HttpStatus.NOT_FOUND, "사용자 리소스를 찾을 수 없습니다."),
+    CANNOT_CONVERT_ROLE("US002", HttpStatus.BAD_REQUEST, "올바르지 않은 Parameter 입력입니다."),
 
     // Feed
     FEED_NOT_FOUND("FE001", HttpStatus.NOT_FOUND, "피드 리소스를 찾을 수 없습니다."),

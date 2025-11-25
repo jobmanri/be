@@ -20,8 +20,8 @@ VALUES (1, 'User One', 'u1', 1),
 -- Private messages
 -- 1) user 1 → user 2 메시지 (삭제되지 않음 → partner 관계 생성)
 INSERT INTO private_messages (sender_id, receiver_id, content, read_at, deleted_at_by_sender,
-                              deleted_at_by_receiver)
-VALUES (1, 2, 'message1', NULL, NULL, NULL)
-     , (1, 2, 'message2', NULL, NULL, NULL)
-     , (2, 1, 'message3', NULL, NULL, NULL)
-     , (1, 3, 'message4', NULL, NULL, NULL);;
+                              deleted_at_by_receiver, created_at)
+VALUES (1, 2, 'message1', NULL, NULL, NULL, '2025-01-01 10:10:10')
+     , (1, 2, 'message2', NULL, NULL, NULL, '2025-01-01 10:10:10')
+     , (2, 1, 'message3', NULL, NULL, NULL, '2025-01-01 10:10:10')
+     , (1, 3, 'message4', NULL, NULL, NULL, '2025-01-01 10:10:10');

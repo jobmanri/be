@@ -7,7 +7,7 @@ public record MessageItemResult(
         Long senderId,
         Long receiverId,
         String content,
-        //created_at 추가
+        LocalDateTime createdAt,
         LocalDateTime readAt
 ) {
 

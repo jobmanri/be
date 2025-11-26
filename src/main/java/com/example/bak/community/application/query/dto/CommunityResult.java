@@ -1,4 +1,4 @@
-package com.example.bak.community.application.dto;
+package com.example.bak.community.application.query.dto;
 
 import com.example.bak.community.domain.Community;
 import com.example.bak.company.application.query.dto.CompanyResult;

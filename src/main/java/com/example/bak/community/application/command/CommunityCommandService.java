@@ -2,7 +2,7 @@ package com.example.bak.community.application.command;
 
 import com.example.bak.community.application.command.port.CommunityCommandPort;
 import com.example.bak.community.application.command.port.CompanyValidationPort;
-import com.example.bak.community.application.dto.CommunityResult;
+import com.example.bak.community.application.query.dto.CommunityResult;
 import com.example.bak.community.domain.Community;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;

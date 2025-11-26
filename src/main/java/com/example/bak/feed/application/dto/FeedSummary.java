@@ -1,6 +1,6 @@
 package com.example.bak.feed.application.dto;
 
-import com.example.bak.community.application.dto.CommunityResult;
+import com.example.bak.community.application.query.dto.CommunityResult;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.user.application.dto.UserInfo;
 import java.util.List;

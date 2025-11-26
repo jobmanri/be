@@ -1,6 +1,6 @@
 package com.example.bak.company.application.query.dto;
 
-import com.example.bak.community.application.dto.CommunityResult;
+import com.example.bak.community.application.query.dto.CommunityResult;
 import com.example.bak.company.domain.Company;
 import java.util.List;
 

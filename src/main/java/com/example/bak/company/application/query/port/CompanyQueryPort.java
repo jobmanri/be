@@ -8,5 +8,5 @@ public interface CompanyQueryPort {
 
     List<CompanyResult.Flat> findAll();
 
-    Optional<CompanyResult.Detail> findById(Long companyId);
+    Optional<List<CompanyResult.Flat>> findById(Long companyId);
 }

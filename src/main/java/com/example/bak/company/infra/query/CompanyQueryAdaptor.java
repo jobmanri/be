@@ -20,7 +20,7 @@ public class CompanyQueryAdaptor implements CompanyQueryPort {
     }
 
     @Override
-    public Optional<CompanyResult.Detail> findById(Long companyId) {
+    public Optional<List<CompanyResult.Flat>> findById(Long companyId) {
         return companyJdbcRepository.findById(companyId);
     }
 }

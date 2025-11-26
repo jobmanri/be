@@ -8,5 +8,5 @@ public interface CompanyJdbcRepository {
 
     List<CompanyResult.Flat> findAll();
 
-    Optional<CompanyResult.Detail> findById(Long id);
+    Optional<List<CompanyResult.Flat>> findById(Long id);
 }

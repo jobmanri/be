@@ -28,7 +28,9 @@ public class CompanyQueryService {
     }
 
     public CompanyResult.Detail getCompany(Long companyId) {
-        return companyQueryPort.findById(companyId)
+        List<Flat> flats = companyQueryPort.findById(companyId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMPANY_NOT_FOUND));
+
+        return CompanyResult.Detail.from(flats);
     }
 }

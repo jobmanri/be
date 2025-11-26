@@ -1,6 +1,6 @@
 package com.example.bak.company.infra.command;
 
-import com.example.bak.community.application.command.CompanyValidationPort;
+import com.example.bak.community.application.command.port.CompanyValidationPort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 

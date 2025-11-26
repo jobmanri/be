@@ -1,6 +1,6 @@
 package com.example.bak.community.infra.command;
 
-import com.example.bak.community.application.command.CommunityCommandPort;
+import com.example.bak.community.application.command.port.CommunityCommandPort;
 import com.example.bak.community.domain.Community;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

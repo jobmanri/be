@@ -1,6 +1,6 @@
 package com.example.bak.community.domain;
 
-import com.example.bak.community.application.command.CommunityCommandPort;
+import com.example.bak.community.application.command.port.CommunityCommandPort;
 import com.example.bak.global.support.AbstractStubRepository;
 import java.util.Objects;
 

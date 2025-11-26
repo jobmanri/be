@@ -1,4 +1,4 @@
-package com.example.bak.community.application.command;
+package com.example.bak.community.application.command.port;
 
 import com.example.bak.community.domain.Community;
 import java.util.Optional;

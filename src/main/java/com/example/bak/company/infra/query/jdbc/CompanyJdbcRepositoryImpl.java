@@ -16,17 +16,16 @@ public class CompanyJdbcRepositoryImpl implements CompanyJdbcRepository {
 
     @Override
     public List<CompanyResult.Flat> findAll() {
-
         String sql = """
                  SELECT
-                     c.id AS companyId,
-                     c.name AS companyName,
-                     c.career_link AS careerLink,
-                     c.logo_url AS logoUrl,
+                     c.id AS company_id,
+                     c.name AS company_name,
+                     c.career_link AS career_link,
+                     c.logo_url AS logo_url,
                      c.description AS description,
-                     cm.id AS communityId,
-                     cm.name AS communityName,
-                     cm.job_group AS jobGroup
+                     cm.id AS community_id,
+                     cm.name AS community_name,
+                     cm.job_group AS job_group
                  FROM companies c
                  LEFT JOIN communities cm
                      ON c.id = cm.company_id

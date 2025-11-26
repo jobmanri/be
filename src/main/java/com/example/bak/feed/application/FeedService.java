@@ -1,10 +1,10 @@
 package com.example.bak.feed.application;
 
 import com.example.bak.community.domain.Community;
-import com.example.bak.community.domain.CommunityRepository;
 import com.example.bak.feed.application.dto.FeedDetail;
 import com.example.bak.feed.application.dto.FeedResult;
 import com.example.bak.feed.application.dto.FeedSummary;
+import com.example.bak.feed.application.port.CommunityCommandPort;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepository;
 import com.example.bak.global.exception.BusinessException;
@@ -27,14 +27,14 @@ public class FeedService {
 
     private final FeedRepository feedRepository;
     private final UserRepository userRepository;
-    private final CommunityRepository communityRepository;
+    private final CommunityCommandPort communityCommandPort;
 
     @Transactional
     public FeedResult createFeed(String title, String content, Long communityId, Long userId) {
         User user = userRepository.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        Community community = communityRepository.findById(communityId)
+        Community community = communityCommandPort.findById(communityId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMUNITY_NOT_FOUND));
 
         Feed newFeed = Feed.create(title, content, community, user);

@@ -23,12 +23,24 @@ public class CompanyResult {
             String description,
             List<CommunityResult.Detail> communityInfos
     ) {
+
         public static Detail from(List<Flat> flats) {
             Flat first = flats.getFirst();
 
+            if (first.communityId() == 0) {
+                return new Detail(
+                        first.companyId(),
+                        first.name(),
+                        first.careerLink(),
+                        first.logoUrl(),
+                        first.description(),
+                        List.of()
+                );
+            }
+
             return new Detail(
                     first.companyId(),
-                    first.communityName(),
+                    first.name(),
                     first.careerLink(),
                     first.logoUrl(),
                     first.description(),

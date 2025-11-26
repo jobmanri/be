@@ -1,13 +1,10 @@
 package com.example.bak.community.domain;
 
-import com.example.bak.company.domain.Company;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -27,28 +24,28 @@ public class Community {
     @Column(nullable = false)
     private String jobGroup;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Company company;
+    @Column
+    private Long companyId;
 
-    private Community(Long id, String name, String jobGroup, Company company) {
+    private Community(Long id, String name, String jobGroup, Long companyId) {
         this.id = id;
         this.name = name;
         this.jobGroup = jobGroup;
-        this.company = company;
+        this.companyId = companyId;
     }
 
-    private Community(String name, String jobGroup, Company company) {
+    private Community(String name, String jobGroup, Long companyId) {
         this.name = name;
         this.jobGroup = jobGroup;
-        this.company = company;
+        this.companyId = companyId;
     }
 
-    public static Community create(String name, String jobGroup, Company company) {
-        return new Community(name, jobGroup, company);
+    public static Community create(String name, String jobGroup, Long companyId) {
+        return new Community(name, jobGroup, companyId);
     }
 
-    public static Community testInstance(Long id, String name, String jobGroup, Company company) {
-        return new Community(id, name, jobGroup, company);
+    public static Community testInstance(Long id, String name, String jobGroup, Long companyId) {
+        return new Community(id, name, jobGroup, companyId);
     }
 
     public void update(String name, String jobGroup) {

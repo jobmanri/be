@@ -1,7 +1,7 @@
 package com.example.bak.auth.infra.jwt;
 
-import com.example.bak.auth.application.JwtPort;
-import com.example.bak.auth.infra.jwt.persistence.TokenType;
+import com.example.bak.auth.application.JwtTokenPort;
+import com.example.bak.auth.domain.TokenType;
 import com.example.bak.global.common.utils.DateUtils;
 import com.example.bak.user.domain.UserRole;
 import io.jsonwebtoken.Jwts;
@@ -10,8 +10,9 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class JwtAdaptor implements JwtPort {
-    private final TokenProvider tokenProvider;
+public class JwtTokenAdaptor implements JwtTokenPort {
+
+    private final JwtTokenProvider tokenProvider;
     private final static String TOKEN_ROLE_KEY = "role";
 
     @Override

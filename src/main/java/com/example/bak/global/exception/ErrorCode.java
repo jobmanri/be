@@ -20,6 +20,7 @@ public enum ErrorCode {
     NO_ATTRIBUTES("AU003", HttpStatus.BAD_REQUEST, "토큰 검증에 필요한 정보가 없습니다."),
     NO_TOKEN("AU004", HttpStatus.UNAUTHORIZED, "토큰이 없습니다."),
     NO_AUTHORITY("AU005", HttpStatus.FORBIDDEN, "해당 정보에 접근할 수 있는 권한이 없습니다."),
+    INVALID_TOKEN_TTL("AU006", HttpStatus.FORBIDDEN, "올바르지 않은 TTL 값입니다."),
     // Company
     COMPANY_NOT_FOUND("CM001", HttpStatus.NOT_FOUND, "회사 리소스를 찾을 수 없습니다."),
     COMPANY_COMMUNITY_NOT_FOUND("CC001", HttpStatus.NOT_FOUND, "커뮤니티 리소스를 찾을 수 없습니다."),

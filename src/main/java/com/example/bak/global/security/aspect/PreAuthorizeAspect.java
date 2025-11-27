@@ -1,10 +1,10 @@
 package com.example.bak.global.security.aspect;
 
+import com.example.bak.auth.infra.jwt.utils.JwtUtils;
 import com.example.bak.global.exception.ErrorCode;
 import com.example.bak.global.exception.VerificationException;
 import com.example.bak.global.security.annotation.PreAuthorize;
 import com.example.bak.global.security.dto.AuthInfo;
-import com.example.bak.auth.infra.jwt.utils.JwtUtils;
 import com.example.bak.user.domain.UserRole;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -17,25 +17,44 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 @Component
 @Aspect
 public class PreAuthorizeAspect {
+
     @Around("@annotation(preAuthorize)")
-    public Object checkRoleForAuthorize(ProceedingJoinPoint pjp, PreAuthorize preAuthorize) throws Throwable {
-        ServletRequestAttributes attrs = (ServletRequestAttributes) RequestContextHolder.getRequestAttributes();
-        if (attrs == null) {
-            throw new VerificationException(ErrorCode.NO_ATTRIBUTES);
-        }
+    public Object checkRoleForAuthorize(ProceedingJoinPoint proceedingJoinPoint,
+            PreAuthorize preAuthorize) throws Throwable {
+        ServletRequestAttributes attrs = getRequestAttributes();
 
         HttpServletRequest request = attrs.getRequest();
 
-        AuthInfo auth = (AuthInfo) request.getAttribute(JwtUtils.CLAIMS_KEY);
-        if(auth == null){
-            throw new VerificationException(ErrorCode.NO_TOKEN);
+        AuthInfo authInfo = getAuthInfo(request);
+
+        userRoleVerification(authInfo, preAuthorize.role());
+
+        return proceedingJoinPoint.proceed();
+    }
+
+    private ServletRequestAttributes getRequestAttributes() {
+        if (RequestContextHolder.getRequestAttributes() instanceof ServletRequestAttributes attributes) {
+            return attributes;
         }
+        throw new VerificationException(ErrorCode.NO_ATTRIBUTES);
+    }
 
-        UserRole standardRole = UserRole.convert(preAuthorize.role());
+    private AuthInfo getAuthInfo(HttpServletRequest request) {
+        if (request.getAttribute(JwtUtils.CLAIMS_KEY) instanceof AuthInfo authInfo) {
+            return authInfo;
+        }
+        throw new VerificationException(ErrorCode.NO_TOKEN);
+    }
 
-        if(!UserRole.verify(auth.role(), standardRole)){
+    private void userRoleVerification(AuthInfo authInfo, String role) {
+        if (role == null) {
             throw new VerificationException(ErrorCode.NO_AUTHORITY);
         }
-        return pjp.proceed();
+
+        UserRole standardRole = UserRole.convert(role);
+
+        if (!UserRole.verify(authInfo.role(), standardRole)) {
+            throw new VerificationException(ErrorCode.NO_AUTHORITY);
+        }
     }
 }

@@ -1,7 +1,7 @@
 package com.example.bak.auth.application;
 
 import com.example.bak.auth.application.dto.TokenInfo;
-import com.example.bak.auth.infra.jwt.persistence.TokenType;
+import com.example.bak.auth.domain.TokenType;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;
 import com.example.bak.user.domain.User;
@@ -13,7 +13,8 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class AuthService {
-    private final JwtPort jwtPort;
+
+    private final JwtTokenPort jwtTokenPort;
     private final UserRepository userRepository;
 
     @Transactional(readOnly = true)
@@ -23,8 +24,10 @@ public class AuthService {
 
         user.matchPassword(password);
 
-        String accessToken = jwtPort.publishToken(TokenType.ACCESS, user.getId(), user.getRole());
-        String refreshToken = jwtPort.publishToken(TokenType.REFRESH, user.getId(), user.getRole());
+        String accessToken = jwtTokenPort.publishToken(TokenType.ACCESS, user.getId(),
+                user.getRole());
+        String refreshToken = jwtTokenPort.publishToken(TokenType.REFRESH, user.getId(),
+                user.getRole());
         return TokenInfo.of(accessToken, refreshToken);
     }
 }

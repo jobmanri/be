@@ -7,7 +7,8 @@ import com.example.bak.community.application.command.CommunityCommandService;
 import com.example.bak.community.application.query.dto.CommunityResult;
 import com.example.bak.community.domain.Community;
 import com.example.bak.community.domain.CommunityRepositoryStub;
-import com.example.bak.community.domain.CompanyValidationStub;
+import com.example.bak.company.domain.Company;
+import com.example.bak.company.domain.CompanyRepositoryStub;
 import com.example.bak.global.exception.ErrorCode;
 import java.util.List;
 import java.util.Optional;
@@ -20,14 +21,15 @@ import org.junit.jupiter.api.Test;
 @DisplayName("CommunityService 유닛 테스트")
 public class CommunityServiceUnitTest {
 
+    private CompanyRepositoryStub companyRepositoryStub;
     private CommunityCommandService communityCommandService;
     private CommunityRepositoryStub communityRepository;
-    private CompanyValidationStub companyValidation;
 
     @BeforeEach
     void setUp() {
+        companyRepositoryStub = new CompanyRepositoryStub();
         communityRepository = new CommunityRepositoryStub();
-        communityCommandService = new CommunityCommandService(communityRepository, companyValidation);
+        communityCommandService = new CommunityCommandService(communityRepository, companyRepositoryStub);
     }
 
     private List<Community> setUpCommunities(Long companyId, int count) {
@@ -48,6 +50,9 @@ public class CommunityServiceUnitTest {
         @Test
         @DisplayName("커뮤니티 생성 성공")
         void createCommunity_success() {
+            // given
+            companyRepositoryStub.save(Company.testInstance(1L, "", "", "", ""));
+
             // when
             CommunityResult.CommunityId result = communityCommandService.createCommunity(
                     1L, "it 커뮤니티", "it 직군"

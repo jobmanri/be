@@ -42,7 +42,7 @@ class FeedServiceUnitTest {
                     "testing company1");
 
     private final Community community =
-            Community.testInstance(EXISTING_COMMUNITY_ID, "community", "jobGroup", company);
+            Community.testInstance(EXISTING_COMMUNITY_ID, "community", "jobGroup", EXISTING_COMPANY_ID);
 
     private FeedService feedService;
     private FeedRepositoryStub feedRepository;

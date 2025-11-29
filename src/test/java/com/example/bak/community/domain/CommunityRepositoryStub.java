@@ -1,12 +1,12 @@
 package com.example.bak.community.domain;
 
+import com.example.bak.community.application.command.port.CommunityCommandPort;
 import com.example.bak.global.support.AbstractStubRepository;
-import java.util.List;
 import java.util.Objects;
 
 public class CommunityRepositoryStub
         extends AbstractStubRepository<Long, Community>
-        implements CommunityRepository {
+        implements CommunityCommandPort, com.example.bak.feed.application.port.CommunityCommandPort {
 
     @Override
     protected Long getId(Community community) {
@@ -16,12 +16,5 @@ public class CommunityRepositoryStub
     @Override
     protected boolean isSame(Long left, Long right) {
         return Objects.equals(left, right);
-    }
-
-    @Override
-    public List<Community> findByCompanyId(Long companyId) {
-        return findAll().stream()
-                .filter(community -> community.getCompany().getId().equals(companyId))
-                .toList();
     }
 }

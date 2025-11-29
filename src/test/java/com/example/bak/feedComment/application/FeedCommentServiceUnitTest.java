@@ -40,7 +40,7 @@ public class FeedCommentServiceUnitTest {
                     "testing company1");
 
     private final Community community =
-            Community.testInstance(1L, "name", "jobGroup", company);
+            Community.testInstance(1L, "name", "jobGroup", 1L);
 
     private final Feed testFeed =
             Feed.testInstance(EXISTING_FEED_ID, "title", COMMENT_CONTENT, community, testUser);

@@ -1,8 +1,9 @@
 package com.example.bak.company.presentation;
 
-import com.example.bak.company.application.CompanyService;
-import com.example.bak.company.application.dto.CompanyResult;
-import com.example.bak.company.application.dto.CompanyResult.CompanyId;
+import com.example.bak.company.application.command.CompanyCommandService;
+import com.example.bak.company.application.query.CompanyQueryService;
+import com.example.bak.company.application.query.dto.CompanyResult;
+import com.example.bak.company.application.query.dto.CompanyResult.CompanyId;
 import com.example.bak.company.presentation.dto.CompanyRequest;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
@@ -24,13 +25,15 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class CompanyController {
 
-    private final CompanyService companyService;
+    private final CompanyCommandService companyCommandService;
+    private final CompanyQueryService companyQueryService;
 
     @GetMapping()
     public ResponseEntity<ApiResponse> getCompanies() {
-        List<CompanyResult.Detail> companyResults = companyService.getCompanies();
+        List<CompanyResult.Detail> companyResults = companyQueryService.getCompanies();
         ApiResponse response = ApiResponseFactory.success(
                 "회사 목록을 성공적으로 조회했습니다.", companyResults);
+
         return ResponseEntity.ok(response);
     }
 
@@ -38,8 +41,9 @@ public class CompanyController {
     public ResponseEntity<ApiResponse> getCompany(
             @PathVariable Long companyId
     ) {
-        CompanyResult.Detail companyResult = companyService.getCompany(companyId);
+        CompanyResult.Detail companyResult = companyQueryService.getCompany(companyId);
         ApiResponse response = ApiResponseFactory.success("회사 정보를 성공적으로 조회했습니다.", companyResult);
+
         return ResponseEntity.ok(response);
     }
 
@@ -47,10 +51,11 @@ public class CompanyController {
     public ResponseEntity<ApiResponse> createCompany(
             @RequestBody CompanyRequest request
     ) {
-        CompanyId companyId = companyService.createCompany(
+        CompanyId companyId = companyCommandService.createCompany(
                 request.name(), request.careerLink(), request.logoUrl(), request.description()
         );
         ApiResponse response = ApiResponseFactory.successVoid("회사 정보를 성공적으로 생성했습니다.");
+
         return ResponseEntity.created(UriUtils.current(companyId.value()))
                 .body(response);
     }
@@ -60,11 +65,12 @@ public class CompanyController {
             @PathVariable Long companyId,
             @RequestBody CompanyRequest request
     ) {
-        companyService.updateCompany(
+        companyCommandService.updateCompany(
                 companyId, request.name(), request.careerLink(), request.logoUrl(),
                 request.description()
         );
         ApiResponse response = ApiResponseFactory.successVoid("회사 정보를 성공적으로 수정했습니다.");
+
         return ResponseEntity.ok(response);
     }
 
@@ -72,8 +78,9 @@ public class CompanyController {
     public ResponseEntity<ApiResponse> deleteCompany(
             @PathVariable Long companyId
     ) {
-        companyService.deleteCompany(companyId);
+        companyCommandService.deleteCompany(companyId);
         ApiResponse response = ApiResponseFactory.successVoid("회사 정보를 성공적으로 삭제했습니다.");
+
         return ResponseEntity.ok(response);
     }
 }

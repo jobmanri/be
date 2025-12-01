@@ -16,8 +16,18 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+        dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
 
   h2:
     console:
       enabled: false
+
+jwt:
+  auth:
+    access:
+      secret-key: ${JWT_ACCESS_KEY}
+      time-to-live: ${JWT_ACCESS_EXPIRATION}
+    refresh:
+      secret-key: ${JWT_REFRESH_KEY}
+      time-to-live: ${JWT_REFRESH_EXPIRATION}

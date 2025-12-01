@@ -1,7 +1,5 @@
-package com.example.bak.feedComment.domain;
+package com.example.bak.feedcomment.domain;
 
-import com.example.bak.feedcomment.domain.FeedComment;
-import com.example.bak.feedcomment.domain.FeedCommentRepository;
 import com.example.bak.global.support.AbstractStubRepository;
 import java.util.List;
 import java.util.Objects;

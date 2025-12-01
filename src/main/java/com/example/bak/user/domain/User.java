@@ -1,12 +1,8 @@
 package com.example.bak.user.domain;
 
-import jakarta.persistence.CascadeType;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.OneToOne;
+import com.example.bak.global.exception.BusinessException;
+import com.example.bak.global.exception.ErrorCode;
+import jakarta.persistence.*;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -31,6 +27,9 @@ public class User {
     @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
     private Profile profile;
 
+    @Enumerated(EnumType.STRING)
+    private UserRole role = UserRole.NORMAL;
+
     private User(String email, String password) {
         this.email = email;
         this.password = password;
@@ -40,6 +39,12 @@ public class User {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public void matchPassword(String newPassword) {
+        if (!newPassword.equals(this.password)) {
+            throw new BusinessException(ErrorCode.INCORRECT_PASSWORD);
+        }
     }
 
     public static User create(String email, String password, String name, String nickname) {

@@ -9,4 +9,6 @@ public interface UserRepository {
     Optional<Profile> findProfileByUserId(Long userId);
 
     Optional<User> findById(Long userId);
+
+    Optional<User> findByEmail(String email);
 }

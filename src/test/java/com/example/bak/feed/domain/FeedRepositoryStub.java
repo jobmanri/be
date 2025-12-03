@@ -1,11 +1,12 @@
 package com.example.bak.feed.domain;
 
+import com.example.bak.feed.application.command.port.FeedCommandPort;
 import com.example.bak.global.support.AbstractStubRepository;
 import java.util.Objects;
 
 public class FeedRepositoryStub
         extends AbstractStubRepository<Long, Feed>
-        implements FeedRepository {
+        implements FeedRepository, FeedCommandPort {
 
     @Override
     protected Long getId(Feed feed) {

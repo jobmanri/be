@@ -44,6 +44,113 @@ class FeedServiceUnitTest {
     private static final String COMMUNITY_NAME = "community";
     private static final String JOB_GROUP = "jobGroup";
 
+    private FeedSummary summaryOf(Long id, int commentCount) {
+        return new FeedSummary(
+                id,
+                TITLE + id,
+                authorInfo(),
+                communityDetail(),
+                commentCount
+        );
+    }
+
+    private FeedDetail detailOf(Long id) {
+        return new FeedDetail(
+                id,
+                TITLE + id,
+                CONTENT + id,
+                authorInfo(),
+                communityDetail()
+        );
+    }
+
+    private UserInfo authorInfo() {
+        return new UserInfo(EXISTING_USER_ID, NICKNAME);
+    }
+
+    private CommunityResult.Detail communityDetail() {
+        return new CommunityResult.Detail(EXISTING_COMMUNITY_ID, COMMUNITY_NAME, JOB_GROUP);
+    }
+
+    private static class InMemoryFeedCommandPort implements FeedCommandPort {
+
+        private final Map<Long, Feed> store = new HashMap<>();
+        private long sequence = 1L;
+
+        @Override
+        public Feed save(Feed feed) {
+            Long id = feed.getId();
+            if (id == null) {
+                id = sequence++;
+            }
+
+            Feed persisted = Feed.testInstance(
+                    id,
+                    feed.getTitle(),
+                    feed.getContent(),
+                    feed.getCommunityId(),
+                    feed.getAuthorId()
+            );
+            store.put(id, persisted);
+            return persisted;
+        }
+
+        public Optional<Feed> findById(Long id) {
+            return Optional.ofNullable(store.get(id));
+        }
+    }
+
+    private static class StubCommunityValidationPort implements CommunityValidationPort {
+
+        private final Set<Long> existingCommunityIds = new HashSet<>();
+
+        void registerCommunity(Long communityId) {
+            existingCommunityIds.add(communityId);
+        }
+
+        void removeCommunity(Long communityId) {
+            existingCommunityIds.remove(communityId);
+        }
+
+        @Override
+        public boolean isCommunityExists(Long communityId) {
+            return existingCommunityIds.contains(communityId);
+        }
+    }
+
+    private static class StubFeedQueryPort implements FeedQueryPort {
+
+        private final Map<Long, FeedSummary> summaries = new LinkedHashMap<>();
+        private final Map<Long, FeedDetail> details = new LinkedHashMap<>();
+
+        void save(FeedSummary summary, FeedDetail detail) {
+            summaries.put(summary.id(), summary);
+            details.put(detail.id(), detail);
+        }
+
+        @Override
+        public Page<FeedSummary> findAll(Pageable pageable) {
+            List<FeedSummary> list = new ArrayList<>(summaries.values());
+            int start = (int) pageable.getOffset();
+            if (start >= list.size()) {
+                return new PageImpl<>(List.of(), pageable, list.size());
+            }
+
+            int end = Math.min(start + pageable.getPageSize(), list.size());
+            return new PageImpl<>(list.subList(start, end), pageable, list.size());
+        }
+
+        @Override
+        public Optional<FeedSummary> findSummaryById(Long feedId) {
+            return Optional.ofNullable(summaries.get(feedId));
+        }
+
+        @Override
+        public Optional<FeedDetail> findDetailById(Long feedId) {
+            return Optional.ofNullable(details.get(feedId));
+        }
+    }
+
     @Nested
     @DisplayName("FeedCommandService")
     class FeedCommandServiceTest {
@@ -71,7 +178,7 @@ class FeedServiceUnitTest {
             );
 
             assertThat(result).isNotNull();
-            Feed saved = feedCommandPort.findById(result.id());
+            Feed saved = feedCommandPort.findById(result.id()).orElse(null);
             assertThat(saved).isNotNull();
             assertThat(saved.getTitle()).isEqualTo(TITLE);
             assertThat(saved.getContent()).isEqualTo(CONTENT);
@@ -160,113 +267,6 @@ class FeedServiceUnitTest {
 
             assertThat(feeds).hasSize(3);
             assertThat(feeds.get(0).id()).isEqualTo(1L);
-        }
-    }
-
-    private FeedSummary summaryOf(Long id, int commentCount) {
-        return new FeedSummary(
-                id,
-                TITLE + id,
-                authorInfo(),
-                communityDetail(),
-                commentCount
-        );
-    }
-
-    private FeedDetail detailOf(Long id) {
-        return new FeedDetail(
-                id,
-                TITLE + id,
-                CONTENT + id,
-                authorInfo(),
-                communityDetail()
-        );
-    }
-
-    private UserInfo authorInfo() {
-        return new UserInfo(EXISTING_USER_ID, NICKNAME);
-    }
-
-    private CommunityResult.Detail communityDetail() {
-        return new CommunityResult.Detail(EXISTING_COMMUNITY_ID, COMMUNITY_NAME, JOB_GROUP);
-    }
-
-    private static class InMemoryFeedCommandPort implements FeedCommandPort {
-
-        private final Map<Long, Feed> store = new HashMap<>();
-        private long sequence = 1L;
-
-        @Override
-        public Feed save(Feed feed) {
-            Long id = feed.getId();
-            if (id == null) {
-                id = sequence++;
-            }
-
-            Feed persisted = Feed.testInstance(
-                    id,
-                    feed.getTitle(),
-                    feed.getContent(),
-                    feed.getCommunityId(),
-                    feed.getAuthorId()
-            );
-            store.put(id, persisted);
-            return persisted;
-        }
-
-        Feed findById(Long id) {
-            return store.get(id);
-        }
-    }
-
-    private static class StubCommunityValidationPort implements CommunityValidationPort {
-
-        private final Set<Long> existingCommunityIds = new HashSet<>();
-
-        void registerCommunity(Long communityId) {
-            existingCommunityIds.add(communityId);
-        }
-
-        void removeCommunity(Long communityId) {
-            existingCommunityIds.remove(communityId);
-        }
-
-        @Override
-        public boolean isCommunityExists(Long communityId) {
-            return existingCommunityIds.contains(communityId);
-        }
-    }
-
-    private static class StubFeedQueryPort implements FeedQueryPort {
-
-        private final Map<Long, FeedSummary> summaries = new LinkedHashMap<>();
-        private final Map<Long, FeedDetail> details = new LinkedHashMap<>();
-
-        void save(FeedSummary summary, FeedDetail detail) {
-            summaries.put(summary.id(), summary);
-            details.put(detail.id(), detail);
-        }
-
-        @Override
-        public Page<FeedSummary> findAll(Pageable pageable) {
-            List<FeedSummary> list = new ArrayList<>(summaries.values());
-            int start = (int) pageable.getOffset();
-            if (start >= list.size()) {
-                return new PageImpl<>(List.of(), pageable, list.size());
-            }
-
-            int end = Math.min(start + pageable.getPageSize(), list.size());
-            return new PageImpl<>(list.subList(start, end), pageable, list.size());
-        }
-
-        @Override
-        public Optional<FeedSummary> findSummaryById(Long feedId) {
-            return Optional.ofNullable(summaries.get(feedId));
-        }
-
-        @Override
-        public Optional<FeedDetail> findDetailById(Long feedId) {
-            return Optional.ofNullable(details.get(feedId));
         }
     }
 }

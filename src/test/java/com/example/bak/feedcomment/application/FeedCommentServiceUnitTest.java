@@ -42,7 +42,13 @@ public class FeedCommentServiceUnitTest {
             Community.testInstance(1L, "name", "jobGroup", 1L);
 
     private final Feed testFeed =
-            Feed.testInstance(EXISTING_FEED_ID, "title", COMMENT_CONTENT, community, testUser);
+            Feed.testInstance(
+                    EXISTING_FEED_ID,
+                    "title",
+                    COMMENT_CONTENT,
+                    community.getId(),
+                    testUser.getId()
+            );
 
     private FeedCommentService feedCommentService;
     private FeedCommentRepositoryStub feedCommentRepository;

@@ -43,26 +43,4 @@ public class FeedService {
         return FeedResult.of(savedFeed.getId());
     }
 
-    @Transactional(readOnly = true)
-    public FeedDetail getFeedDetail(Long feedId) {
-        Feed feed = feedRepository.findById(feedId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
-
-        return FeedDetail.from(feed);
-    }
-
-    @Transactional(readOnly = true)
-    public FeedSummary getFeedSummary(Long feedId) {
-        Feed feed = feedRepository.findById(feedId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
-
-        return FeedSummary.from(feed);
-    }
-
-    @Transactional(readOnly = true)
-    public List<FeedSummary> getFeeds(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<Feed> feedPage = feedRepository.findAll(pageable);
-        return FeedSummary.listFrom(feedPage);
-    }
 }

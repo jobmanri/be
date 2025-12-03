@@ -53,9 +53,10 @@ public class FeedCommentController {
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<ApiResponse> updateComment(
             @PathVariable Long commentId,
-            @RequestBody CommentRequest request
+            @RequestBody CommentRequest request,
+            @AuthUser Long userId
     ) {
-        feedCommentCommandService.updateComment(commentId, request.content(), request.userId());
+        feedCommentCommandService.updateComment(commentId, request.content(), userId);
         ApiResponse response = ApiResponseFactory.successVoid("댓글을 성공적으로 수정하였습니다.");
         return ResponseEntity.ok(response);
     }

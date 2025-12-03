@@ -8,13 +8,15 @@ import com.example.bak.company.domain.Company;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepositoryStub;
 import com.example.bak.feedcomment.application.command.FeedCommentCommandService;
+import com.example.bak.feedcomment.application.command.port.UserDataPort;
 import com.example.bak.feedcomment.application.query.FeedCommentQueryService;
 import com.example.bak.feedcomment.domain.FeedComment;
 import com.example.bak.feedcomment.domain.FeedCommentRepositoryStub;
 import com.example.bak.global.exception.ErrorCode;
 import com.example.bak.user.domain.User;
-import com.example.bak.user.domain.UserRepositoryStub;
 import java.util.List;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -64,33 +66,51 @@ class FeedCommentServiceUnitTest {
                 .toList();
     }
 
+    private static class StubUserDataPort implements UserDataPort {
+
+        private final ConcurrentHashMap<Long, UserSnapshot> store = new ConcurrentHashMap<>();
+
+        void save(User user) {
+            store.put(user.getId(),
+                    new UserSnapshot(user.getId(), user.getProfile().getNickname()));
+        }
+
+        @Override
+        public Optional<UserSnapshot> findById(Long userId) {
+            return Optional.ofNullable(store.get(userId));
+        }
+    }
+
     @Nested
     @DisplayName("FeedCommentCommandService")
     class FeedCommentCommandServiceTest {
 
         private FeedCommentCommandService feedCommentCommandService;
         private FeedCommentRepositoryStub feedCommentRepository;
+        private StubUserDataPort userDataPort;
 
         @BeforeEach
         void setUp() {
             FeedRepositoryStub feedRepository = new FeedRepositoryStub();
-            UserRepositoryStub userRepository = new UserRepositoryStub();
+            feedRepository.save(testFeed);
+
+            userDataPort = new StubUserDataPort();
+            userDataPort.save(testUser);
+
             feedCommentRepository = new FeedCommentRepositoryStub();
 
             feedCommentCommandService = new FeedCommentCommandService(
                     feedCommentRepository,
                     feedRepository,
-                    userRepository
+                    userDataPort
             );
-
-            userRepository.save(testUser);
-            feedRepository.save(testFeed);
         }
 
         @Test
         @DisplayName("피드 댓글 생성에 성공한다")
         void createComment_success() {
-            feedCommentCommandService.createComment(EXISTING_FEED_ID, COMMENT_CONTENT, EXISTING_USER_ID);
+            feedCommentCommandService.createComment(EXISTING_FEED_ID, COMMENT_CONTENT,
+                    EXISTING_USER_ID);
 
             var saved = feedCommentRepository.findAll().getFirst();
             assertThat(saved.getAuthorId()).isEqualTo(EXISTING_USER_ID);
@@ -129,7 +149,8 @@ class FeedCommentServiceUnitTest {
         @DisplayName("피드 댓글 업데이트에 성공한다")
         void updateComment_success() {
             feedCommentRepository.save(
-                    FeedComment.testInstance(1L, COMMENT_CONTENT, EXISTING_USER_ID, nickname(), testFeed)
+                    FeedComment.testInstance(1L, COMMENT_CONTENT, EXISTING_USER_ID, nickname(),
+                            testFeed)
             );
 
             feedCommentCommandService.updateComment(1L, UPDATED_CONTENT, EXISTING_USER_ID);
@@ -143,11 +164,13 @@ class FeedCommentServiceUnitTest {
         @DisplayName("피드 댓글 업데이트 권한이 없을 때 예외를 던진다")
         void updateComment_when_isNotAuthor() {
             feedCommentRepository.save(
-                    FeedComment.testInstance(1L, COMMENT_CONTENT, EXISTING_USER_ID, nickname(), testFeed)
+                    FeedComment.testInstance(1L, COMMENT_CONTENT, EXISTING_USER_ID, nickname(),
+                            testFeed)
             );
 
             assertBusiness(
-                    () -> feedCommentCommandService.updateComment(1L, UPDATED_CONTENT, NOT_FOUND_USER_ID),
+                    () -> feedCommentCommandService.updateComment(1L, UPDATED_CONTENT,
+                            NOT_FOUND_USER_ID),
                     ErrorCode.UNAUTHORIZED_ACTION
             );
         }
@@ -156,7 +179,8 @@ class FeedCommentServiceUnitTest {
         @DisplayName("존재하지 않는 댓글 업데이트 시 예외")
         void updateComment_when_commentNotFound() {
             assertBusiness(
-                    () -> feedCommentCommandService.updateComment(1L, UPDATED_CONTENT, EXISTING_USER_ID),
+                    () -> feedCommentCommandService.updateComment(1L, UPDATED_CONTENT,
+                            EXISTING_USER_ID),
                     ErrorCode.COMMENT_NOT_FOUND
             );
         }

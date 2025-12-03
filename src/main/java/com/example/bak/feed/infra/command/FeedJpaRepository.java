@@ -1,4 +1,4 @@
-package com.example.bak.feed.infra.persistence;
+package com.example.bak.feed.infra.command;
 
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepository;

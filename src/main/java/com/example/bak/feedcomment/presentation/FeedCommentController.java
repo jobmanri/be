@@ -1,7 +1,7 @@
 package com.example.bak.feedcomment.presentation;
 
 import com.example.bak.feedcomment.application.FeedCommentService;
-import com.example.bak.feedcomment.application.dto.CommentInfo;
+import com.example.bak.feedcomment.application.query.dto.CommentInfo;
 import com.example.bak.feedcomment.presentation.dto.CommentRequest;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;

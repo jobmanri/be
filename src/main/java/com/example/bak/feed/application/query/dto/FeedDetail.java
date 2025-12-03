@@ -1,4 +1,4 @@
-package com.example.bak.feed.application.dto;
+package com.example.bak.feed.application.query.dto;
 
 import com.example.bak.community.application.query.dto.CommunityResult;
 import com.example.bak.feed.domain.Feed;

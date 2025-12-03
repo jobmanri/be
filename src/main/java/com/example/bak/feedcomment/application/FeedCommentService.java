@@ -2,7 +2,7 @@ package com.example.bak.feedcomment.application;
 
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepository;
-import com.example.bak.feedcomment.application.dto.CommentInfo;
+import com.example.bak.feedcomment.application.query.dto.CommentInfo;
 import com.example.bak.feedcomment.domain.FeedComment;
 import com.example.bak.feedcomment.domain.FeedCommentRepository;
 import com.example.bak.global.exception.BusinessException;

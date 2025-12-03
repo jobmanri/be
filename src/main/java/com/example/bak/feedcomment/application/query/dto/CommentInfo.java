@@ -1,4 +1,4 @@
-package com.example.bak.feedcomment.application.dto;
+package com.example.bak.feedcomment.application.query.dto;
 
 import com.example.bak.feedcomment.domain.FeedComment;
 

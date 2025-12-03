@@ -6,7 +6,8 @@ import java.util.Objects;
 
 public class CommunityRepositoryStub
         extends AbstractStubRepository<Long, Community>
-        implements CommunityCommandPort, com.example.bak.feed.application.port.CommunityCommandPort {
+        implements CommunityCommandPort,
+        com.example.bak.feed.application.command.port.CommunityCommandPort {
 
     @Override
     protected Long getId(Community community) {

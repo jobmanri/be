@@ -9,7 +9,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 @RequiredArgsConstructor
 public class CommunityCommandAdaptor
-        implements CommunityCommandPort, com.example.bak.feed.application.port.CommunityCommandPort {
+        implements CommunityCommandPort,
+        com.example.bak.feed.application.command.port.CommunityCommandPort {
 
     private final CommunityJpaRepository communityJpaRepository;
 

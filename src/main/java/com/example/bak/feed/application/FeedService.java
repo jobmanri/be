@@ -1,10 +1,10 @@
 package com.example.bak.feed.application;
 
 import com.example.bak.community.domain.Community;
-import com.example.bak.feed.application.dto.FeedDetail;
-import com.example.bak.feed.application.dto.FeedResult;
-import com.example.bak.feed.application.dto.FeedSummary;
-import com.example.bak.feed.application.port.CommunityCommandPort;
+import com.example.bak.feed.application.query.dto.FeedDetail;
+import com.example.bak.feed.application.query.dto.FeedResult;
+import com.example.bak.feed.application.query.dto.FeedSummary;
+import com.example.bak.feed.application.command.port.CommunityCommandPort;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepository;
 import com.example.bak.global.exception.BusinessException;

@@ -9,6 +9,7 @@ import com.example.bak.feed.presentation.dto.FeedRequest;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
+import com.example.bak.global.security.annotation.AuthUser;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -29,12 +30,13 @@ public class FeedController {
     private final FeedQueryService feedQueryService;
 
     @PostMapping()
-    public ResponseEntity<ApiResponse> createFeed(@RequestBody FeedRequest request) {
+    public ResponseEntity<ApiResponse> createFeed(@AuthUser Long userId,
+            @RequestBody FeedRequest request) {
         FeedResult feedResult = feedCommandService.createFeed(
                 request.title(),
                 request.content(),
                 request.communityId(),
-                request.userId()
+                userId
         );
         ApiResponse response = ApiResponseFactory.successVoid("피드를 성공적으로 생성하였습니다.");
         return ResponseEntity.created(UriUtils.current(feedResult.id()))

@@ -15,8 +15,8 @@ public record CommentInfo(
     public static CommentInfo from(FeedComment comment) {
         return new CommentInfo(
                 comment.getId(),
-                comment.getAuthor().getId(),
-                comment.getAuthor().getProfile().getNickname(),
+                comment.getAuthorId(),
+                comment.getAuthorNickname(),
                 comment.getComment()
         );
     }

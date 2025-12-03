@@ -1,11 +1,13 @@
 package com.example.bak.feedcomment.presentation;
 
-import com.example.bak.feedcomment.application.FeedCommentService;
+import com.example.bak.feedcomment.application.command.FeedCommentCommandService;
+import com.example.bak.feedcomment.application.query.FeedCommentQueryService;
 import com.example.bak.feedcomment.application.query.dto.CommentInfo;
 import com.example.bak.feedcomment.presentation.dto.CommentRequest;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
+import com.example.bak.global.security.annotation.AuthUser;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -22,17 +24,19 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class FeedCommentController {
 
-    private final FeedCommentService feedCommentService;
+    private final FeedCommentCommandService feedCommentCommandService;
+    private final FeedCommentQueryService feedCommentQueryService;
 
     @PostMapping("/feeds/{feedId}/comments")
     public ResponseEntity<ApiResponse> createComment(
             @PathVariable Long feedId,
-            @RequestBody CommentRequest request
+            @RequestBody CommentRequest request,
+            @AuthUser Long userId
     ) {
-        feedCommentService.createComment(
+        feedCommentCommandService.createComment(
                 feedId,
                 request.content(),
-                request.userId()
+                userId
         );
         ApiResponse response = ApiResponseFactory.successVoid("댓글을 성공적으로 생성하였습니다.");
         return ResponseEntity.created(UriUtils.current())
@@ -41,7 +45,7 @@ public class FeedCommentController {
 
     @GetMapping("/feeds/{feedId}/comments")
     public ResponseEntity<ApiResponse> getComment(@PathVariable Long feedId) {
-        List<CommentInfo> comments = feedCommentService.getComments(feedId);
+        List<CommentInfo> comments = feedCommentQueryService.getComments(feedId);
         ApiResponse response = ApiResponseFactory.success("댓글을 성공적으로 조회하였습니다.", comments);
         return ResponseEntity.ok(response);
     }
@@ -51,7 +55,7 @@ public class FeedCommentController {
             @PathVariable Long commentId,
             @RequestBody CommentRequest request
     ) {
-        feedCommentService.updateComment(commentId, request.content(), request.userId());
+        feedCommentCommandService.updateComment(commentId, request.content(), request.userId());
         ApiResponse response = ApiResponseFactory.successVoid("댓글을 성공적으로 수정하였습니다.");
         return ResponseEntity.ok(response);
     }

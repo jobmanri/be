@@ -1,14 +1,11 @@
 package com.example.bak.feedcomment.domain;
 
-import com.example.bak.feed.domain.Feed;
-import com.example.bak.user.domain.User;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
+import java.util.Objects;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,40 +21,47 @@ public class FeedComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User author;
+    @Column(name = "feed_id", nullable = false)
+    private Long feedId;
+
+    @Column(nullable = false)
+    private Long authorId;
+
+    @Column(nullable = false)
+    private String authorNickname;
 
     @Column(nullable = false)
     private String comment;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Feed feed;
-
-    private FeedComment(Long id, String comment, User author, Feed feed) {
+    private FeedComment(Long id, Long feedId, String comment, Long authorId, String authorNickname) {
         this.id = id;
+        this.feedId = feedId;
         this.comment = comment;
-        this.author = author;
-        this.feed = feed;
+        this.authorId = authorId;
+        this.authorNickname = authorNickname;
     }
 
-    private FeedComment(String comment, User author) {
+    private FeedComment(Long feedId, String comment, Long authorId, String authorNickname) {
+        this.feedId = feedId;
         this.comment = comment;
-        this.author = author;
+        this.authorId = authorId;
+        this.authorNickname = authorNickname;
     }
 
-    public static FeedComment create(String comment, User author) {
-        return new FeedComment(comment, author);
+    public static FeedComment create(Long feedId, String comment, Long authorId, String authorNickname) {
+        return new FeedComment(feedId, comment, authorId, authorNickname);
     }
 
-    public static FeedComment testInstance(Long id, String comment, User author, Feed feed) {
-        return new FeedComment(id, comment, author, feed);
-    }
-
-    public void joinFeed(Feed feed) {
-        this.feed = feed;
+    public static FeedComment testInstance(Long id, Long feedId, String comment, Long authorId,
+            String authorNickname) {
+        return new FeedComment(id, feedId, comment, authorId, authorNickname);
     }
 
     public void updateComment(String comment) {
         this.comment = comment;
+    }
+
+    public boolean isWrittenBy(Long authorId) {
+        return Objects.equals(this.authorId, authorId);
     }
 }

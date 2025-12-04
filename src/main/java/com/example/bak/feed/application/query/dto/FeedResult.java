@@ -1,4 +1,4 @@
-package com.example.bak.feed.application.dto;
+package com.example.bak.feed.application.query.dto;
 
 public record FeedResult(
         Long id

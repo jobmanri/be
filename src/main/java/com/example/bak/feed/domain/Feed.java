@@ -1,25 +1,17 @@
 package com.example.bak.feed.domain;
 
-import com.example.bak.feedcomment.domain.FeedComment;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "feeds")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Feed {
 
     @Id
@@ -31,9 +23,6 @@ public class Feed {
 
     @Column(nullable = false)
     private String content;
-
-    @OneToMany(mappedBy = "feed", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedComment> comments = new ArrayList<>();
 
     @Column(nullable = false)
     private Long communityId;
@@ -73,10 +62,5 @@ public class Feed {
             Long userId
     ) {
         return new Feed(id, title, content, communityId, userId);
-    }
-
-    public void addComment(FeedComment comment) {
-        comment.joinFeed(this);
-        this.comments.add(comment);
     }
 }

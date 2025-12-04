@@ -1,7 +1,6 @@
 package com.example.bak.feedcomment.application.command;
 
 import com.example.bak.feed.application.command.port.FeedCommandPort;
-import com.example.bak.feed.domain.Feed;
 import com.example.bak.feedcomment.application.command.port.FeedCommentCommandPort;
 import com.example.bak.feedcomment.application.command.port.UserDataPort;
 import com.example.bak.feedcomment.application.command.port.UserDataPort.UserSnapshot;
@@ -22,19 +21,19 @@ public class FeedCommentCommandService {
     private final UserDataPort userDataPort;
 
     public void createComment(Long feedId, String content, Long userId) {
-        Feed feed = feedCommandPort.findById(feedId)
+        feedCommandPort.findById(feedId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
 
         UserSnapshot user = userDataPort.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         FeedComment newComment = FeedComment.create(
+                feedId,
                 content,
                 user.id(),
                 user.nickname()
         );
 
-        feed.addComment(newComment);
         feedCommentCommandPort.save(newComment);
     }
 

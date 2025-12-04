@@ -58,10 +58,10 @@ class FeedCommentServiceUnitTest {
         return IntStream.rangeClosed(1, count)
                 .mapToObj(i -> FeedComment.testInstance(
                         (long) i,
+                        testFeed.getId(),
                         COMMENT_CONTENT + i,
                         testUser.getId(),
-                        nickname(),
-                        testFeed
+                        nickname()
                 ))
                 .toList();
     }
@@ -115,7 +115,7 @@ class FeedCommentServiceUnitTest {
             var saved = feedCommentRepository.findAll().getFirst();
             assertThat(saved.getAuthorId()).isEqualTo(EXISTING_USER_ID);
             assertThat(saved.getAuthorNickname()).isEqualTo(nickname());
-            assertThat(saved.getFeed().getId()).isEqualTo(EXISTING_FEED_ID);
+            assertThat(saved.getFeedId()).isEqualTo(EXISTING_FEED_ID);
             assertThat(saved.getComment()).isEqualTo(COMMENT_CONTENT);
         }
 
@@ -149,8 +149,8 @@ class FeedCommentServiceUnitTest {
         @DisplayName("피드 댓글 업데이트에 성공한다")
         void updateComment_success() {
             feedCommentRepository.save(
-                    FeedComment.testInstance(1L, COMMENT_CONTENT, EXISTING_USER_ID, nickname(),
-                            testFeed)
+                    FeedComment.testInstance(1L, testFeed.getId(), COMMENT_CONTENT,
+                            EXISTING_USER_ID, nickname())
             );
 
             feedCommentCommandService.updateComment(1L, UPDATED_CONTENT, EXISTING_USER_ID);
@@ -164,8 +164,8 @@ class FeedCommentServiceUnitTest {
         @DisplayName("피드 댓글 업데이트 권한이 없을 때 예외를 던진다")
         void updateComment_when_isNotAuthor() {
             feedCommentRepository.save(
-                    FeedComment.testInstance(1L, COMMENT_CONTENT, EXISTING_USER_ID, nickname(),
-                            testFeed)
+                    FeedComment.testInstance(1L, testFeed.getId(), COMMENT_CONTENT,
+                            EXISTING_USER_ID, nickname())
             );
 
             assertBusiness(

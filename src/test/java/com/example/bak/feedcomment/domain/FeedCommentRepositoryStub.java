@@ -25,7 +25,7 @@ public class FeedCommentRepositoryStub
     @Override
     public List<CommentInfo> findByFeedId(Long feedId) {
         return findAll().stream()
-                .filter(comment -> comment.getFeed().getId().equals(feedId))
+                .filter(comment -> comment.getFeedId().equals(feedId))
                 .map(CommentInfo::from)
                 .toList();
     }

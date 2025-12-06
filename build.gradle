@@ -8,8 +8,10 @@ group = 'com.example'
 version = '0.0.1-SNAPSHOT'
 description = 'bak'
 
-ext{
+ext {
     jwtVersion = '0.13.0'
+    passwordEncoderVersion = '6.4.5'
+    swaggerUIVersion = '2.2.0'
 }
 
 java {
@@ -66,6 +68,12 @@ dependencies {
     implementation "io.jsonwebtoken:jjwt-api:${jwtVersion}"
     runtimeOnly "io.jsonwebtoken:jjwt-impl:${jwtVersion}"
     runtimeOnly "io.jsonwebtoken:jjwt-jackson:${jwtVersion}"
+
+    // * Password Encoder
+    implementation "org.springframework.security:spring-security-crypto:${passwordEncoderVersion}"
+
+    // * Swagger UI
+    implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${swaggerUIVersion}"
 }
 
 tasks.named('test') {

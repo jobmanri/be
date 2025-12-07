@@ -3,6 +3,7 @@ package com.example.bak.feedcomment.presentation;
 import com.example.bak.feedcomment.application.FeedCommentService;
 import com.example.bak.feedcomment.application.dto.CommentInfo;
 import com.example.bak.feedcomment.presentation.dto.CommentRequest;
+import com.example.bak.feedcomment.presentation.swagger.FeedCommentSwagger;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
@@ -20,7 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class FeedCommentController {
+public class FeedCommentController implements FeedCommentSwagger {
 
     private final FeedCommentService feedCommentService;
 

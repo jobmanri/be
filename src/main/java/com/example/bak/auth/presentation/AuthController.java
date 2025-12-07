@@ -3,6 +3,7 @@ package com.example.bak.auth.presentation;
 import com.example.bak.auth.application.command.AuthCommandService;
 import com.example.bak.auth.presentation.dto.LoginRequest;
 import com.example.bak.auth.presentation.dto.SignUpRequest;
+import com.example.bak.auth.presentation.swagger.AuthSwagger;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import lombok.RequiredArgsConstructor;
@@ -15,7 +16,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/auth")
 @RequiredArgsConstructor
-public class AuthController {
+public class AuthController implements AuthSwagger {
 
     private final AuthCommandService authCommandService;
 

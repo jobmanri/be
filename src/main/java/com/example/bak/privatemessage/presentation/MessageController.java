@@ -4,6 +4,7 @@ import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.privatemessage.application.command.MessageCommandService;
 import com.example.bak.privatemessage.application.query.MessageQueryService;
+import com.example.bak.privatemessage.presentation.swagger.MessageSwagger;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -19,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/private-messages")
 @RequiredArgsConstructor
-public class MessageController {
+public class MessageController implements MessageSwagger {
 
     private final MessageCommandService commandService;
     private final MessageQueryService queryService;

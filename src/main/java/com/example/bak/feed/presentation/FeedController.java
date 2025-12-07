@@ -5,6 +5,7 @@ import com.example.bak.feed.application.dto.FeedDetail;
 import com.example.bak.feed.application.dto.FeedResult;
 import com.example.bak.feed.application.dto.FeedSummary;
 import com.example.bak.feed.presentation.dto.FeedRequest;
+import com.example.bak.feed.presentation.swagger.FeedSwagger;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
@@ -22,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/feeds")
 @RequiredArgsConstructor
-public class FeedController {
+public class FeedController implements FeedSwagger {
 
     private final FeedService feedService;
 

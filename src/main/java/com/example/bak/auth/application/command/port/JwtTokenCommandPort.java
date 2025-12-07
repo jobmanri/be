@@ -1,9 +1,9 @@
-package com.example.bak.auth.application;
+package com.example.bak.auth.application.command.port;
 
 import com.example.bak.auth.domain.TokenType;
 import com.example.bak.user.domain.UserRole;
 
-public interface JwtTokenPort {
+public interface JwtTokenCommandPort {
 
     /**
      * 지정된 토큰 타입과 사용자 정보를 기반으로 새로운 JWT(JSON Web Token)를 발급합니다.

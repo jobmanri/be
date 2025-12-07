@@ -1,6 +1,6 @@
 package com.example.bak.auth.infra.jwt;
 
-import com.example.bak.auth.application.JwtTokenPort;
+import com.example.bak.auth.application.command.port.JwtTokenCommandPort;
 import com.example.bak.auth.domain.TokenType;
 import com.example.bak.global.common.utils.DateUtils;
 import com.example.bak.user.domain.UserRole;
@@ -10,7 +10,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class JwtTokenAdaptor implements JwtTokenPort {
+public class JwtTokenCommandAdaptor implements JwtTokenCommandPort {
 
     private final JwtTokenProvider tokenProvider;
     private final static String TOKEN_ROLE_KEY = "role";

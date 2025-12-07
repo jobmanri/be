@@ -1,4 +1,4 @@
-package com.example.bak.user.application.dto;
+package com.example.bak.user.application.command.dto;
 
 public record UserResult(
         Long id

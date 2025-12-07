@@ -2,7 +2,7 @@ package com.example.bak.feed.application.dto;
 
 import com.example.bak.community.application.query.dto.CommunityResult;
 import com.example.bak.feed.domain.Feed;
-import com.example.bak.user.application.dto.UserInfo;
+import com.example.bak.user.application.query.dto.UserResult;
 import java.util.List;
 import org.springframework.data.domain.Page;
 
@@ -12,13 +12,13 @@ import org.springframework.data.domain.Page;
 public record FeedSummary(
         Long id,
         String title,
-        UserInfo author,
+        UserResult author,
         CommunityResult.Detail community,
         int commentCount
 ) {
 
     public static FeedSummary from(Feed feed) {
-        final UserInfo author = UserInfo.from(feed.getAuthor());
+        final UserResult author = UserResult.from(feed.getAuthor());
         final CommunityResult.Detail community = CommunityResult.Detail.from(feed.getCommunity());
         final int commentCount = feed.getComments().size();
 

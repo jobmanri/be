@@ -9,8 +9,8 @@ import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepository;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;
+import com.example.bak.user.application.query.port.UserQueryPort;
 import com.example.bak.user.domain.User;
-import com.example.bak.user.domain.UserRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -26,12 +26,12 @@ import org.springframework.transaction.annotation.Transactional;
 public class FeedService {
 
     private final FeedRepository feedRepository;
-    private final UserRepository userRepository;
+    private final UserQueryPort userQueryPort;
     private final CommunityCommandPort communityCommandPort;
 
     @Transactional
     public FeedResult createFeed(String title, String content, Long communityId, Long userId) {
-        User user = userRepository.findById(userId)
+        User user = userQueryPort.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         Community community = communityCommandPort.findById(communityId)

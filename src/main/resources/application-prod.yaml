@@ -19,6 +19,15 @@ spring:
         dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
 
+springdoc:
+  swagger-ui:
+    path: /api-test
+    groups-order: desc
+    tags-sorter: alpha
+    operations-sorter: method
+  paths-to-match:
+    - /api/**
+
 jwt:
   auth:
     access:

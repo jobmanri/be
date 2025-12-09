@@ -5,6 +5,7 @@ import com.example.bak.community.application.query.CommunityQueryService;
 import com.example.bak.community.application.query.dto.CommunityResult;
 import com.example.bak.community.application.query.dto.CommunityResult.CommunityId;
 import com.example.bak.community.presentation.dto.CommunityRequest;
+import com.example.bak.community.presentation.swagger.CommunitySwagger;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/v1")
-public class CommunityController {
+public class CommunityController implements CommunitySwagger {
 
     private final CommunityCommandService communityCommandService;
     private final CommunityQueryService communityQueryService;

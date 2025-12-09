@@ -8,4 +8,6 @@ public interface FeedCommandPort {
     Feed save(Feed feed);
 
     Optional<Feed> findById(Long id);
+
+    void delete(Feed feed);
 }

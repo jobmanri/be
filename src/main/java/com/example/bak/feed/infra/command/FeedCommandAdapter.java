@@ -21,4 +21,9 @@ public class FeedCommandAdapter implements FeedCommandPort {
     public Optional<Feed> findById(Long id) {
         return feedJpaRepository.findById(id);
     }
+
+    @Override
+    public void delete(Feed feed) {
+        feedJpaRepository.delete(feed);
+    }
 }

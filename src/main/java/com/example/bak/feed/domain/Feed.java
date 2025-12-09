@@ -63,4 +63,9 @@ public class Feed {
     ) {
         return new Feed(id, title, content, communityId, userId);
     }
+
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
 }

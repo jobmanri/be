@@ -28,4 +28,29 @@ public class FeedCommandService {
 
         return FeedResult.of(savedFeed.getId());
     }
+
+    public void updateFeed(Long feedId, String title, String content, Long userId) {
+        Feed feed = feedCommandPort.findById(feedId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
+
+        validateAuthor(feed, userId);
+
+        feed.update(title, content);
+        feedCommandPort.save(feed);
+    }
+
+    public void deleteFeed(Long feedId, Long userId) {
+        Feed feed = feedCommandPort.findById(feedId)
+                .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
+
+        validateAuthor(feed, userId);
+
+        feedCommandPort.delete(feed);
+    }
+
+    private void validateAuthor(Feed feed, Long userId) {
+        if (!feed.getAuthorId().equals(userId)) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_ACTION);
+        }
+    }
 }

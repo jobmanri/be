@@ -6,6 +6,7 @@ import com.example.bak.feed.application.query.FeedQueryService;
 import com.example.bak.feed.application.query.dto.FeedDetail;
 import com.example.bak.feed.application.query.dto.FeedSummary;
 import com.example.bak.feed.presentation.dto.FeedRequest;
+import com.example.bak.feed.presentation.dto.FeedUpdateRequest;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
@@ -13,9 +14,11 @@ import com.example.bak.global.security.annotation.AuthUser;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -64,6 +67,27 @@ public class FeedController {
     public ResponseEntity<ApiResponse> getFeedDetail(@PathVariable Long feedId) {
         FeedDetail detail = feedQueryService.getFeedDetail(feedId);
         ApiResponse response = ApiResponseFactory.success("피드 상세를 성공적으로 조회하였습니다.", detail);
+        return ResponseEntity.ok(response);
+    }
+
+    @PutMapping("/{feedId}")
+    public ResponseEntity<ApiResponse> updateFeed(
+            @PathVariable Long feedId,
+            @AuthUser Long userId,
+            @RequestBody FeedUpdateRequest request
+    ) {
+        feedCommandService.updateFeed(feedId, request.title(), request.content(), userId);
+        ApiResponse response = ApiResponseFactory.successVoid("피드를 성공적으로 수정하였습니다.");
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{feedId}")
+    public ResponseEntity<ApiResponse> deleteFeed(
+            @PathVariable Long feedId,
+            @AuthUser Long userId
+    ) {
+        feedCommandService.deleteFeed(feedId, userId);
+        ApiResponse response = ApiResponseFactory.successVoid("피드를 성공적으로 삭제하였습니다.");
         return ResponseEntity.ok(response);
     }
 }

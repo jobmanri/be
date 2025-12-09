@@ -1,9 +1,9 @@
 package com.example.bak.feed.presentation;
 
 import com.example.bak.feed.application.command.FeedCommandService;
+import com.example.bak.feed.application.command.dto.FeedResult;
 import com.example.bak.feed.application.query.FeedQueryService;
 import com.example.bak.feed.application.query.dto.FeedDetail;
-import com.example.bak.feed.application.query.dto.FeedResult;
 import com.example.bak.feed.application.query.dto.FeedSummary;
 import com.example.bak.feed.presentation.dto.FeedRequest;
 import com.example.bak.global.common.response.ApiResponse;

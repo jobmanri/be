@@ -39,7 +39,7 @@ class PreAuthorizeAspectTest {
         @Test
         @DisplayName("권한이 일치할 경우")
         void success() throws Throwable {
-            // * When
+            // * Given
             JwtTokenProvider provider = TestTokenProvider.getProvider();
             JwtTokenCommandAdaptor commandAdaptor = new JwtTokenCommandAdaptor(provider);
 

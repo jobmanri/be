@@ -26,7 +26,6 @@ public class UserCommandAdaptor implements UserCommandPort {
                 ErrorCode.USER_NOT_FOUND));
         Profile profile = Profile.create(name, nickname);
         user.addProfile(profile);
-        profile.assignUser(user);
         return ProfileResult.from(profile.getName(), profile.getNickname());
     }
 }

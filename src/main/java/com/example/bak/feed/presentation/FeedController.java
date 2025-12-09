@@ -73,8 +73,8 @@ public class FeedController implements FeedSwagger {
 
     @PutMapping("/{feedId}")
     public ResponseEntity<ApiResponse> updateFeed(
-            @PathVariable Long feedId,
             @AuthUser Long userId,
+            @PathVariable Long feedId,
             @RequestBody FeedUpdateRequest request
     ) {
         feedCommandService.updateFeed(feedId, request.title(), request.content(), userId);
@@ -84,8 +84,8 @@ public class FeedController implements FeedSwagger {
 
     @DeleteMapping("/{feedId}")
     public ResponseEntity<ApiResponse> deleteFeed(
-            @PathVariable Long feedId,
-            @AuthUser Long userId
+            @AuthUser Long userId,
+            @PathVariable Long feedId
     ) {
         feedCommandService.deleteFeed(feedId, userId);
         ApiResponse response = ApiResponseFactory.successVoid("피드를 성공적으로 삭제하였습니다.");

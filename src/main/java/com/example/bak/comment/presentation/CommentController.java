@@ -4,6 +4,7 @@ import com.example.bak.comment.application.command.CommentCommandService;
 import com.example.bak.comment.application.query.CommentQueryService;
 import com.example.bak.comment.application.query.dto.CommentInfo;
 import com.example.bak.comment.presentation.dto.CommentRequest;
+import com.example.bak.comment.presentation.swagger.FeedCommentSwagger;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
@@ -22,11 +23,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1")
 @RequiredArgsConstructor
-public class CommentController {
+public class CommentController implements FeedCommentSwagger {
 
     private final CommentCommandService commentCommandService;
     private final CommentQueryService commentQueryService;
 
+    @Override
     @PostMapping("/feeds/{feedId}/comments")
     public ResponseEntity<ApiResponse> createComment(
             @PathVariable Long feedId,
@@ -43,13 +45,15 @@ public class CommentController {
                 .body(response);
     }
 
+    @Override
     @GetMapping("/feeds/{feedId}/comments")
-    public ResponseEntity<ApiResponse> getComment(@PathVariable Long feedId) {
+    public ResponseEntity<ApiResponse> getComments(@PathVariable Long feedId) {
         List<CommentInfo> comments = commentQueryService.getComments(feedId);
         ApiResponse response = ApiResponseFactory.success("댓글을 성공적으로 조회하였습니다.", comments);
         return ResponseEntity.ok(response);
     }
 
+    @Override
     @PutMapping("/comments/{commentId}")
     public ResponseEntity<ApiResponse> updateComment(
             @PathVariable Long commentId,

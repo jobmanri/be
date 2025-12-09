@@ -1,10 +1,10 @@
-package com.example.bak.feedcomment.application.command;
+package com.example.bak.comment.application.command;
 
+import com.example.bak.comment.application.command.port.CommentCommandPort;
+import com.example.bak.comment.application.command.port.UserDataPort;
+import com.example.bak.comment.application.command.port.dto.UserSnapShot;
+import com.example.bak.comment.domain.Comment;
 import com.example.bak.feed.application.command.port.FeedCommandPort;
-import com.example.bak.feedcomment.application.command.port.FeedCommentCommandPort;
-import com.example.bak.feedcomment.application.command.port.UserDataPort;
-import com.example.bak.feedcomment.application.command.port.dto.UserSnapShot;
-import com.example.bak.feedcomment.domain.FeedComment;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -14,9 +14,9 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 @Transactional
-public class FeedCommentCommandService {
+public class CommentCommandService {
 
-    private final FeedCommentCommandPort feedCommentCommandPort;
+    private final CommentCommandPort commentCommandPort;
     private final FeedCommandPort feedCommandPort;
     private final UserDataPort userDataPort;
 
@@ -27,18 +27,18 @@ public class FeedCommentCommandService {
         UserSnapShot user = userDataPort.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
-        FeedComment newComment = FeedComment.create(
+        Comment newComment = Comment.create(
                 feedId,
                 content,
                 user.id(),
                 user.nickname()
         );
 
-        feedCommentCommandPort.save(newComment);
+        commentCommandPort.save(newComment);
     }
 
     public void updateComment(Long commentId, String content, Long userId) {
-        FeedComment comment = feedCommentCommandPort.findById(commentId)
+        Comment comment = commentCommandPort.findById(commentId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.COMMENT_NOT_FOUND));
 
         if (!comment.isWrittenBy(userId)) {
@@ -46,6 +46,6 @@ public class FeedCommentCommandService {
         }
 
         comment.updateComment(content);
-        feedCommentCommandPort.save(comment);
+        commentCommandPort.save(comment);
     }
 }

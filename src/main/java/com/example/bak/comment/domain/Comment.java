@@ -1,4 +1,4 @@
-package com.example.bak.feedcomment.domain;
+package com.example.bak.comment.domain;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -15,7 +15,7 @@ import lombok.NoArgsConstructor;
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 @AllArgsConstructor(access = AccessLevel.PROTECTED)
-public class FeedComment {
+public class Comment {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,7 +33,7 @@ public class FeedComment {
     @Column(nullable = false)
     private String content;
 
-    private FeedComment(Long id, Long feedId, String content, Long authorId,
+    private Comment(Long id, Long feedId, String content, Long authorId,
             String authorNickname) {
         this.id = id;
         this.feedId = feedId;
@@ -42,21 +42,21 @@ public class FeedComment {
         this.authorNickname = authorNickname;
     }
 
-    private FeedComment(Long feedId, String content, Long authorId, String authorNickname) {
+    private Comment(Long feedId, String content, Long authorId, String authorNickname) {
         this.feedId = feedId;
         this.content = content;
         this.authorId = authorId;
         this.authorNickname = authorNickname;
     }
 
-    public static FeedComment create(Long feedId, String comment, Long authorId,
+    public static Comment create(Long feedId, String comment, Long authorId,
             String authorNickname) {
-        return new FeedComment(feedId, comment, authorId, authorNickname);
+        return new Comment(feedId, comment, authorId, authorNickname);
     }
 
-    public static FeedComment testInstance(Long id, Long feedId, String comment, Long authorId,
+    public static Comment testInstance(Long id, Long feedId, String comment, Long authorId,
             String authorNickname) {
-        return new FeedComment(id, feedId, comment, authorId, authorNickname);
+        return new Comment(id, feedId, comment, authorId, authorNickname);
     }
 
     public void updateComment(String comment) {

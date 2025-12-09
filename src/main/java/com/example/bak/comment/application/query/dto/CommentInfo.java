@@ -1,9 +1,9 @@
-package com.example.bak.feedcomment.application.query.dto;
+package com.example.bak.comment.application.query.dto;
 
-import com.example.bak.feedcomment.domain.FeedComment;
+import com.example.bak.comment.domain.Comment;
 
 /**
- * FeedComment의 기본 정보를 담는 DTO Feed 상세 조회 시 포함됨
+ * Comment의 기본 정보를 담는 DTO Feed 상세 조회 시 포함됨
  */
 public record CommentInfo(
         Long id,
@@ -12,7 +12,7 @@ public record CommentInfo(
         String content
 ) {
 
-    public static CommentInfo from(FeedComment comment) {
+    public static CommentInfo from(Comment comment) {
         return new CommentInfo(
                 comment.getId(),
                 comment.getAuthorId(),

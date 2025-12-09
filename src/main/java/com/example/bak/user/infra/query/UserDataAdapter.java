@@ -1,7 +1,7 @@
 package com.example.bak.user.infra.query;
 
-import com.example.bak.feedcomment.application.command.port.UserDataPort;
-import com.example.bak.feedcomment.application.command.port.dto.UserSnapShot;
+import com.example.bak.comment.application.command.port.UserDataPort;
+import com.example.bak.comment.application.command.port.dto.UserSnapShot;
 import com.example.bak.user.domain.UserRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

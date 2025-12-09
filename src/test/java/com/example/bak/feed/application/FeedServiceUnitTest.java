@@ -5,11 +5,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.bak.community.application.query.dto.CommunityResult;
 import com.example.bak.feed.application.command.FeedCommandService;
+import com.example.bak.feed.application.command.dto.FeedResult;
 import com.example.bak.feed.application.command.port.CommunityValidationPort;
 import com.example.bak.feed.application.command.port.FeedCommandPort;
 import com.example.bak.feed.application.query.FeedQueryService;
 import com.example.bak.feed.application.query.dto.FeedDetail;
-import com.example.bak.feed.application.query.dto.FeedResult;
 import com.example.bak.feed.application.query.dto.FeedSummary;
 import com.example.bak.feed.application.query.port.FeedQueryPort;
 import com.example.bak.feed.domain.Feed;

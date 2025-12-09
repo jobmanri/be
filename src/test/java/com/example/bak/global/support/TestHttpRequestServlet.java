@@ -11,7 +11,7 @@ public class TestHttpRequestServlet {
         final Map<String, Object> attributes = new HashMap<>();
         final Map<String, String> headers = new HashMap<>();
 
-        headers.put("Authorization", "Bearer" + token);
+        headers.put("Authorization", "Bearer " + token);
 
         return (HttpServletRequest) Proxy.newProxyInstance(
                 TestHttpRequestServlet.class.getClassLoader(),

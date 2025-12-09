@@ -17,7 +17,7 @@ public record CommentInfo(
                 comment.getId(),
                 comment.getAuthorId(),
                 comment.getAuthorNickname(),
-                comment.getComment()
+                comment.getContent()
         );
     }
 }

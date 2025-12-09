@@ -31,24 +31,26 @@ public class FeedComment {
     private String authorNickname;
 
     @Column(nullable = false)
-    private String comment;
+    private String content;
 
-    private FeedComment(Long id, Long feedId, String comment, Long authorId, String authorNickname) {
+    private FeedComment(Long id, Long feedId, String content, Long authorId,
+            String authorNickname) {
         this.id = id;
         this.feedId = feedId;
-        this.comment = comment;
+        this.content = content;
         this.authorId = authorId;
         this.authorNickname = authorNickname;
     }
 
-    private FeedComment(Long feedId, String comment, Long authorId, String authorNickname) {
+    private FeedComment(Long feedId, String content, Long authorId, String authorNickname) {
         this.feedId = feedId;
-        this.comment = comment;
+        this.content = content;
         this.authorId = authorId;
         this.authorNickname = authorNickname;
     }
 
-    public static FeedComment create(Long feedId, String comment, Long authorId, String authorNickname) {
+    public static FeedComment create(Long feedId, String comment, Long authorId,
+            String authorNickname) {
         return new FeedComment(feedId, comment, authorId, authorNickname);
     }
 
@@ -58,7 +60,7 @@ public class FeedComment {
     }
 
     public void updateComment(String comment) {
-        this.comment = comment;
+        this.content = comment;
     }
 
     public boolean isWrittenBy(Long authorId) {

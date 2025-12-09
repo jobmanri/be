@@ -5,8 +5,8 @@ import static com.example.bak.global.exception.ErrorCode.USER_NOT_FOUND;
 import com.example.bak.auth.application.command.dto.TokenResult;
 import com.example.bak.auth.application.command.port.AuthCommandPort;
 import com.example.bak.auth.application.command.port.JwtTokenCommandPort;
+import com.example.bak.auth.application.command.port.PasswordEncoderPort;
 import com.example.bak.auth.domain.TokenType;
-import com.example.bak.auth.infra.passwordencoder.PasswordEncoderProvider;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +19,11 @@ public class AuthCommandService {
 
     private final AuthCommandPort authCommandPort;
     private final JwtTokenCommandPort jwtTokenCommandPort;
-    private final PasswordEncoderProvider passwordEncoderProvider;
+    private final PasswordEncoderPort passwordEncoderPort;
 
     @Transactional
     public void registerService(String email, String password) {
-        String encodedPassword = passwordEncoderProvider.encryptPassword(password);
+        String encodedPassword = passwordEncoderPort.encryptPassword(password);
         authCommandPort.register(email, encodedPassword);
     }
 
@@ -32,7 +32,7 @@ public class AuthCommandService {
         User user = authCommandPort.findByEmail(email).orElseThrow(() -> new BusinessException(
                 USER_NOT_FOUND));
 
-        passwordEncoderProvider.matchPassword(password, user.getPassword());
+        passwordEncoderPort.matchPassword(password, user.getPassword());
 
         String accessToken = jwtTokenCommandPort.publishToken(TokenType.ACCESS, user.getId(),
                 user.getRole());

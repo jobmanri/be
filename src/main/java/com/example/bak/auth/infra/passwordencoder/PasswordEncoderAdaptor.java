@@ -1,5 +1,6 @@
 package com.example.bak.auth.infra.passwordencoder;
 
+import com.example.bak.auth.application.command.port.PasswordEncoderPort;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -8,7 +9,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
-public class PasswordEncoderProvider {
+public class PasswordEncoderAdaptor implements PasswordEncoderPort {
 
     private final PasswordEncoder passwordEncoder;
 

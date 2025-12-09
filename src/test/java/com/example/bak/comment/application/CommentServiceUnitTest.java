@@ -14,6 +14,7 @@ import com.example.bak.company.domain.Company;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepositoryStub;
 import com.example.bak.global.exception.ErrorCode;
+import com.example.bak.user.domain.Profile;
 import com.example.bak.user.domain.User;
 import java.util.List;
 import java.util.Optional;
@@ -32,27 +33,44 @@ class CommentServiceUnitTest {
     private static final Long NOT_FOUND_USER_ID = 999L;
     private static final Long NOT_FOUND_FEED_ID = 999L;
 
-    private static final String COMMENT_CONTENT = "content";
-    private static final String UPDATED_CONTENT = "updatedContent";
+    private static final String COMMENT_CONTENT = "기존댓글내용";
+    private static final String UPDATED_CONTENT = "수정된댓글내용";
 
-    private final User testUser =
-            User.testInstance(EXISTING_USER_ID, "test@test.com", "password", "name", "nickname");
+    private static final String USER_EMAIL = "test@test.com";
+    private static final String USER_PASSWORD = "password";
+    private static final String USER_NAME = "name";
+    private static final String USER_NICKNAME = "nickname";
+
     private final Company company =
             Company.testInstance(1L, "testDotCom", "test.com", "image.url.com",
                     "testing company1");
     private final Community community =
             Community.testInstance(1L, "name", "jobGroup", 1L);
-    private final Feed testFeed =
-            Feed.testInstance(
-                    EXISTING_FEED_ID,
-                    "title",
-                    COMMENT_CONTENT,
-                    community.getId(),
-                    testUser.getId()
-            );
+
+    private User testUser;
+    private Feed testFeed;
+
+    @BeforeEach
+    void initFixtures() {
+        testUser = createUser();
+        testFeed = Feed.testInstance(
+                EXISTING_FEED_ID,
+                "title",
+                COMMENT_CONTENT,
+                community.getId(),
+                testUser.getId()
+        );
+    }
+
+    private User createUser() {
+        User user = User.testInstance(EXISTING_USER_ID, USER_EMAIL, USER_PASSWORD);
+        Profile profile = Profile.createInstance(1L, USER_NAME, USER_NICKNAME);
+        user.addProfile(profile);
+        return user;
+    }
 
     private String nickname() {
-        return testUser.getProfile().getNickname();
+        return USER_NICKNAME;
     }
 
     private List<Comment> createComments(int count) {
@@ -113,11 +131,11 @@ class CommentServiceUnitTest {
             commentCommandService.createComment(EXISTING_FEED_ID, COMMENT_CONTENT,
                     EXISTING_USER_ID);
 
-            var saved = commentRepository.findAll().getFirst();
-            assertThat(saved.getAuthorId()).isEqualTo(EXISTING_USER_ID);
-            assertThat(saved.getAuthorNickname()).isEqualTo(nickname());
-            assertThat(saved.getFeedId()).isEqualTo(EXISTING_FEED_ID);
-            assertThat(saved.getContent()).isEqualTo(COMMENT_CONTENT);
+            var savedComment = commentRepository.findAll().getFirst();
+            assertThat(savedComment.getAuthorId()).isEqualTo(EXISTING_USER_ID);
+            assertThat(savedComment.getAuthorNickname()).isEqualTo(nickname());
+            assertThat(savedComment.getFeedId()).isEqualTo(EXISTING_FEED_ID);
+            assertThat(savedComment.getContent()).isEqualTo(COMMENT_CONTENT);
         }
 
         @Test

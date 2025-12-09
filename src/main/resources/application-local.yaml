@@ -2,13 +2,11 @@ spring:
   jackson:
     serialization:
       write-dates-as-timestamps: false
-
   datasource:
     url: ${LOCAL_DB_URL}
     driver-class-name: ${LOCAL_DB_DRIVER}
     username: ${LOCAL_DB_USERNAME}
     password: ${LOCAL_DB_PASSWORD}
-
   jpa:
     hibernate:
       ddl-auto: update
@@ -18,10 +16,18 @@ spring:
         show_sql: true
         dialect: org.hibernate.dialect.MySQL8Dialect
     open-in-view: false
-
   h2:
     console:
       enabled: false
+
+springdoc:
+  swagger-ui:
+    path: /api-test
+    groups-order: desc
+    tags-sorter: alpha
+    operations-sorter: method
+  paths-to-match:
+    - /api/**
 
 jwt:
   auth:

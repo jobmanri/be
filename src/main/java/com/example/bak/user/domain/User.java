@@ -2,7 +2,16 @@ package com.example.bak.user.domain;
 
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,7 +33,8 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "user", nullable = false)
     private Profile profile;
 
     @Enumerated(EnumType.STRING)
@@ -47,22 +57,19 @@ public class User {
         }
     }
 
-    public static User create(String email, String password, String name, String nickname) {
-        User user = new User(email, password);
-        Profile profile = Profile.create(name, nickname, user);
-        user.addProfile(profile);
-        return user;
+    public static User createInstance(Long id, String email, String password) {
+        return new User(id, email, password);
     }
 
-    public static User testInstance(Long id, String email, String password, String name,
-            String nickname) {
-        User user = new User(id, email, password);
-        Profile profile = Profile.create(name, nickname, user);
-        user.addProfile(profile);
-        return user;
+    public static User create(String email, String password) {
+        return new User(email, password);
     }
 
-    private void addProfile(Profile profile) {
+    public static User testInstance(Long id, String email, String password) {
+        return new User(id, email, password);
+    }
+
+    public void addProfile(Profile profile) {
         this.profile = profile;
     }
 }

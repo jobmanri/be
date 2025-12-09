@@ -5,6 +5,7 @@ import com.example.bak.company.application.query.CompanyQueryService;
 import com.example.bak.company.application.query.dto.CompanyResult;
 import com.example.bak.company.application.query.dto.CompanyResult.CompanyId;
 import com.example.bak.company.presentation.dto.CompanyRequest;
+import com.example.bak.company.presentation.swagger.CompanySwagger;
 import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
@@ -23,7 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/companies")
 @RequiredArgsConstructor
-public class CompanyController {
+public class CompanyController implements CompanySwagger {
 
     private final CompanyCommandService companyCommandService;
     private final CompanyQueryService companyQueryService;

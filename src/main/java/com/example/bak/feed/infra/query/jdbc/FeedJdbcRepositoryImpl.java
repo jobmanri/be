@@ -20,8 +20,8 @@ import org.springframework.stereotype.Repository;
 @RequiredArgsConstructor
 public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
 
-    private static final FeedSummaryRowMapper FEED_SUMMARY_MAPPER = new FeedSummaryRowMapper();
-    private static final FeedDetailRowMapper FEED_DETAIL_MAPPER = new FeedDetailRowMapper();
+    private static final FeedSummaryRowMapper feedSummaryMapper = new FeedSummaryRowMapper();
+    private static final FeedDetailRowMapper feedDetailMapper = new FeedDetailRowMapper();
     private static final String SUMMARY_SELECT = """
             SELECT
                 f.id   AS id,
@@ -75,7 +75,7 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 + buildOrderByClause(pageable) + '\n'
                 + "LIMIT :limit OFFSET :offset";
 
-        List<FeedSummary> content = jdbc.query(sql, params, FEED_SUMMARY_MAPPER);
+        List<FeedSummary> content = jdbc.query(sql, params, feedSummaryMapper);
         long total = countFeeds();
 
         return new PageImpl<>(content, pageable, total);
@@ -90,7 +90,7 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 + "WHERE f.id = :feedId\n"
                 + SUMMARY_GROUP_BY;
 
-        return jdbc.query(sql, params, FEED_SUMMARY_MAPPER).stream().findFirst();
+        return jdbc.query(sql, params, feedSummaryMapper).stream().findFirst();
     }
 
     @Override
@@ -98,7 +98,7 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("feedId", feedId);
 
-        return jdbc.query(DETAIL_SELECT, params, FEED_DETAIL_MAPPER).stream().findFirst();
+        return jdbc.query(DETAIL_SELECT, params, feedDetailMapper).stream().findFirst();
     }
 
     private long countFeeds() {

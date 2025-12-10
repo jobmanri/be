@@ -5,12 +5,10 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.bak.feed.application.command.FeedCommandService;
 import com.example.bak.feed.application.command.dto.FeedResult;
-import com.example.bak.feed.application.command.port.CommunityValidationPort;
+import com.example.bak.feed.application.command.port.CommunityValidationPortStub;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepositoryStub;
 import com.example.bak.global.exception.ErrorCode;
-import java.util.HashSet;
-import java.util.Set;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -25,23 +23,6 @@ class FeedServiceUnitTest {
 
     private static final String TITLE = "title";
     private static final String CONTENT = "content";
-    private static class StubCommunityValidationPort implements CommunityValidationPort {
-
-        private final Set<Long> existingCommunityIds = new HashSet<>();
-
-        void registerCommunity(Long communityId) {
-            existingCommunityIds.add(communityId);
-        }
-
-        void removeCommunity(Long communityId) {
-            existingCommunityIds.remove(communityId);
-        }
-
-        @Override
-        public boolean isCommunityExists(Long communityId) {
-            return existingCommunityIds.contains(communityId);
-        }
-    }
 
     @Nested
     @DisplayName("FeedCommandService")
@@ -49,12 +30,12 @@ class FeedServiceUnitTest {
 
         private FeedCommandService feedCommandService;
         private FeedRepositoryStub feedRepository;
-        private StubCommunityValidationPort communityValidationPort;
+        private CommunityValidationPortStub communityValidationPort;
 
         @BeforeEach
         void setUp() {
             feedRepository = new FeedRepositoryStub();
-            communityValidationPort = new StubCommunityValidationPort();
+            communityValidationPort = new CommunityValidationPortStub();
             communityValidationPort.registerCommunity(EXISTING_COMMUNITY_ID);
             feedCommandService = new FeedCommandService(feedRepository, communityValidationPort);
         }

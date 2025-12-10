@@ -4,8 +4,7 @@ import static com.example.bak.global.utils.AssertionsErrorCode.assertBusiness;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.bak.comment.application.command.CommentCommandService;
-import com.example.bak.comment.application.command.port.UserDataPort;
-import com.example.bak.comment.application.command.port.dto.UserSnapShot;
+import com.example.bak.comment.application.command.port.UserDataPortStub;
 import com.example.bak.comment.application.query.CommentQueryService;
 import com.example.bak.comment.domain.Comment;
 import com.example.bak.comment.domain.CommentRepositoryStub;
@@ -17,8 +16,6 @@ import com.example.bak.global.exception.ErrorCode;
 import com.example.bak.user.domain.Profile;
 import com.example.bak.user.domain.User;
 import java.util.List;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.IntStream;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -85,35 +82,20 @@ class CommentServiceUnitTest {
                 .toList();
     }
 
-    private static class StubUserDataPort implements UserDataPort {
-
-        private final ConcurrentHashMap<Long, UserSnapShot> store = new ConcurrentHashMap<>();
-
-        void save(User user) {
-            store.put(user.getId(),
-                    new UserSnapShot(user.getId(), user.getProfile().getNickname()));
-        }
-
-        @Override
-        public Optional<UserSnapShot> findById(Long userId) {
-            return Optional.ofNullable(store.get(userId));
-        }
-    }
-
     @Nested
     @DisplayName("CommentCommandService")
     class CommentCommandServiceTest {
 
         private CommentCommandService commentCommandService;
         private CommentRepositoryStub commentRepository;
-        private StubUserDataPort userDataPort;
+        private UserDataPortStub userDataPort;
 
         @BeforeEach
         void setUp() {
             FeedRepositoryStub feedRepository = new FeedRepositoryStub();
             feedRepository.save(testFeed);
 
-            userDataPort = new StubUserDataPort();
+            userDataPort = new UserDataPortStub();
             userDataPort.save(testUser);
 
             commentRepository = new CommentRepositoryStub();

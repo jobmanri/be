@@ -1,7 +1,5 @@
 package com.example.bak.user.infra.persistence.command;
 
-import com.example.bak.global.exception.BusinessException;
-import com.example.bak.global.exception.ErrorCode;
 import com.example.bak.user.application.command.port.UserCommandPort;
 import com.example.bak.user.application.query.dto.ProfileResult;
 import com.example.bak.user.domain.Profile;
@@ -22,10 +20,8 @@ public class UserCommandAdaptor implements UserCommandPort {
 
     @Override
     public ProfileResult createProfile(Long userId, String name, String nickname) {
-        User user = userJpaRepository.findById(userId).orElseThrow(() -> new BusinessException(
-                ErrorCode.USER_NOT_FOUND));
         Profile profile = Profile.create(name, nickname);
-        user.addProfile(profile);
+        profile.assignUser(userId);
         return ProfileResult.from(profile.getName(), profile.getNickname());
     }
 }

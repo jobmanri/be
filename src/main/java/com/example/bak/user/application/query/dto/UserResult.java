@@ -1,12 +1,10 @@
 package com.example.bak.user.application.query.dto;
 
-import com.example.bak.user.domain.User;
-
 public record UserResult(
         Long id,
         String nickname
 ) {
-    
+
     public static UserResult from(Long id, String nickname) {
         return new UserResult(
                 id,
@@ -14,10 +12,4 @@ public record UserResult(
         );
     }
 
-    public static UserResult from(User user) {
-        return new UserResult(
-                user.getId(),
-                user.getProfile().getNickname()
-        );
-    }
 }

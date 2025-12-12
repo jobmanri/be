@@ -13,7 +13,6 @@ import com.example.bak.company.domain.Company;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepositoryStub;
 import com.example.bak.global.exception.ErrorCode;
-import com.example.bak.user.domain.Profile;
 import com.example.bak.user.domain.User;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -35,7 +34,6 @@ class CommentServiceUnitTest {
 
     private static final String USER_EMAIL = "test@test.com";
     private static final String USER_PASSWORD = "password";
-    private static final String USER_NAME = "name";
     private static final String USER_NICKNAME = "nickname";
 
     private final Company company =
@@ -60,10 +58,7 @@ class CommentServiceUnitTest {
     }
 
     private User createUser() {
-        User user = User.testInstance(EXISTING_USER_ID, USER_EMAIL, USER_PASSWORD);
-        Profile profile = Profile.createInstance(1L, USER_NAME, USER_NICKNAME);
-        user.addProfile(profile);
-        return user;
+        return User.testInstance(EXISTING_USER_ID, USER_EMAIL, USER_PASSWORD);
     }
 
     private String nickname() {
@@ -96,7 +91,7 @@ class CommentServiceUnitTest {
             feedRepository.save(testFeed);
 
             userDataPort = new UserDataPortStub();
-            userDataPort.save(testUser);
+            userDataPort.save(testUser.getId(), nickname());
 
             commentRepository = new CommentRepositoryStub();
 

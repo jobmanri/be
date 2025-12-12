@@ -1,21 +1,19 @@
 package com.example.bak.comment.application.command.port;
 
-import com.example.bak.comment.application.command.port.dto.UserSnapShot;
-import com.example.bak.user.domain.User;
+import com.example.bak.comment.application.command.port.dto.ProfileSnapShot;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class UserDataPortStub implements UserDataPort {
 
-    private final ConcurrentHashMap<Long, UserSnapShot> store = new ConcurrentHashMap<>();
+    private final ConcurrentHashMap<Long, ProfileSnapShot> store = new ConcurrentHashMap<>();
 
-    public void save(User user) {
-        store.put(user.getId(),
-                new UserSnapShot(user.getId(), user.getProfile().getNickname()));
+    public void save(Long userId, String nickname) {
+        store.put(userId, new ProfileSnapShot(userId, nickname));
     }
 
     @Override
-    public Optional<UserSnapShot> findById(Long userId) {
+    public Optional<ProfileSnapShot> findById(Long userId) {
         return Optional.ofNullable(store.get(userId));
     }
 }

@@ -1,4 +1,4 @@
-package com.example.bak.user.infra.query;
+package com.example.bak.user.infra.persistence.query.jdbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -6,7 +6,6 @@ import com.example.bak.global.AbstractMySqlContainerTest;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;
 import com.example.bak.user.domain.Profile;
-import com.example.bak.user.infra.persistence.query.jdbc.UserJdbcRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;

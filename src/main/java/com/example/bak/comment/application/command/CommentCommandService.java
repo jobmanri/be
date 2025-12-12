@@ -2,7 +2,7 @@ package com.example.bak.comment.application.command;
 
 import com.example.bak.comment.application.command.port.CommentCommandPort;
 import com.example.bak.comment.application.command.port.UserDataPort;
-import com.example.bak.comment.application.command.port.dto.UserSnapShot;
+import com.example.bak.comment.application.command.port.dto.ProfileSnapShot;
 import com.example.bak.comment.domain.Comment;
 import com.example.bak.feed.application.command.port.FeedCommandPort;
 import com.example.bak.global.exception.BusinessException;
@@ -24,14 +24,14 @@ public class CommentCommandService {
         feedCommandPort.findById(feedId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
 
-        UserSnapShot user = userDataPort.findById(userId)
+        ProfileSnapShot userProfile = userDataPort.findById(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         Comment newComment = Comment.create(
                 feedId,
                 content,
-                user.id(),
-                user.nickname()
+                userProfile.userId(),
+                userProfile.nickname()
         );
 
         commentCommandPort.save(newComment);

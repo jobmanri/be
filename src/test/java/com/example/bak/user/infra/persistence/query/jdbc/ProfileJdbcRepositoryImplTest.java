@@ -2,6 +2,7 @@ package com.example.bak.user.infra.persistence.query.jdbc;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
+import com.example.bak.global.AbstractMySqlContainerTest;
 import com.example.bak.user.domain.Profile;
 import com.example.bak.user.domain.User;
 import java.util.Optional;
@@ -17,7 +18,7 @@ import org.springframework.test.context.jdbc.Sql;
 @JdbcTest
 @DisplayName("ProfileJdbcRepository 통합 테스트")
 @Sql(scripts = "/sql/user/data.sql", executionPhase = Sql.ExecutionPhase.BEFORE_TEST_METHOD)
-class ProfileJdbcRepositoryImplTest {
+class ProfileJdbcRepositoryImplTest extends AbstractMySqlContainerTest {
 
     @Autowired
     private ProfileJdbcRepository profileJdbcRepository;

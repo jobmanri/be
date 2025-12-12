@@ -4,7 +4,6 @@ import static com.example.bak.global.utils.AssertionsErrorCode.assertBusiness;
 import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.bak.comment.application.command.CommentCommandService;
-import com.example.bak.comment.application.command.port.UserDataPortStub;
 import com.example.bak.comment.application.query.CommentQueryService;
 import com.example.bak.comment.domain.Comment;
 import com.example.bak.comment.domain.CommentRepositoryStub;
@@ -13,6 +12,8 @@ import com.example.bak.company.domain.Company;
 import com.example.bak.feed.domain.Feed;
 import com.example.bak.feed.domain.FeedRepositoryStub;
 import com.example.bak.global.exception.ErrorCode;
+import com.example.bak.user.domain.Profile;
+import com.example.bak.user.domain.ProfileRepositoryStub;
 import com.example.bak.user.domain.User;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -34,6 +35,7 @@ class CommentServiceUnitTest {
 
     private static final String USER_EMAIL = "test@test.com";
     private static final String USER_PASSWORD = "password";
+    private static final String PROFILE_NAME = "name";
     private static final String USER_NICKNAME = "nickname";
 
     private final Company company =
@@ -43,11 +45,13 @@ class CommentServiceUnitTest {
             Community.testInstance(1L, "name", "jobGroup", 1L);
 
     private User testUser;
+    private Profile testProfile;
     private Feed testFeed;
 
     @BeforeEach
     void initFixtures() {
         testUser = createUser();
+        testProfile = createProfile();
         testFeed = Feed.testInstance(
                 EXISTING_FEED_ID,
                 "title",
@@ -59,6 +63,12 @@ class CommentServiceUnitTest {
 
     private User createUser() {
         return User.testInstance(EXISTING_USER_ID, USER_EMAIL, USER_PASSWORD);
+    }
+
+    private Profile createProfile() {
+        Profile profile = Profile.createInstance(1L, PROFILE_NAME, USER_NICKNAME);
+        profile.assignUser(EXISTING_USER_ID);
+        return profile;
     }
 
     private String nickname() {
@@ -83,22 +93,22 @@ class CommentServiceUnitTest {
 
         private CommentCommandService commentCommandService;
         private CommentRepositoryStub commentRepository;
-        private UserDataPortStub userDataPort;
+        private ProfileRepositoryStub profileDataPort;
 
         @BeforeEach
         void setUp() {
             FeedRepositoryStub feedRepository = new FeedRepositoryStub();
             feedRepository.save(testFeed);
 
-            userDataPort = new UserDataPortStub();
-            userDataPort.save(testUser.getId(), nickname());
+            profileDataPort = new ProfileRepositoryStub();
+            profileDataPort.save(testProfile);
 
             commentRepository = new CommentRepositoryStub();
 
             commentCommandService = new CommentCommandService(
                     commentRepository,
                     feedRepository,
-                    userDataPort
+                    profileDataPort
             );
         }
 

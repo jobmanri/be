@@ -61,8 +61,7 @@ public class ProfileJdbcRepositoryImpl implements ProfileJdbcRepository {
                 """;
         MapSqlParameterSource params = new MapSqlParameterSource();
         params.addValue("userId", userId);
-        User profile = repository.queryForObject(sql, params, new UserMapper());
-        return Optional.empty();
+        User user = repository.queryForObject(sql, params, new UserMapper());
+        return Optional.ofNullable(user);
     }
 }
-

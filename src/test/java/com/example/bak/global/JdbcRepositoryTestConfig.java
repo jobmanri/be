@@ -4,6 +4,8 @@ import com.example.bak.feed.infra.query.jdbc.FeedJdbcRepository;
 import com.example.bak.feed.infra.query.jdbc.FeedJdbcRepositoryImpl;
 import com.example.bak.privatemessage.infra.query.jdbc.MessageJdbcRepository;
 import com.example.bak.privatemessage.infra.query.jdbc.MessageJdbcRepositoryImpl;
+import com.example.bak.user.infra.persistence.query.jdbc.ProfileJdbcRepository;
+import com.example.bak.user.infra.persistence.query.jdbc.ProfileJdbcRepositoryImpl;
 import com.example.bak.user.infra.persistence.query.jdbc.UserJdbcRepository;
 import com.example.bak.user.infra.persistence.query.jdbc.UserJdbcRepositoryImpl;
 import org.springframework.boot.test.context.TestConfiguration;
@@ -26,5 +28,10 @@ public class JdbcRepositoryTestConfig {
     @Bean
     public UserJdbcRepository userJdbcRepository(NamedParameterJdbcTemplate jdbc) {
         return new UserJdbcRepositoryImpl(jdbc);
+    }
+
+    @Bean
+    public ProfileJdbcRepository profileJdbcRepository(NamedParameterJdbcTemplate jdbc) {
+        return new ProfileJdbcRepositoryImpl(jdbc);
     }
 }

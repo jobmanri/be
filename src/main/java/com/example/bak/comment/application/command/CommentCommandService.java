@@ -1,7 +1,7 @@
 package com.example.bak.comment.application.command;
 
 import com.example.bak.comment.application.command.port.CommentCommandPort;
-import com.example.bak.comment.application.command.port.UserDataPort;
+import com.example.bak.comment.application.command.port.ProfileDataPort;
 import com.example.bak.comment.application.command.port.dto.ProfileSnapShot;
 import com.example.bak.comment.domain.Comment;
 import com.example.bak.feed.application.command.port.FeedCommandPort;
@@ -18,13 +18,13 @@ public class CommentCommandService {
 
     private final CommentCommandPort commentCommandPort;
     private final FeedCommandPort feedCommandPort;
-    private final UserDataPort userDataPort;
+    private final ProfileDataPort profileDataPort;
 
     public void createComment(Long feedId, String content, Long userId) {
         feedCommandPort.findById(feedId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
 
-        ProfileSnapShot userProfile = userDataPort.findById(userId)
+        ProfileSnapShot userProfile = profileDataPort.findSnapshotByUserId(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));
 
         Comment newComment = Comment.create(

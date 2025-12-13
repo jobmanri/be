@@ -30,7 +30,7 @@ public class Profile {
     private String nickname;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile")
+    @JoinColumn(name = "user_id")
     private User user;
 
     private Profile(Long id, String name, String nickname) {

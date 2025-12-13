@@ -34,7 +34,7 @@ public class User {
     private String password;
 
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user", nullable = false)
+    @JoinColumn(name = "profile_id")
     private Profile profile;
 
     @Enumerated(EnumType.STRING)

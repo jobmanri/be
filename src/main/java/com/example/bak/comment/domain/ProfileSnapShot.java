@@ -1,4 +1,4 @@
-package com.example.bak.comment.application.command.port.dto;
+package com.example.bak.comment.domain;
 
 public record ProfileSnapShot(Long userId, String nickname) {
 

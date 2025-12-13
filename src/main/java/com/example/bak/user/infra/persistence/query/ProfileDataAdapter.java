@@ -1,7 +1,7 @@
 package com.example.bak.user.infra.persistence.query;
 
 import com.example.bak.comment.application.command.port.ProfileDataPort;
-import com.example.bak.comment.application.command.port.dto.ProfileSnapShot;
+import com.example.bak.comment.domain.ProfileSnapShot;
 import com.example.bak.user.infra.persistence.command.ProfileJpaRepository;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;

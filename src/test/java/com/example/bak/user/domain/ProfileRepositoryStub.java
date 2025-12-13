@@ -1,7 +1,7 @@
 package com.example.bak.user.domain;
 
 import com.example.bak.comment.application.command.port.ProfileDataPort;
-import com.example.bak.comment.application.command.port.dto.ProfileSnapShot;
+import com.example.bak.comment.domain.ProfileSnapShot;
 import com.example.bak.global.support.AbstractStubRepository;
 import java.util.Objects;
 import java.util.Optional;

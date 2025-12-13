@@ -2,8 +2,8 @@ package com.example.bak.comment.application.command;
 
 import com.example.bak.comment.application.command.port.CommentCommandPort;
 import com.example.bak.comment.application.command.port.ProfileDataPort;
-import com.example.bak.comment.application.command.port.dto.ProfileSnapShot;
 import com.example.bak.comment.domain.Comment;
+import com.example.bak.comment.domain.ProfileSnapShot;
 import com.example.bak.feed.application.command.port.FeedCommandPort;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;

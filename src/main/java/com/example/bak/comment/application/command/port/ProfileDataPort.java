@@ -1,6 +1,6 @@
 package com.example.bak.comment.application.command.port;
 
-import com.example.bak.comment.application.command.port.dto.ProfileSnapShot;
+import com.example.bak.comment.domain.ProfileSnapShot;
 import java.util.Optional;
 
 public interface ProfileDataPort {

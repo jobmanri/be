@@ -12,6 +12,7 @@ import org.springframework.stereotype.Repository;
 public class UserCommandAdaptor implements UserCommandPort {
 
     private final UserJpaRepository userJpaRepository;
+    private final ProfileJpaRepository profileJpaRepository;
 
     @Override
     public User save(User user) {
@@ -22,6 +23,7 @@ public class UserCommandAdaptor implements UserCommandPort {
     public ProfileResult createProfile(Long userId, String name, String nickname) {
         Profile profile = Profile.create(name, nickname);
         profile.assignUser(userId);
+        profileJpaRepository.save(profile);
         return ProfileResult.from(profile.getName(), profile.getNickname());
     }
 }

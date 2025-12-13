@@ -1,13 +1,10 @@
 package com.example.bak.user.domain;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -29,9 +26,7 @@ public class Profile {
     @Column(nullable = false)
     private String nickname;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "profile")
-    private User user;
+    private Long userId;
 
     private Profile(Long id, String name, String nickname) {
         this.id = id;
@@ -55,7 +50,7 @@ public class Profile {
         return new Profile(name, nickname);
     }
 
-    public void assignUser(User user) {
-        this.user = user;
+    public void assignUser(Long userId) {
+        this.userId = userId;
     }
 }

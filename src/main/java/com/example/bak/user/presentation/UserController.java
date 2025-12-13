@@ -5,7 +5,7 @@ import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
 import com.example.bak.global.security.annotation.AuthUser;
 import com.example.bak.user.application.command.UserCommandService;
-import com.example.bak.user.application.command.dto.UserResult;
+import com.example.bak.user.application.command.dto.UserCommandResult;
 import com.example.bak.user.application.query.UserQueryService;
 import com.example.bak.user.application.query.dto.ProfileResult;
 import com.example.bak.user.presentation.dto.ProfileRequest;
@@ -33,7 +33,7 @@ public class UserController implements UserSwagger {
     public ResponseEntity<ApiResponse> createUser(
             @RequestBody UserRequest request
     ) {
-        UserResult userResult = userCommandService.createUser(
+        UserCommandResult userResult = userCommandService.createUser(
                 request.email(),
                 request.password()
         );

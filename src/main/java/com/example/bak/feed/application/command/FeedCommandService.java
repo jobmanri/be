@@ -33,7 +33,7 @@ public class FeedCommandService {
         Feed feed = feedCommandPort.findById(feedId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
 
-        validateAuthor(feed, userId);
+        feed.validateAuthor(userId);
 
         feed.update(title, content);
         feedCommandPort.save(feed);
@@ -43,14 +43,8 @@ public class FeedCommandService {
         Feed feed = feedCommandPort.findById(feedId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
 
-        validateAuthor(feed, userId);
+        feed.validateAuthor(userId);
 
         feedCommandPort.delete(feed);
-    }
-
-    private void validateAuthor(Feed feed, Long userId) {
-        if (!feed.getAuthorId().equals(userId)) {
-            throw new BusinessException(ErrorCode.UNAUTHORIZED_ACTION);
-        }
     }
 }

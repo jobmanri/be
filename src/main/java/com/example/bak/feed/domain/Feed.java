@@ -1,5 +1,7 @@
 package com.example.bak.feed.domain;
 
+import com.example.bak.global.exception.BusinessException;
+import com.example.bak.global.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -67,5 +69,11 @@ public class Feed {
     public void update(String title, String content) {
         this.title = title;
         this.content = content;
+    }
+
+    public void validateAuthor(Long userId) {
+        if (!this.authorId.equals(userId)) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_ACTION);
+        }
     }
 }

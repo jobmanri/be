@@ -1,6 +1,7 @@
 package com.example.bak.feed.domain;
 
 import com.example.bak.feed.application.command.port.FeedCommandPort;
+import com.example.bak.feed.application.command.port.FeedValidationPort;
 import com.example.bak.global.support.AbstractStubRepository;
 import java.util.List;
 import java.util.Objects;
@@ -10,7 +11,7 @@ import org.springframework.data.domain.Pageable;
 
 public class FeedRepositoryStub
         extends AbstractStubRepository<Long, Feed>
-        implements FeedRepository, FeedCommandPort {
+        implements FeedRepository, FeedCommandPort, FeedValidationPort {
 
     @Override
     protected Long getId(Feed feed) {
@@ -45,5 +46,10 @@ public class FeedRepositoryStub
     @Override
     public void delete(Feed feed) {
         store.removeIf(it -> isSame(getId(it), getId(feed)));
+    }
+
+    @Override
+    public boolean existsById(Long feedId) {
+        return findById(feedId).isPresent();
     }
 }

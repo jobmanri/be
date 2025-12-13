@@ -1,6 +1,6 @@
 
 -- Drop tables if they exist to start with a clean slate
-DROP TABLE IF EXISTS feed_comments;
+DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS feeds;
 DROP TABLE IF EXISTS communities;
 DROP TABLE IF EXISTS profiles;
@@ -53,8 +53,8 @@ CREATE TABLE feeds (
     FOREIGN KEY (author_id) REFERENCES users(id)
 );
 
--- Table for Feed Comments
-CREATE TABLE feed_comments (
+-- Table for Comments
+CREATE TABLE comments (
     id BIGINT AUTO_INCREMENT PRIMARY KEY,
     comment TEXT NOT NULL,
     author_id BIGINT,

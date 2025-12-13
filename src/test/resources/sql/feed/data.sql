@@ -1,4 +1,4 @@
-DELETE FROM feed_comments;
+DELETE FROM comments;
 DELETE FROM feeds;
 DELETE FROM communities;
 DELETE FROM profiles;
@@ -27,7 +27,7 @@ INSERT INTO feeds (id, title, content, community_id, author_id) VALUES
     (2, 'title2', 'content2', 1, 2),
     (3, 'title3', 'content3', 2, 3);
 
-INSERT INTO feed_comments (id, comment, author_id, feed_id) VALUES
+INSERT INTO comments (id, comment, author_id, feed_id) VALUES
     (1, 'c1', 2, 1),
     (2, 'c2', 3, 1),
     (3, 'c3', 1, 2);

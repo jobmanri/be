@@ -31,12 +31,12 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 c.id   AS community_id,
                 c.name AS community_name,
                 c.job_group AS community_job_group,
-                COUNT(fc.id) AS comment_count
+                COUNT(cm.id) AS comment_count
             FROM feeds f
                 JOIN users u ON f.author_id = u.id
                 JOIN profiles p ON p.user_id = u.id
                 JOIN communities c ON f.community_id = c.id
-                LEFT JOIN feed_comments fc ON fc.feed_id = f.id
+                LEFT JOIN comments cm ON cm.feed_id = f.id
             """;
 
     private static final String SUMMARY_GROUP_BY = """

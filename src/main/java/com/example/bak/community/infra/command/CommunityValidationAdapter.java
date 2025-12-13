@@ -2,9 +2,9 @@ package com.example.bak.community.infra.command;
 
 import com.example.bak.feed.application.command.port.CommunityValidationPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class CommunityValidationAdapter implements CommunityValidationPort {
 

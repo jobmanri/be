@@ -2,9 +2,9 @@ package com.example.bak.feed.infra.command;
 
 import com.example.bak.feed.application.command.port.FeedValidationPort;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Repository;
+import org.springframework.stereotype.Component;
 
-@Repository
+@Component
 @RequiredArgsConstructor
 public class FeedValidationAdapter implements FeedValidationPort {
 

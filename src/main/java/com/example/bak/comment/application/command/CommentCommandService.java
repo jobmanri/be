@@ -4,7 +4,7 @@ import com.example.bak.comment.application.command.port.CommentCommandPort;
 import com.example.bak.comment.application.command.port.ProfileDataPort;
 import com.example.bak.comment.domain.Comment;
 import com.example.bak.comment.domain.ProfileSnapShot;
-import com.example.bak.feed.application.command.port.FeedCommandPort;
+import com.example.bak.feed.application.command.port.FeedValidationPort;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;
 import lombok.RequiredArgsConstructor;
@@ -17,12 +17,13 @@ import org.springframework.transaction.annotation.Transactional;
 public class CommentCommandService {
 
     private final CommentCommandPort commentCommandPort;
-    private final FeedCommandPort feedCommandPort;
+    private final FeedValidationPort feedValidationPort;
     private final ProfileDataPort profileDataPort;
 
     public void createComment(Long feedId, String content, Long userId) {
-        feedCommandPort.findById(feedId)
-                .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
+        if (!feedValidationPort.existsById(feedId)) {
+            throw new BusinessException(ErrorCode.FEED_NOT_FOUND);
+        }
 
         ProfileSnapShot userProfile = profileDataPort.findSnapshotByUserId(userId)
                 .orElseThrow(() -> new BusinessException(ErrorCode.USER_NOT_FOUND));

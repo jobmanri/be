@@ -77,7 +77,6 @@ dependencies {
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${swaggerUIVersion}"
 
     // * Flyway
-    runtimeOnly "org.flywaydb:flyway-gradle-plugin:${flywayVersion}"
     implementation "org.flywaydb:flyway-mysql:${flywayVersion}"
 }
 

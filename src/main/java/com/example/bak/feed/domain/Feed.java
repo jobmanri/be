@@ -1,28 +1,19 @@
 package com.example.bak.feed.domain;
 
-import com.example.bak.community.domain.Community;
-import com.example.bak.feedcomment.domain.FeedComment;
-import com.example.bak.user.domain.User;
-import jakarta.persistence.CascadeType;
+import com.example.bak.global.exception.BusinessException;
+import com.example.bak.global.exception.ErrorCode;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import java.util.ArrayList;
-import java.util.List;
 import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity(name = "feeds")
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor(access = AccessLevel.PROTECTED)
 public class Feed {
 
     @Id
@@ -35,51 +26,54 @@ public class Feed {
     @Column(nullable = false)
     private String content;
 
-    @OneToMany(mappedBy = "feed", fetch = FetchType.LAZY, cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<FeedComment> comments = new ArrayList<>();
+    @Column(nullable = false)
+    private Long communityId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private Community community;
+    @Column(nullable = false)
+    private Long authorId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    private User author;
-
-    private Feed(Long id, String title, String content, Community community, User author) {
+    private Feed(Long id, String title, String content, Long communityId, Long authorId) {
         this.id = id;
         this.title = title;
         this.content = content;
-        this.community = community;
-        this.author = author;
+        this.communityId = communityId;
+        this.authorId = authorId;
     }
 
-    private Feed(String title, String content, Community community, User author) {
+    private Feed(String title, String content, Long communityId, Long authorId) {
         this.title = title;
         this.content = content;
-        this.community = community;
-        this.author = author;
+        this.communityId = communityId;
+        this.authorId = authorId;
     }
 
     public static Feed create(
             String title,
             String content,
-            Community community,
-            User author
+            Long communityId,
+            Long authorId
     ) {
-        return new Feed(title, content, community, author);
+        return new Feed(title, content, communityId, authorId);
     }
 
     public static Feed testInstance(
             Long id,
             String title,
             String content,
-            Community community,
-            User author
+            Long communityId,
+            Long userId
     ) {
-        return new Feed(id, title, content, community, author);
+        return new Feed(id, title, content, communityId, userId);
     }
 
-    public void addComment(FeedComment comment) {
-        comment.joinFeed(this);
-        this.comments.add(comment);
+    public void update(String title, String content) {
+        this.title = title;
+        this.content = content;
+    }
+
+    public void validateAuthor(Long userId) {
+        if (!this.authorId.equals(userId)) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED_ACTION);
+        }
     }
 }

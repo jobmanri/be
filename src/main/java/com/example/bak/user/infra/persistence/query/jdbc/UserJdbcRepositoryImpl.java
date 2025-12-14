@@ -4,8 +4,8 @@ import com.example.bak.user.application.query.dto.UserResult;
 import com.example.bak.user.domain.Profile;
 import com.example.bak.user.domain.User;
 import com.example.bak.user.infra.persistence.query.jdbc.mapper.ProfileMapper;
-import com.example.bak.user.infra.persistence.query.jdbc.mapper.UserInfoMapper;
 import com.example.bak.user.infra.persistence.query.jdbc.mapper.UserMapper;
+import com.example.bak.user.infra.persistence.query.jdbc.mapper.UserResultMapper;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -76,7 +76,7 @@ public class UserJdbcRepositoryImpl implements UserJdbcRepository {
                     where u.id = :userId
                 """;
         MapSqlParameterSource params = new MapSqlParameterSource().addValue("userId", userId);
-        List<UserResult> result = repository.query(sql, params, new UserInfoMapper());
+        List<UserResult> result = repository.query(sql, params, new UserResultMapper());
         return result.stream().findFirst();
     }
 }

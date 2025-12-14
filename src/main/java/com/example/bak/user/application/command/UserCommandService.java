@@ -1,6 +1,6 @@
 package com.example.bak.user.application.command;
 
-import com.example.bak.user.application.command.dto.UserResult;
+import com.example.bak.user.application.command.dto.UserCommandResult;
 import com.example.bak.user.application.command.port.UserCommandPort;
 import com.example.bak.user.application.query.dto.ProfileResult;
 import com.example.bak.user.domain.User;
@@ -15,11 +15,11 @@ public class UserCommandService {
     private final UserCommandPort userCommandPort;
 
     @Transactional
-    public UserResult createUser(String email, String password) {
+    public UserCommandResult createUser(String email, String password) {
         User user = User.create(email, password);
         User savedUser = userCommandPort.save(user);
 
-        return UserResult.of(savedUser.getId());
+        return UserCommandResult.of(savedUser.getId());
     }
 
     @Transactional

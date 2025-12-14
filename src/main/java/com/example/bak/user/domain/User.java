@@ -2,7 +2,6 @@ package com.example.bak.user.domain;
 
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -10,8 +9,6 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.OneToOne;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -33,9 +30,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user", nullable = false)
-    private Profile profile;
+    private Long profileId;
 
     @Enumerated(EnumType.STRING)
     private UserRole role = UserRole.NORMAL;
@@ -51,12 +46,6 @@ public class User {
         this.password = password;
     }
 
-    public void matchPassword(String newPassword) {
-        if (!newPassword.equals(this.password)) {
-            throw new BusinessException(ErrorCode.INCORRECT_PASSWORD);
-        }
-    }
-
     public static User createInstance(Long id, String email, String password) {
         return new User(id, email, password);
     }
@@ -69,7 +58,13 @@ public class User {
         return new User(id, email, password);
     }
 
-    public void addProfile(Profile profile) {
-        this.profile = profile;
+    public void matchPassword(String newPassword) {
+        if (!newPassword.equals(this.password)) {
+            throw new BusinessException(ErrorCode.INCORRECT_PASSWORD);
+        }
+    }
+
+    public void addProfile(Long profileId) {
+        this.profileId = profileId;
     }
 }

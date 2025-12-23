@@ -32,13 +32,14 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 c.id   AS community_id,
                 c.name AS community_name,
                 c.job_group AS community_job_group,
-                COUNT(cm.id) AS comment_count,
-                0 AS like_count
+                COUNT(DISTINCT cm.id) AS comment_count,
+                COUNT(DISTINCT fl.id) AS like_count
             FROM feeds f
                 JOIN users u ON f.author_id = u.id
                 JOIN profiles p ON p.user_id = u.id
                 JOIN communities c ON f.community_id = c.id
                 LEFT JOIN comments cm ON cm.feed_id = f.id
+                LEFT JOIN feed_likes fl ON fl.feed_id = f.id
             """;
 
     private static final String SUMMARY_GROUP_BY = """
@@ -55,13 +56,14 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 c.id      AS community_id,
                 c.name    AS community_name,
                 c.job_group AS community_job_group,
-                COUNT(cm.id) AS comment_count,
-                0 AS like_count
+                COUNT(DISTINCT cm.id) AS comment_count,
+                COUNT(DISTINCT fl.id) AS like_count
             FROM feeds f
                 JOIN users u ON f.author_id = u.id
                 JOIN profiles p ON p.user_id = u.id
                 JOIN communities c ON f.community_id = c.id
                 LEFT JOIN comments cm ON cm.feed_id = f.id
+                LEFT JOIN feed_likes fl ON fl.feed_id = f.id
             WHERE f.id = :feedId
             GROUP BY f.id, f.title, f.content, u.id, p.nickname, c.id, c.name, c.job_group
             LIMIT 1

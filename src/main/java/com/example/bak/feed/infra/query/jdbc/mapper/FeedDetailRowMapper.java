@@ -27,7 +27,9 @@ public class FeedDetailRowMapper implements RowMapper<FeedDetail> {
                 rs.getString("title"),
                 rs.getString("content"),
                 author,
-                community
+                community,
+                rs.getInt("like_count"),
+                rs.getInt("comment_count")
         );
     }
 }

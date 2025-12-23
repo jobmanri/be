@@ -125,7 +125,7 @@ public interface FeedSwagger {
 
     @Operation(
             summary = "피드 목록 조회",
-            description = "페이지 번호와 페이지 크기를 지정해 최신 피드 목록을 조회합니다."
+            description = "페이지 번호와 페이지 크기를 지정해 최신 피드 목록을 조회하며, 각 항목은 본문 미리보기와 좋아요/댓글 수를 함께 제공합니다."
     )
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -145,6 +145,7 @@ public interface FeedSwagger {
                                                     {
                                                         "id": 7,
                                                         "title": "Infra 스터디 회고",
+                                                        "contentPreview": "스터디에서 다룬 주제와 배운 내용을 간단히 정리했습니다...",
                                                         "author": {
                                                             "id": 21,
                                                             "nickname": "infra-cat"
@@ -154,6 +155,7 @@ public interface FeedSwagger {
                                                             "name": "백엔드 개발자",
                                                             "jobGroup": "개발"
                                                         },
+                                                        "likeCount": 0,
                                                         "commentCount": 2
                                                     }
                                                 ]
@@ -192,7 +194,7 @@ public interface FeedSwagger {
 
     @Operation(
             summary = "피드 요약 조회",
-            description = "피드 카드 노출용으로 필요한 최소 정보(제목, 작성자, 커뮤니티, 댓글 수)를 조회합니다."
+            description = "피드 카드 노출용으로 필요한 최소 정보(제목, 본문 미리보기, 작성자, 커뮤니티, 좋아요/댓글 수)를 조회합니다."
     )
     @ApiResponses(value = {
             @io.swagger.v3.oas.annotations.responses.ApiResponse(
@@ -211,6 +213,7 @@ public interface FeedSwagger {
                                                 "data": {
                                                     "id": 1,
                                                     "title": "신입 개발자 채용 정보 공유",
+                                                    "contentPreview": "채용 절차를 준비하면서 도움이 되었던 자료를 정리했습니다...",
                                                     "author": {
                                                         "id": 5,
                                                         "nickname": "backend-dev"
@@ -220,6 +223,7 @@ public interface FeedSwagger {
                                                         "name": "백엔드 개발자",
                                                         "jobGroup": "개발"
                                                     },
+                                                    "likeCount": 0,
                                                     "commentCount": 5
                                                 }
                                             }
@@ -281,7 +285,9 @@ public interface FeedSwagger {
                                                         "id": 2,
                                                         "name": "백엔드 개발자",
                                                         "jobGroup": "개발"
-                                                    }
+                                                    },
+                                                    "likeCount": 0,
+                                                    "commentCount": 5
                                                 }
                                             }
                                             """

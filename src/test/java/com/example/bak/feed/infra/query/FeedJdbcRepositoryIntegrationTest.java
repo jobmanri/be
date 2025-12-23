@@ -37,6 +37,8 @@ class FeedJdbcRepositoryIntegrationTest extends AbstractMySqlContainerTest {
             assertThat(detail.title()).isEqualTo("title1");
             assertThat(detail.author().nickname()).isEqualTo("nick1");
             assertThat(detail.community().name()).isEqualTo("backend");
+            assertThat(detail.commentCount()).isEqualTo(2);
+            assertThat(detail.likeCount()).isZero();
         }
     }
 
@@ -52,6 +54,8 @@ class FeedJdbcRepositoryIntegrationTest extends AbstractMySqlContainerTest {
             assertThat(summary.id()).isEqualTo(1L);
             assertThat(summary.commentCount()).isEqualTo(2);
             assertThat(summary.author().nickname()).isEqualTo("nick1");
+            assertThat(summary.contentPreview()).isEqualTo("content1");
+            assertThat(summary.likeCount()).isZero();
         }
     }
 
@@ -68,6 +72,7 @@ class FeedJdbcRepositoryIntegrationTest extends AbstractMySqlContainerTest {
             List<FeedSummary> content = page.getContent();
             assertThat(content).hasSize(2);
             assertThat(content.getFirst().id()).isEqualTo(3L); // DESC order
+            assertThat(content.getFirst().contentPreview()).isEqualTo("content3");
         }
     }
 }

@@ -16,6 +16,8 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class FeedQueryService {
 
+    private static final int CONTENT_PREVIEW_LIMIT = 100;
+
     private final FeedQueryPort feedQueryPort;
 
     public FeedDetail getFeedDetail(Long feedId) {
@@ -25,12 +27,27 @@ public class FeedQueryService {
 
     public FeedSummary getFeedSummary(Long feedId) {
         return feedQueryPort.findSummaryById(feedId)
+                .map(this::applyContentPreviewLimit)
                 .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
     }
 
     public List<FeedSummary> getFeeds(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
-        Page<FeedSummary> feedPage = feedQueryPort.findAll(pageable);
+        Page<FeedSummary> feedPage = feedQueryPort.findAll(pageable)
+                .map(this::applyContentPreviewLimit);
         return feedPage.getContent();
+    }
+
+    private FeedSummary applyContentPreviewLimit(FeedSummary summary) {
+        String preview = summary.contentPreview();
+        if (preview == null) {
+            return summary.withContentPreview("");
+        }
+
+        if (preview.length() <= CONTENT_PREVIEW_LIMIT) {
+            return summary;
+        }
+
+        return summary.withContentPreview(preview.substring(0, CONTENT_PREVIEW_LIMIT));
     }
 }

@@ -11,6 +11,8 @@ public record FeedDetail(
         String title,
         String content,
         UserResult author,
-        CommunityResult.Detail community
+        CommunityResult.Detail community,
+        int likeCount,
+        int commentCount
 ) {
 }

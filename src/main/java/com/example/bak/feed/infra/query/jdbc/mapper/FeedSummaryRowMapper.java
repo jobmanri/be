@@ -25,8 +25,10 @@ public class FeedSummaryRowMapper implements RowMapper<FeedSummary> {
         return new FeedSummary(
                 rs.getLong("id"),
                 rs.getString("title"),
+                rs.getString("content"),
                 author,
                 community,
+                rs.getInt("like_count"),
                 rs.getInt("comment_count")
         );
     }

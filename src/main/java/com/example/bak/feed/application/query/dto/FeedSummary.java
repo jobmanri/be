@@ -9,9 +9,22 @@ import com.example.bak.user.application.query.dto.UserResult;
 public record FeedSummary(
         Long id,
         String title,
+        String contentPreview,
         UserResult author,
         CommunityResult.Detail community,
+        int likeCount,
         int commentCount
 ) {
 
+    public FeedSummary withContentPreview(String preview) {
+        return new FeedSummary(
+                id,
+                title,
+                preview,
+                author,
+                community,
+                likeCount,
+                commentCount
+        );
+    }
 }

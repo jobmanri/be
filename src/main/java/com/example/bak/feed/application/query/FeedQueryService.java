@@ -39,10 +39,33 @@ public class FeedQueryService {
         return feedPage.getContent();
     }
 
+    public List<FeedDetail> getMainPageFeeds(int limit) {
+        int sanitizedLimit = Math.max(1, limit);
+        return feedQueryPort.findTopDetails(sanitizedLimit);
+    }
+
+    public CommunityPageResult getFeedsByCommunity(Long communityId, Long cursor, int size) {
+        int sanitizedSize = Math.max(1, size);
+        List<FeedSummary> feeds = feedQueryPort.findByCommunityIdWithCursor(communityId, cursor, sanitizedSize)
+                .stream()
+                .map(this::applyContentPreviewLimit)
+                .toList();
+
+        Long nextCursor = feeds.isEmpty() ? null : feeds.get(feeds.size() - 1).id();
+        return new CommunityPageResult(feeds, nextCursor);
+    }
+
+    public List<FeedTitleOnly> getFeedTitlesGroupedByCommunity(int limitPerCommunity) {
+        int sanitizedLimit = Math.max(1, limitPerCommunity);
+        return feedQueryPort.findTitleOnlyGroupedByCommunity(sanitizedLimit);
+    }
+
     public List<FeedTitleOnly> getFeedTitlesByCommunity(Long communityId, int limit) {
         int sanitizedLimit = Math.max(1, limit);
         return feedQueryPort.findTitleOnlyByCommunity(communityId, sanitizedLimit);
     }
+
+    public record CommunityPageResult(List<FeedSummary> feeds, Long nextCursor) {}
 
     private FeedSummary applyContentPreviewLimit(FeedSummary summary) {
         String preview = summary.contentPreview();

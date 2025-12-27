@@ -193,6 +193,40 @@ public interface FeedSwagger {
     );
 
     @Operation(
+            summary = "메인 페이지 피드 조회",
+            description = "최신 순으로 정렬된 피드 상세 정보를 제한 개수만큼 조회합니다."
+    )
+    ResponseEntity<ApiResponse> getMainPageFeeds(
+            @Parameter(description = "조회할 개수", example = "10",
+                    schema = @Schema(minimum = "1", defaultValue = "10"))
+            @RequestParam(defaultValue = "10") int limit
+    );
+
+    @Operation(
+            summary = "메인 페이지 커뮤니티별 제목 조회",
+            description = "각 커뮤니티별로 최신 N개의 피드 제목만 묶어서 조회합니다."
+    )
+    ResponseEntity<ApiResponse> getMainPageTitles(
+            @Parameter(description = "커뮤니티별 조회할 개수", example = "5",
+                    schema = @Schema(minimum = "1", defaultValue = "5"))
+            @RequestParam(defaultValue = "5") int limit
+    );
+
+    @Operation(
+            summary = "커뮤니티 피드 목록 조회",
+            description = "특정 커뮤니티에 속한 피드를 페이지네이션 형태로 조회합니다."
+    )
+    ResponseEntity<ApiResponse> getFeedsByCommunity(
+            @Parameter(description = "커뮤니티 ID", required = true, example = "1")
+            @PathVariable Long communityId,
+            @Parameter(description = "다음 페이지 조회를 위한 커서(이전 응답의 nextCursor)")
+            @RequestParam(required = false) Long cursor,
+            @Parameter(description = "한 번에 가져올 개수", example = "20",
+                    schema = @Schema(minimum = "1", defaultValue = "20"))
+            @RequestParam(defaultValue = "20") int size
+    );
+
+    @Operation(
             summary = "커뮤니티별 피드 제목 조회",
             description = "특정 커뮤니티에서 최신 N개의 피드 제목과 좋아요/댓글 요약을 조회합니다."
     )

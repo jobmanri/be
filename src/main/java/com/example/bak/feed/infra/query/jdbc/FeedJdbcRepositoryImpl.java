@@ -73,6 +73,28 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
             """;
 
     private static final String DEFAULT_ORDER_BY = "ORDER BY f.id DESC";
+    private static final String DETAIL_MAIN_SELECT = """
+            SELECT
+                f.id      AS id,
+                f.title   AS title,
+                f.content AS content,
+                u.id      AS author_id,
+                p.nickname AS author_nickname,
+                c.id      AS community_id,
+                c.name    AS community_name,
+                c.job_group AS community_job_group,
+                COUNT(DISTINCT cm.id) AS comment_count,
+                COUNT(DISTINCT fl.id) AS like_count
+            FROM feeds f
+                JOIN users u ON f.author_id = u.id
+                JOIN profiles p ON p.user_id = u.id
+                JOIN communities c ON f.community_id = c.id
+                LEFT JOIN comments cm ON cm.feed_id = f.id
+                LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id
+            GROUP BY f.id, f.title, f.content, u.id, p.nickname, c.id, c.name, c.job_group
+            ORDER BY f.id DESC
+            LIMIT :limit
+            """;
     private static final String TITLE_ONLY_SELECT = """
             SELECT
                 f.id   AS id,
@@ -90,6 +112,34 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
             GROUP BY f.id, f.title, c.id, c.name, c.job_group
             ORDER BY f.id DESC
             LIMIT :limit
+            """;
+
+    private static final String TITLE_GROUPED_SELECT = """
+            SELECT id,
+                   title,
+                   community_id,
+                   community_name,
+                   community_job_group,
+                   comment_count,
+                   like_count
+            FROM (
+                SELECT
+                    f.id   AS id,
+                    f.title AS title,
+                    c.id   AS community_id,
+                    c.name AS community_name,
+                    c.job_group AS community_job_group,
+                    COUNT(DISTINCT cm.id) AS comment_count,
+                    COUNT(DISTINCT fl.id) AS like_count,
+                    ROW_NUMBER() OVER (PARTITION BY f.community_id ORDER BY f.id DESC) AS rn
+                FROM feeds f
+                    JOIN communities c ON f.community_id = c.id
+                    LEFT JOIN comments cm ON cm.feed_id = f.id
+                    LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id
+                GROUP BY f.id, f.title, c.id, c.name, c.job_group
+            ) ranked
+            WHERE rn <= :limit
+            ORDER BY community_id, id DESC
             """;
 
     private final NamedParameterJdbcTemplate jdbc;
@@ -137,6 +187,39 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 .addValue("limit", limit);
 
         return jdbc.query(TITLE_ONLY_SELECT, params, feedTitleOnlyMapper);
+    }
+
+    @Override
+    public List<FeedDetail> findTopDetails(int limit) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("limit", limit);
+
+        return jdbc.query(DETAIL_MAIN_SELECT, params, feedDetailMapper);
+    }
+
+    @Override
+    public List<FeedTitleOnly> findTitleOnlyGroupedByCommunity(int limitPerCommunity) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("limit", limitPerCommunity);
+
+        return jdbc.query(TITLE_GROUPED_SELECT, params, feedTitleOnlyMapper);
+    }
+
+    @Override
+    public List<FeedSummary> findByCommunityIdWithCursor(Long communityId, Long cursorId, int size) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("communityId", communityId)
+                .addValue("limit", size)
+                .addValue("cursorId", cursorId);
+
+        String sql = SUMMARY_SELECT + '\n'
+                + "WHERE f.community_id = :communityId\n"
+                + (cursorId != null ? "AND f.id < :cursorId\n" : "")
+                + SUMMARY_GROUP_BY + '\n'
+                + DEFAULT_ORDER_BY + '\n'
+                + "LIMIT :limit";
+
+        return jdbc.query(sql, params, feedSummaryMapper);
     }
 
     private long countFeeds() {

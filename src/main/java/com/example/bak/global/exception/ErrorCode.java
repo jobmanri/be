@@ -40,7 +40,8 @@ public enum ErrorCode {
     MESSAGE_NOT_FOUND("PM001", HttpStatus.NOT_FOUND, "쪽지 리소스를 찾을 수 없습니다."),
 
     // Global
-    UNAUTHORIZED_ACTION("CM002", HttpStatus.FORBIDDEN, "권한이 없는 작업입니다.");
+    UNAUTHORIZED_ACTION("CM002", HttpStatus.FORBIDDEN, "권한이 없는 작업입니다."),
+    INVALID_LIKE_TARGET("LK001", HttpStatus.BAD_REQUEST, "지원하지 않는 좋아요 대상입니다.");
 
     private final String code;
     private final HttpStatus status;

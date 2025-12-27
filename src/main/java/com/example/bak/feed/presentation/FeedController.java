@@ -5,6 +5,7 @@ import com.example.bak.feed.application.command.dto.FeedResult;
 import com.example.bak.feed.application.query.FeedQueryService;
 import com.example.bak.feed.application.query.dto.FeedDetail;
 import com.example.bak.feed.application.query.dto.FeedSummary;
+import com.example.bak.feed.application.query.dto.FeedTitleOnly;
 import com.example.bak.feed.presentation.dto.FeedRequest;
 import com.example.bak.feed.presentation.dto.FeedUpdateRequest;
 import com.example.bak.feed.presentation.swagger.FeedSwagger;
@@ -12,6 +13,8 @@ import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
 import com.example.bak.global.security.annotation.AuthUser;
+import com.example.bak.like.application.command.LikeCommandService;
+import com.example.bak.like.domain.LikeTargetType;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -31,6 +34,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class FeedController implements FeedSwagger {
 
     private final FeedCommandService feedCommandService;
+    private final LikeCommandService likeCommandService;
     private final FeedQueryService feedQueryService;
 
     @PostMapping()
@@ -54,6 +58,16 @@ public class FeedController implements FeedSwagger {
     ) {
         List<FeedSummary> feeds = feedQueryService.getFeeds(page, size);
         ApiResponse response = ApiResponseFactory.success("피드 목록을 성공적으로 조회하였습니다.", feeds);
+        return ResponseEntity.ok(response);
+    }
+
+    @GetMapping("/by-community/{communityId}/titles")
+    public ResponseEntity<ApiResponse> getFeedTitlesByCommunity(
+            @PathVariable Long communityId,
+            @RequestParam(defaultValue = "5") int limit
+    ) {
+        List<FeedTitleOnly> titles = feedQueryService.getFeedTitlesByCommunity(communityId, limit);
+        ApiResponse response = ApiResponseFactory.success("커뮤니티 피드 제목을 성공적으로 조회하였습니다.", titles);
         return ResponseEntity.ok(response);
     }
 
@@ -89,6 +103,26 @@ public class FeedController implements FeedSwagger {
     ) {
         feedCommandService.deleteFeed(feedId, userId);
         ApiResponse response = ApiResponseFactory.successVoid("피드를 성공적으로 삭제하였습니다.");
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/{feedId}/likes")
+    public ResponseEntity<ApiResponse> likeFeed(
+            @AuthUser Long userId,
+            @PathVariable Long feedId
+    ) {
+        likeCommandService.like(LikeTargetType.FEED, feedId, userId);
+        ApiResponse response = ApiResponseFactory.successVoid("피드에 좋아요를 추가했습니다.");
+        return ResponseEntity.ok(response);
+    }
+
+    @DeleteMapping("/{feedId}/likes")
+    public ResponseEntity<ApiResponse> unlikeFeed(
+            @AuthUser Long userId,
+            @PathVariable Long feedId
+    ) {
+        likeCommandService.unlike(LikeTargetType.FEED, feedId, userId);
+        ApiResponse response = ApiResponseFactory.successVoid("피드 좋아요를 취소했습니다.");
         return ResponseEntity.ok(response);
     }
 }

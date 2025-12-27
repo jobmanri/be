@@ -2,9 +2,11 @@ package com.example.bak.feed.infra.query;
 
 import com.example.bak.feed.application.query.dto.FeedDetail;
 import com.example.bak.feed.application.query.dto.FeedSummary;
+import com.example.bak.feed.application.query.dto.FeedTitleOnly;
 import com.example.bak.feed.application.query.port.FeedQueryPort;
 import com.example.bak.feed.infra.query.jdbc.FeedJdbcRepository;
 import java.util.Optional;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -29,5 +31,10 @@ public class FeedQueryAdapter implements FeedQueryPort {
     @Override
     public Optional<FeedDetail> findDetailById(Long feedId) {
         return feedJdbcRepository.findDetailById(feedId);
+    }
+
+    @Override
+    public List<FeedTitleOnly> findTitleOnlyByCommunity(Long communityId, int limit) {
+        return feedJdbcRepository.findTitleOnlyByCommunity(communityId, limit);
     }
 }

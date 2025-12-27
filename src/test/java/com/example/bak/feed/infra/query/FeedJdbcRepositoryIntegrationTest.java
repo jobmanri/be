@@ -4,6 +4,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 import com.example.bak.feed.application.query.dto.FeedDetail;
 import com.example.bak.feed.application.query.dto.FeedSummary;
+import com.example.bak.feed.application.query.dto.FeedTitleOnly;
 import com.example.bak.feed.infra.query.jdbc.FeedJdbcRepository;
 import com.example.bak.global.AbstractMySqlContainerTest;
 import java.util.List;
@@ -74,6 +75,24 @@ class FeedJdbcRepositoryIntegrationTest extends AbstractMySqlContainerTest {
             assertThat(content.getFirst().id()).isEqualTo(3L); // DESC order
             assertThat(content.getFirst().contentPreview()).isEqualTo("content3");
             assertThat(content.getFirst().likeCount()).isEqualTo(1);
+        }
+    }
+
+    @Nested
+    @DisplayName("findTitleOnlyByCommunity")
+    class FindTitleOnlyByCommunity {
+
+        @Test
+        @DisplayName("커뮤니티별 최신 피드 제목을 제한 개수만큼 조회한다")
+        void success() {
+            List<FeedTitleOnly> titles = feedJdbcRepository.findTitleOnlyByCommunity(1L, 1);
+
+            assertThat(titles).hasSize(1);
+            FeedTitleOnly titleOnly = titles.getFirst();
+            assertThat(titleOnly.title()).isEqualTo("title2");
+            assertThat(titleOnly.likeCount()).isZero();
+            assertThat(titleOnly.commentCount()).isEqualTo(1);
+            assertThat(titleOnly.community().id()).isEqualTo(1L);
         }
     }
 }

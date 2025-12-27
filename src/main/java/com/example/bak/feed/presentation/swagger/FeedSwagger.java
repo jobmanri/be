@@ -193,6 +193,51 @@ public interface FeedSwagger {
     );
 
     @Operation(
+            summary = "커뮤니티별 피드 제목 조회",
+            description = "특정 커뮤니티에서 최신 N개의 피드 제목과 좋아요/댓글 요약을 조회합니다."
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "커뮤니티 피드 제목 조회 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiResponse.class),
+                            examples = @ExampleObject(
+                                    name = "FeedTitleList",
+                                    summary = "커뮤니티별 제목 리스트",
+                                    value = """
+                                            {
+                                                "status": "SUCCESS",
+                                                "message": "커뮤니티 피드 제목을 성공적으로 조회하였습니다.",
+                                                "data": [
+                                                    {
+                                                        "id": 10,
+                                                        "title": "블라인드 스타일 데이터",
+                                                        "likeCount": 12,
+                                                        "commentCount": 4,
+                                                        "community": {
+                                                            "id": 3,
+                                                            "name": "백엔드 개발자",
+                                                            "jobGroup": "개발"
+                                                        }
+                                                    }
+                                                ]
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
+    ResponseEntity<ApiResponse> getFeedTitlesByCommunity(
+            @Parameter(description = "커뮤니티 ID", required = true, example = "1")
+            @PathVariable Long communityId,
+            @Parameter(description = "조회할 개수", example = "5",
+                    schema = @Schema(minimum = "1", defaultValue = "5"))
+            @RequestParam(defaultValue = "5") int limit
+    );
+
+    @Operation(
             summary = "피드 요약 조회",
             description = "피드 카드 노출용으로 필요한 최소 정보(제목, 본문 미리보기, 작성자, 커뮤니티, 좋아요/댓글 수)를 조회합니다."
     )
@@ -520,6 +565,70 @@ public interface FeedSwagger {
             )
     })
     ResponseEntity<ApiResponse> deleteFeed(
+            @Parameter(hidden = true, description = "인증된 사용자 ID", required = true)
+            Long userId,
+            @Parameter(description = "피드 ID", required = true, example = "1")
+            @PathVariable Long feedId
+    );
+
+    @Operation(
+            summary = "피드 좋아요 등록",
+            description = "로그인 사용자가 특정 피드에 좋아요를 추가합니다."
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "좋아요 등록 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiResponse.class),
+                            examples = @ExampleObject(
+                                    name = "FeedLikeSuccess",
+                                    summary = "좋아요 성공",
+                                    value = """
+                                            {
+                                                "status": "SUCCESS",
+                                                "message": "피드에 좋아요를 추가했습니다.",
+                                                "data": null
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
+    ResponseEntity<ApiResponse> likeFeed(
+            @Parameter(hidden = true, description = "인증된 사용자 ID", required = true)
+            Long userId,
+            @Parameter(description = "피드 ID", required = true, example = "1")
+            @PathVariable Long feedId
+    );
+
+    @Operation(
+            summary = "피드 좋아요 취소",
+            description = "로그인 사용자가 자신이 누른 좋아요를 취소합니다."
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "좋아요 취소 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiResponse.class),
+                            examples = @ExampleObject(
+                                    name = "FeedUnlikeSuccess",
+                                    summary = "좋아요 취소",
+                                    value = """
+                                            {
+                                                "status": "SUCCESS",
+                                                "message": "피드 좋아요를 취소했습니다.",
+                                                "data": null
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
+    ResponseEntity<ApiResponse> unlikeFeed(
             @Parameter(hidden = true, description = "인증된 사용자 ID", required = true)
             Long userId,
             @Parameter(description = "피드 ID", required = true, example = "1")

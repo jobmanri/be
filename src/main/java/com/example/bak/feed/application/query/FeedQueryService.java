@@ -2,6 +2,7 @@ package com.example.bak.feed.application.query;
 
 import com.example.bak.feed.application.query.dto.FeedDetail;
 import com.example.bak.feed.application.query.dto.FeedSummary;
+import com.example.bak.feed.application.query.dto.FeedTitleOnly;
 import com.example.bak.feed.application.query.port.FeedQueryPort;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;
@@ -36,6 +37,11 @@ public class FeedQueryService {
         Page<FeedSummary> feedPage = feedQueryPort.findAll(pageable)
                 .map(this::applyContentPreviewLimit);
         return feedPage.getContent();
+    }
+
+    public List<FeedTitleOnly> getFeedTitlesByCommunity(Long communityId, int limit) {
+        int sanitizedLimit = Math.max(1, limit);
+        return feedQueryPort.findTitleOnlyByCommunity(communityId, sanitizedLimit);
     }
 
     private FeedSummary applyContentPreviewLimit(FeedSummary summary) {

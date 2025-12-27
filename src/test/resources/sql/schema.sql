@@ -1,5 +1,5 @@
 -- Drop tables if they exist to start with a clean slate
-DROP TABLE IF EXISTS feed_likes;
+DROP TABLE IF EXISTS likes;
 DROP TABLE IF EXISTS comments;
 DROP TABLE IF EXISTS feeds;
 DROP TABLE IF EXISTS communities;
@@ -58,15 +58,15 @@ CREATE TABLE feeds
     FOREIGN KEY (author_id) REFERENCES users (id)
 );
 
--- Table for Feed Likes
-CREATE TABLE feed_likes
+-- Table for Likes
+CREATE TABLE likes
 (
-    id        BIGINT AUTO_INCREMENT PRIMARY KEY,
-    feed_id   BIGINT      NOT NULL,
-    user_id   BIGINT      NOT NULL,
-    created_at TIMESTAMP  NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    CONSTRAINT uk_feed_like UNIQUE (feed_id, user_id),
-    FOREIGN KEY (feed_id) REFERENCES feeds (id),
+    id          BIGINT AUTO_INCREMENT PRIMARY KEY,
+    target_type VARCHAR(50) NOT NULL,
+    target_id   BIGINT      NOT NULL,
+    user_id     BIGINT      NOT NULL,
+    created_at  TIMESTAMP   NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT uk_like_target_user UNIQUE (target_type, target_id, user_id),
     FOREIGN KEY (user_id) REFERENCES users (id)
 );
 

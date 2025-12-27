@@ -2,8 +2,10 @@ package com.example.bak.feed.infra.query.jdbc;
 
 import com.example.bak.feed.application.query.dto.FeedDetail;
 import com.example.bak.feed.application.query.dto.FeedSummary;
+import com.example.bak.feed.application.query.dto.FeedTitleOnly;
 import com.example.bak.feed.infra.query.jdbc.mapper.FeedDetailRowMapper;
 import com.example.bak.feed.infra.query.jdbc.mapper.FeedSummaryRowMapper;
+import com.example.bak.feed.infra.query.jdbc.mapper.FeedTitleOnlyRowMapper;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -22,6 +24,7 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
 
     private static final FeedSummaryRowMapper feedSummaryMapper = new FeedSummaryRowMapper();
     private static final FeedDetailRowMapper feedDetailMapper = new FeedDetailRowMapper();
+    private static final FeedTitleOnlyRowMapper feedTitleOnlyMapper = new FeedTitleOnlyRowMapper();
     private static final String SUMMARY_SELECT = """
             SELECT
                 f.id   AS id,
@@ -39,7 +42,7 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 JOIN profiles p ON p.user_id = u.id
                 JOIN communities c ON f.community_id = c.id
                 LEFT JOIN comments cm ON cm.feed_id = f.id
-                LEFT JOIN feed_likes fl ON fl.feed_id = f.id
+                LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id
             """;
 
     private static final String SUMMARY_GROUP_BY = """
@@ -63,13 +66,31 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 JOIN profiles p ON p.user_id = u.id
                 JOIN communities c ON f.community_id = c.id
                 LEFT JOIN comments cm ON cm.feed_id = f.id
-                LEFT JOIN feed_likes fl ON fl.feed_id = f.id
+                LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id
             WHERE f.id = :feedId
             GROUP BY f.id, f.title, f.content, u.id, p.nickname, c.id, c.name, c.job_group
             LIMIT 1
             """;
 
     private static final String DEFAULT_ORDER_BY = "ORDER BY f.id DESC";
+    private static final String TITLE_ONLY_SELECT = """
+            SELECT
+                f.id   AS id,
+                f.title AS title,
+                c.id   AS community_id,
+                c.name AS community_name,
+                c.job_group AS community_job_group,
+                COUNT(DISTINCT cm.id) AS comment_count,
+                COUNT(DISTINCT fl.id) AS like_count
+            FROM feeds f
+                JOIN communities c ON f.community_id = c.id
+                LEFT JOIN comments cm ON cm.feed_id = f.id
+                LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id
+            WHERE f.community_id = :communityId
+            GROUP BY f.id, f.title, c.id, c.name, c.job_group
+            ORDER BY f.id DESC
+            LIMIT :limit
+            """;
 
     private final NamedParameterJdbcTemplate jdbc;
 
@@ -107,6 +128,15 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 .addValue("feedId", feedId);
 
         return jdbc.query(DETAIL_SELECT, params, feedDetailMapper).stream().findFirst();
+    }
+
+    @Override
+    public List<FeedTitleOnly> findTitleOnlyByCommunity(Long communityId, int limit) {
+        MapSqlParameterSource params = new MapSqlParameterSource()
+                .addValue("communityId", communityId)
+                .addValue("limit", limit);
+
+        return jdbc.query(TITLE_ONLY_SELECT, params, feedTitleOnlyMapper);
     }
 
     private long countFeeds() {

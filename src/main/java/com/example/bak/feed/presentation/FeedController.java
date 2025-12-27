@@ -3,6 +3,7 @@ package com.example.bak.feed.presentation;
 import com.example.bak.feed.application.command.FeedCommandService;
 import com.example.bak.feed.application.command.dto.FeedResult;
 import com.example.bak.feed.application.query.FeedQueryService;
+import com.example.bak.feed.application.query.dto.FeedCommunityPageResult;
 import com.example.bak.feed.application.query.dto.FeedDetail;
 import com.example.bak.feed.application.query.dto.FeedSummary;
 import com.example.bak.feed.application.query.dto.FeedTitleOnly;
@@ -20,7 +21,6 @@ import com.example.bak.like.application.command.LikeCommandService;
 import com.example.bak.like.domain.LikeTargetType;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -57,10 +57,9 @@ public class FeedController implements FeedSwagger {
 
     @GetMapping("/feeds")
     public ResponseEntity<ApiResponse> getFeeds(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size
+            @RequestParam(defaultValue = "20") int limit
     ) {
-        List<FeedSummary> feeds = feedQueryService.getFeeds(page, size);
+        List<FeedSummary> feeds = feedQueryService.getFeeds(limit);
         ApiResponse response = ApiResponseFactory.success("피드 목록을 성공적으로 조회하였습니다.", feeds);
         return ResponseEntity.ok(response);
     }
@@ -83,7 +82,8 @@ public class FeedController implements FeedSwagger {
     ) {
         ApiResponse response = ApiResponseFactory.success(
                 "메인 페이지 커뮤니티별 제목을 성공적으로 조회하였습니다.",
-                new MainPageTitlesResponse(feedQueryService.getCommunityTitleSectionsForMainPage(limit))
+                new MainPageTitlesResponse(
+                        feedQueryService.getCommunityTitleSectionsForMainPage(limit))
         );
         return ResponseEntity.ok(response);
     }
@@ -94,14 +94,12 @@ public class FeedController implements FeedSwagger {
             @RequestParam(required = false) Long cursor,
             @RequestParam(defaultValue = "20") int size
     ) {
-        FeedQueryService.CommunityPageResult result = feedQueryService.getFeedsByCommunity(communityId, cursor,
+        FeedCommunityPageResult result = feedQueryService.getFeedsByCommunity(communityId, cursor,
                 size);
-        CommunityFeedsResponse responseBody = new CommunityFeedsResponse(
-                result.feeds(),
-                result.nextCursor()
+        ApiResponse response = ApiResponseFactory.success(
+                "커뮤니티 피드를 성공적으로 조회하였습니다.",
+                CommunityFeedsResponse.from(result)
         );
-        ApiResponse response = ApiResponseFactory.success("커뮤니티 피드를 성공적으로 조회하였습니다.",
-                responseBody);
         return ResponseEntity.ok(response);
     }
 

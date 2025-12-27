@@ -13,8 +13,6 @@ import org.junit.jupiter.api.Nested;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.test.context.jdbc.Sql;
 
 @JdbcTest
@@ -61,20 +59,17 @@ class FeedJdbcRepositoryIntegrationTest extends AbstractMySqlContainerTest {
     }
 
     @Nested
-    @DisplayName("findAll")
-    class FindAll {
+    @DisplayName("findRecentSummaries")
+    class FindRecentSummaries {
 
         @Test
-        @DisplayName("페이지네이션으로 피드 목록을 조회한다")
+        @DisplayName("최신 순으로 지정한 개수만큼 피드 요약을 조회한다")
         void success() {
-            Page<FeedSummary> page = feedJdbcRepository.findAll(PageRequest.of(0, 2));
+            List<FeedSummary> summaries = feedJdbcRepository.findRecentSummaries(2);
 
-            assertThat(page.getTotalElements()).isEqualTo(3);
-            List<FeedSummary> content = page.getContent();
-            assertThat(content).hasSize(2);
-            assertThat(content.getFirst().id()).isEqualTo(3L); // DESC order
-            assertThat(content.getFirst().contentPreview()).isEqualTo("content3");
-            assertThat(content.getFirst().likeCount()).isEqualTo(1);
+            assertThat(summaries).hasSize(2);
+            assertThat(summaries.getFirst().id()).isEqualTo(3L);
+            assertThat(summaries.get(1).id()).isEqualTo(2L);
         }
     }
 

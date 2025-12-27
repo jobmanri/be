@@ -5,12 +5,10 @@ import com.example.bak.feed.application.query.dto.FeedSummary;
 import com.example.bak.feed.application.query.dto.FeedTitleOnly;
 import java.util.List;
 import java.util.Optional;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 
 public interface FeedQueryPort {
 
-    Page<FeedSummary> findAll(Pageable pageable);
+    List<FeedSummary> findRecentSummaries(int limit);
 
     Optional<FeedSummary> findSummaryById(Long feedId);
 

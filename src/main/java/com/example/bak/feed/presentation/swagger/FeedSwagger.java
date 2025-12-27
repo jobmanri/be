@@ -184,12 +184,9 @@ public interface FeedSwagger {
             )
     })
     ResponseEntity<ApiResponse> getFeeds(
-            @Parameter(description = "페이지 번호 (0부터 시작)", example = "0",
-                    schema = @Schema(minimum = "0", defaultValue = "0"))
-            @RequestParam(defaultValue = "0") int page,
-            @Parameter(description = "페이지 크기 (1 이상)", example = "10",
-                    schema = @Schema(minimum = "1", defaultValue = "10"))
-            @RequestParam(defaultValue = "10") int size
+            @Parameter(description = "조회할 개수", example = "20",
+                    schema = @Schema(minimum = "1", defaultValue = "20"))
+            @RequestParam(defaultValue = "20") int limit
     );
 
     @Operation(

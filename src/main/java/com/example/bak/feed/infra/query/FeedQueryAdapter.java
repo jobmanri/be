@@ -19,8 +19,8 @@ public class FeedQueryAdapter implements FeedQueryPort {
     private final FeedJdbcRepository feedJdbcRepository;
 
     @Override
-    public Page<FeedSummary> findAll(Pageable pageable) {
-        return feedJdbcRepository.findAll(pageable);
+    public List<FeedSummary> findRecentSummaries(int limit) {
+        return feedJdbcRepository.findRecentSummaries(limit);
     }
 
     @Override

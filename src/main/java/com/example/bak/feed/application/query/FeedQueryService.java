@@ -1,5 +1,6 @@
 package com.example.bak.feed.application.query;
 
+import com.example.bak.feed.application.query.dto.FeedCommunityPageResult;
 import com.example.bak.feed.application.query.dto.FeedCommunityTitleSection;
 import com.example.bak.feed.application.query.dto.FeedDetail;
 import com.example.bak.feed.application.query.dto.FeedSummary;
@@ -10,9 +11,6 @@ import com.example.bak.global.exception.ErrorCode;
 import java.util.List;
 import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -34,11 +32,11 @@ public class FeedQueryService {
                 .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
     }
 
-    public List<FeedSummary> getFeeds(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<FeedSummary> feedPage = feedQueryPort.findAll(pageable)
-                .map(this::applyContentPreviewLimit);
-        return feedPage.getContent();
+    public List<FeedSummary> getFeeds(int limit) {
+        int sanitizedLimit = Math.max(1, limit);
+        return feedQueryPort.findRecentSummaries(sanitizedLimit).stream()
+                .map(this::applyContentPreviewLimit)
+                .toList();
     }
 
     public List<FeedDetail> getMainPageFeeds(int limit) {
@@ -46,7 +44,7 @@ public class FeedQueryService {
         return feedQueryPort.findTopDetails(sanitizedLimit);
     }
 
-    public CommunityPageResult getFeedsByCommunity(Long communityId, Long cursor, int size) {
+    public FeedCommunityPageResult getFeedsByCommunity(Long communityId, Long cursor, int size) {
         int sanitizedSize = Math.max(1, size);
         List<FeedSummary> feeds = feedQueryPort.findByCommunityIdWithCursor(communityId, cursor,
                         sanitizedSize)
@@ -54,8 +52,8 @@ public class FeedQueryService {
                 .map(this::applyContentPreviewLimit)
                 .toList();
 
-        Long nextCursor = feeds.isEmpty() ? null : feeds.get(feeds.size() - 1).id();
-        return new CommunityPageResult(feeds, nextCursor);
+        Long nextCursor = feeds.isEmpty() ? null : feeds.getLast().id();
+        return new FeedCommunityPageResult(feeds, nextCursor);
     }
 
     public List<FeedCommunityTitleSection> getCommunityTitleSectionsForMainPage(
@@ -88,7 +86,4 @@ public class FeedQueryService {
         return summary.withContentPreview(preview.substring(0, CONTENT_PREVIEW_LIMIT));
     }
 
-    public record CommunityPageResult(List<FeedSummary> feeds, Long nextCursor) {
-
-    }
 }

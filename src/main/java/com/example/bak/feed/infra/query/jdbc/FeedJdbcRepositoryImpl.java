@@ -6,14 +6,9 @@ import com.example.bak.feed.application.query.dto.FeedTitleOnly;
 import com.example.bak.feed.infra.query.jdbc.mapper.FeedDetailRowMapper;
 import com.example.bak.feed.infra.query.jdbc.mapper.FeedSummaryRowMapper;
 import com.example.bak.feed.infra.query.jdbc.mapper.FeedTitleOnlyRowMapper;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
 import org.springframework.jdbc.core.namedparam.MapSqlParameterSource;
 import org.springframework.jdbc.core.namedparam.NamedParameterJdbcTemplate;
 import org.springframework.stereotype.Repository;
@@ -145,19 +140,15 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
     private final NamedParameterJdbcTemplate jdbc;
 
     @Override
-    public Page<FeedSummary> findAll(Pageable pageable) {
+    public List<FeedSummary> findRecentSummaries(int limit) {
         MapSqlParameterSource params = new MapSqlParameterSource()
-                .addValue("limit", pageable.getPageSize())
-                .addValue("offset", pageable.getOffset());
+                .addValue("limit", limit);
 
         String sql = SUMMARY_SELECT + '\n' + SUMMARY_GROUP_BY + '\n'
-                + buildOrderByClause(pageable) + '\n'
-                + "LIMIT :limit OFFSET :offset";
+                + DEFAULT_ORDER_BY + '\n'
+                + "LIMIT :limit";
 
-        List<FeedSummary> content = jdbc.query(sql, params, feedSummaryMapper);
-        long total = countFeeds();
-
-        return new PageImpl<>(content, pageable, total);
+        return jdbc.query(sql, params, feedSummaryMapper);
     }
 
     @Override
@@ -228,31 +219,4 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
         return total == null ? 0L : total;
     }
 
-    private String buildOrderByClause(Pageable pageable) {
-        if (pageable.getSort().isUnsorted()) {
-            return DEFAULT_ORDER_BY;
-        }
-
-        List<String> orderParts = new ArrayList<>();
-        for (Sort.Order order : pageable.getSort()) {
-            String column = mapPropertyToColumn(order.getProperty());
-            if (column != null) {
-                orderParts.add(column + " " + order.getDirection().name());
-            }
-        }
-
-        if (orderParts.isEmpty()) {
-            return DEFAULT_ORDER_BY;
-        }
-
-        return "ORDER BY " + String.join(", ", orderParts);
-    }
-
-    private String mapPropertyToColumn(String property) {
-        return switch (property) {
-            case "id" -> "f.id";
-            case "title" -> "f.title";
-            default -> null;
-        };
-    }
 }

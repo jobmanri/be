@@ -36,7 +36,7 @@ public class LikeCommandService {
         validator.validateExists(targetId);
 
         if (likeCommandPort.exists(targetType, targetId, userId)) {
-            return;
+            throw new BusinessException(ErrorCode.LIKE_ALREADY_EXISTS);
         }
 
         likeCommandPort.save(Like.create(targetType, targetId, userId));

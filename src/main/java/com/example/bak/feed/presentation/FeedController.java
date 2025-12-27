@@ -18,10 +18,7 @@ import com.example.bak.global.common.utils.UriUtils;
 import com.example.bak.global.security.annotation.AuthUser;
 import com.example.bak.like.application.command.LikeCommandService;
 import com.example.bak.like.domain.LikeTargetType;
-import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
@@ -84,27 +81,9 @@ public class FeedController implements FeedSwagger {
     public ResponseEntity<ApiResponse> getMainPageTitles(
             @RequestParam(defaultValue = "5") int limit
     ) {
-        List<FeedTitleOnly> titleList = feedQueryService.getFeedTitlesGroupedByCommunity(limit);
-        Map<Long, List<FeedTitleOnly>> grouped = titleList.stream()
-                .collect(Collectors.groupingBy(feed -> feed.community().id(),
-                        LinkedHashMap::new,
-                        Collectors.toList()));
-
-        List<MainPageTitlesResponse.CommunitySection> sections = grouped.entrySet().stream()
-                .map(entry -> {
-                    FeedTitleOnly sample = entry.getValue().get(0);
-                    return new MainPageTitlesResponse.CommunitySection(
-                            sample.community().id(),
-                            sample.community().name(),
-                            sample.community().jobGroup(),
-                            entry.getValue()
-                    );
-                })
-                .toList();
-
         ApiResponse response = ApiResponseFactory.success(
                 "메인 페이지 커뮤니티별 제목을 성공적으로 조회하였습니다.",
-                new MainPageTitlesResponse(sections)
+                new MainPageTitlesResponse(feedQueryService.getCommunityTitleSectionsForMainPage(limit))
         );
         return ResponseEntity.ok(response);
     }

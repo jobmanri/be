@@ -30,18 +30,23 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 c.id   AS community_id,
                 c.name AS community_name,
                 c.job_group AS community_job_group,
-                COUNT(DISTINCT cm.id) AS comment_count,
-                COUNT(DISTINCT fl.id) AS like_count
+                COALESCE(comment_counts.comment_count, 0) AS comment_count,
+                COALESCE(like_counts.like_count, 0) AS like_count
             FROM feeds f
                 JOIN users u ON f.author_id = u.id
                 JOIN profiles p ON p.user_id = u.id
                 JOIN communities c ON f.community_id = c.id
-                LEFT JOIN comments cm ON cm.feed_id = f.id
-                LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id
-            """;
-
-    private static final String SUMMARY_GROUP_BY = """
-            GROUP BY f.id, f.title, f.content, u.id, p.nickname, c.id, c.name, c.job_group
+                LEFT JOIN (
+                    SELECT feed_id, COUNT(*) AS comment_count
+                    FROM comments
+                    GROUP BY feed_id
+                ) comment_counts ON comment_counts.feed_id = f.id
+                LEFT JOIN (
+                    SELECT target_id AS feed_id, COUNT(*) AS like_count
+                    FROM likes
+                    WHERE target_type = 'FEED'
+                    GROUP BY target_id
+                ) like_counts ON like_counts.feed_id = f.id
             """;
 
     private static final String DETAIL_SELECT = """
@@ -54,16 +59,24 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 c.id      AS community_id,
                 c.name    AS community_name,
                 c.job_group AS community_job_group,
-                COUNT(DISTINCT cm.id) AS comment_count,
-                COUNT(DISTINCT fl.id) AS like_count
+                COALESCE(comment_counts.comment_count, 0) AS comment_count,
+                COALESCE(like_counts.like_count, 0) AS like_count
             FROM feeds f
                 JOIN users u ON f.author_id = u.id
                 JOIN profiles p ON p.user_id = u.id
                 JOIN communities c ON f.community_id = c.id
-                LEFT JOIN comments cm ON cm.feed_id = f.id
-                LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id
+                LEFT JOIN (
+                    SELECT feed_id, COUNT(*) AS comment_count
+                    FROM comments
+                    GROUP BY feed_id
+                ) comment_counts ON comment_counts.feed_id = f.id
+                LEFT JOIN (
+                    SELECT target_id AS feed_id, COUNT(*) AS like_count
+                    FROM likes
+                    WHERE target_type = 'FEED'
+                    GROUP BY target_id
+                ) like_counts ON like_counts.feed_id = f.id
             WHERE f.id = :feedId
-            GROUP BY f.id, f.title, f.content, u.id, p.nickname, c.id, c.name, c.job_group
             LIMIT 1
             """;
 
@@ -78,15 +91,23 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 c.id      AS community_id,
                 c.name    AS community_name,
                 c.job_group AS community_job_group,
-                COUNT(DISTINCT cm.id) AS comment_count,
-                COUNT(DISTINCT fl.id) AS like_count
+                COALESCE(comment_counts.comment_count, 0) AS comment_count,
+                COALESCE(like_counts.like_count, 0) AS like_count
             FROM feeds f
                 JOIN users u ON f.author_id = u.id
                 JOIN profiles p ON p.user_id = u.id
                 JOIN communities c ON f.community_id = c.id
-                LEFT JOIN comments cm ON cm.feed_id = f.id
-                LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id
-            GROUP BY f.id, f.title, f.content, u.id, p.nickname, c.id, c.name, c.job_group
+                LEFT JOIN (
+                    SELECT feed_id, COUNT(*) AS comment_count
+                    FROM comments
+                    GROUP BY feed_id
+                ) comment_counts ON comment_counts.feed_id = f.id
+                LEFT JOIN (
+                    SELECT target_id AS feed_id, COUNT(*) AS like_count
+                    FROM likes
+                    WHERE target_type = 'FEED'
+                    GROUP BY target_id
+                ) like_counts ON like_counts.feed_id = f.id
             ORDER BY f.id DESC
             LIMIT :limit
             """;
@@ -97,14 +118,22 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 c.id   AS community_id,
                 c.name AS community_name,
                 c.job_group AS community_job_group,
-                COUNT(DISTINCT cm.id) AS comment_count,
-                COUNT(DISTINCT fl.id) AS like_count
+                COALESCE(comment_counts.comment_count, 0) AS comment_count,
+                COALESCE(like_counts.like_count, 0) AS like_count
             FROM feeds f
                 JOIN communities c ON f.community_id = c.id
-                LEFT JOIN comments cm ON cm.feed_id = f.id
-                LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id
+                LEFT JOIN (
+                    SELECT feed_id, COUNT(*) AS comment_count
+                    FROM comments
+                    GROUP BY feed_id
+                ) comment_counts ON comment_counts.feed_id = f.id
+                LEFT JOIN (
+                    SELECT target_id AS feed_id, COUNT(*) AS like_count
+                    FROM likes
+                    WHERE target_type = 'FEED'
+                    GROUP BY target_id
+                ) like_counts ON like_counts.feed_id = f.id
             WHERE f.community_id = :communityId
-            GROUP BY f.id, f.title, c.id, c.name, c.job_group
             ORDER BY f.id DESC
             LIMIT :limit
             """;
@@ -124,14 +153,22 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                     c.id   AS community_id,
                     c.name AS community_name,
                     c.job_group AS community_job_group,
-                    COUNT(DISTINCT cm.id) AS comment_count,
-                    COUNT(DISTINCT fl.id) AS like_count,
+                    COALESCE(comment_counts.comment_count, 0) AS comment_count,
+                    COALESCE(like_counts.like_count, 0) AS like_count,
                     ROW_NUMBER() OVER (PARTITION BY f.community_id ORDER BY f.id DESC) AS rn
                 FROM feeds f
                     JOIN communities c ON f.community_id = c.id
-                    LEFT JOIN comments cm ON cm.feed_id = f.id
-                    LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id
-                GROUP BY f.id, f.title, c.id, c.name, c.job_group
+                    LEFT JOIN (
+                        SELECT feed_id, COUNT(*) AS comment_count
+                        FROM comments
+                        GROUP BY feed_id
+                    ) comment_counts ON comment_counts.feed_id = f.id
+                    LEFT JOIN (
+                        SELECT target_id AS feed_id, COUNT(*) AS like_count
+                        FROM likes
+                        WHERE target_type = 'FEED'
+                        GROUP BY target_id
+                    ) like_counts ON like_counts.feed_id = f.id
             ) ranked
             WHERE rn <= :limit
             ORDER BY community_id, id DESC
@@ -144,7 +181,7 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("limit", limit);
 
-        String sql = SUMMARY_SELECT + '\n' + SUMMARY_GROUP_BY + '\n'
+        String sql = SUMMARY_SELECT + '\n'
                 + DEFAULT_ORDER_BY + '\n'
                 + "LIMIT :limit";
 
@@ -157,8 +194,7 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
                 .addValue("feedId", feedId);
 
         String sql = SUMMARY_SELECT + '\n'
-                + "WHERE f.id = :feedId\n"
-                + SUMMARY_GROUP_BY;
+                + "WHERE f.id = :feedId";
 
         return jdbc.query(sql, params, feedSummaryMapper).stream().findFirst();
     }
@@ -206,7 +242,6 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
         String sql = SUMMARY_SELECT + '\n'
                 + "WHERE f.community_id = :communityId\n"
                 + (cursorId != null ? "AND f.id < :cursorId\n" : "")
-                + SUMMARY_GROUP_BY + '\n'
                 + DEFAULT_ORDER_BY + '\n'
                 + "LIMIT :limit";
 

@@ -33,28 +33,28 @@
   - 기존 DTO 네이밍은 유지하고, 새 DTO가 추가되더라도 import 충돌이 없도록 패키지 경로를 명확히 유지
   - 테스트 스텁에서도 새 DTO를 생성해주어야 하므로 Fixture 헬퍼 추가 검토
 
-### Phase 2: Like(좋아요) 도메인 구현
+### Phase 2: Like(좋아요) 바운디드 컨텍스트 구축
 
-#### 2.1 Like 엔티티 생성 (임시 Mock 데이터용)
-- [ ] **파일**: `FeedLike.java` (신규 생성)
-- [ ] **위치**: `feed/domain/`
+#### 2.1 독립 Like 도메인 모델 정의
+- [x] **파일**: `like/domain/Like.java`, `like/domain/LikeTargetType.java`
 - [ ] **작업 내용**:
-  - Feed와 User의 다대다 관계 표현
-  - `id`, `feedId`, `userId`, `createdAt` 필드
-  - JPA `@Entity` 선언
-- [ ] **고려사항**: 추후 독립 도메인으로 분리 가능성 염두
+  - `LikeTargetType(FEED, COMMENT, …)`를 통해 어떤 애그리거트에 속한 좋아요인지 구분
+  - `Like` 엔티티는 `targetType`, `targetId`, `userId`, `createdAt`을 보유하고 유니크 키로 중복 방지
+  - 향후 댓글/DM 등 다른 컨텍스트에서도 재사용 가능
 
-#### 2.2 Like Repository 인터페이스
-- [ ] **파일**: `FeedLikeRepository.java` (신규 생성)
-- [ ] **위치**: `feed/domain/`
-- [ ] **작업 내용**: `JpaRepository` 상속, `countByFeedId()` 메서드 정의
-
-#### 2.3 Like 집계 쿼리 추가
-- [ ] **파일**: `FeedJdbcRepositoryImpl.java` (수정)
+#### 2.2 Like Command/Validator 포트 구성
+- [x] **파일**: `like/application/command/**`
 - [ ] **작업 내용**:
-  - FeedSummary 조회 시 LEFT JOIN으로 좋아요 수 집계
-  - SQL: `SELECT COUNT(fl.id) as like_count FROM feed_likes fl WHERE fl.feed_id = f.id`
-  - RowMapper에 likeCount 매핑 추가
+  - `LikeCommandPort`/`LikeCommandService`를 생성하여 `like/unlike` 케이스를 통합 처리
+  - `LikeTargetValidator` 인터페이스를 정의하고, Feed/Comment 등 각 도메인이 구현하여 존재 여부 검증
+  - 기존 Feed 전용 Service/Adapter 제거 → Feed 컨텍스트는 Like BC를 의존하도록 변경
+
+#### 2.3 Like 집계 쿼리 및 스키마 공통화
+- [x] **파일**: `FeedJdbcRepositoryImpl.java`, `schema.sql`, `data.sql`
+- [ ] **작업 내용**:
+  - `likes` 테이블을 도입해 `target_type` + `target_id` 기준으로 집계
+  - Feed 조회 시 `LEFT JOIN likes fl ON fl.target_type = 'FEED' AND fl.target_id = f.id`
+  - 테스트 시드도 동일 테이블을 활용해 댓글/피드 모두 검증 가능
 
 ### Phase 3: Query Port 및 Service 확장
 
@@ -79,15 +79,15 @@
 ### Phase 4: Adapter 구현
 
 #### 4.1 JDBC Query Adapter 수정
-- [ ] **파일**: `FeedJdbcRepositoryImpl.java` (수정)
+- [x] **파일**: `FeedJdbcRepositoryImpl.java` (수정)
 - [ ] **작업 내용**:
-  - 좋아요 수 집계 쿼리 추가 (LEFT JOIN `feed_likes`)
+  - 좋아요 수 집계 쿼리 추가 (LEFT JOIN `likes`)
   - 커뮤니티별 조회 쿼리 구현
   - 메인페이지용 최신 N개 조회 쿼리
   - 커뮤니티별 그룹핑 쿼리 (WITH 절 또는 서브쿼리 활용)
 
 #### 4.2 RowMapper 수정
-- [ ] **파일**: `FeedSummaryRowMapper.java` (수정)
+- [x] **파일**: `FeedSummaryRowMapper.java` (수정)
 - [ ] **작업 내용**:
   - `likeCount` 컬럼 매핑 추가
   - `contentPreview` 컬럼 매핑 추가 (SUBSTRING 함수 활용)
@@ -97,7 +97,7 @@
 ### Phase 5: Presentation 계층 API 추가
 
 #### 5.1 FeedController 엔드포인트 추가
-- [ ] **파일**: `FeedController.java` (수정)
+- [x] **파일**: `FeedController.java` (수정)
 - [ ] **작업 내용**:
   - `GET /api/v1/feeds/main?limit=10` - 메인페이지용 FeedDetail 리스트
   - `GET /api/v1/feeds/main/titles?limit=5` - 블라인드 스타일 메인페이지용 (커뮤니티별 N개)
@@ -105,14 +105,14 @@
   - 기존 `GET /api/v1/feeds` 유지 (전체 피드 조회)
 
 #### 5.2 Response DTO 정리
-- [ ] **파일**: 기존 DTO 활용 또는 Presentation 계층 전용 Response 생성
+- [x] **파일**: 기존 DTO 활용 또는 Presentation 계층 전용 Response 생성
 - [ ] **작업 내용**:
   - `MainPageFeedsResponse` - FeedDetail 리스트 래핑
   - `CommunityFeedsResponse` - 커뮤니티별 피드 + 페이징 정보
   - `MainPageTitlesResponse` - 커뮤니티별 FeedTitleOnly 그룹화
 
 #### 5.3 Swagger 문서 갱신
-- [ ] **파일**: `FeedSwagger.java` (수정)
+- [x] **파일**: `FeedSwagger.java` (수정)
 - [ ] **작업 내용**:
   - 새로운 API 엔드포인트 인터페이스 정의
   - 요청/응답 스키마 예시 추가
@@ -125,12 +125,13 @@
 - [ ] **위치**: `src/test/resources/sql/`
 - [ ] **작업 내용**:
   ```sql
-  CREATE TABLE feed_likes (
+  CREATE TABLE likes (
       id BIGINT AUTO_INCREMENT PRIMARY KEY,
-      feed_id BIGINT NOT NULL,
+      target_type VARCHAR(50) NOT NULL,
+      target_id BIGINT NOT NULL,
       user_id BIGINT NOT NULL,
       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-      UNIQUE KEY uk_feed_user (feed_id, user_id)
+      UNIQUE KEY uk_like_target_user (target_type, target_id, user_id)
   );
   ```
 - [ ] **운영 DB**: 동일 스키마 적용 (마이그레이션 스크립트 작성)
@@ -174,7 +175,7 @@
 
 #### 8.1 쿼리 최적화
 - [ ] N+1 문제 확인 및 해결 (JOIN FETCH 또는 배치 조회)
-- [ ] 인덱스 추가: `feeds(community_id, created_at)`, `feed_likes(feed_id)`
+- [ ] 인덱스 추가: `feeds(community_id, created_at)`, `likes(target_type, target_id)`
 - [ ] 실행 계획 분석 (EXPLAIN)
 
 #### 8.2 캐싱 전략 (선택사항)
@@ -241,28 +242,31 @@
 ## 예상 변경 파일 목록
 
 ### 신규 생성
-- `feed/domain/FeedLike.java`
-- `feed/domain/FeedLikeRepository.java`
+- `like/domain/Like.java`
+- `like/domain/LikeTargetType.java`
+- `like/application/command/port/LikeCommandPort.java`
+- `like/application/command/LikeCommandService.java`
+- `like/application/command/validator/LikeTargetValidator.java`
+- `like/infra/command/LikeJpaRepository.java`
+- `like/infra/command/LikeCommandAdapter.java`
+- `feed/application/validator/FeedLikeTargetValidator.java`
 - `feed/infra/query/jdbc/mapper/FeedTitleOnlyRowMapper.java`
-- `feed/application/query/port/FeedQueryPortStub.java` (테스트)
-- `src/test/resources/sql/like_schema.sql`
-- `src/test/resources/sql/like_data.sql`
 
-### 수정
 - `feed/application/query/dto/FeedSummary.java` (필드 확장)
 - `feed/application/query/dto/FeedDetail.java` (필드 확장)
 - `feed/application/query/dto/FeedTitleOnly.java` (메인페이지 전용 DTO 연결)
 - `feed/application/query/port/FeedQueryPort.java`
 - `feed/application/query/FeedQueryService.java`
+- `feed/application/validator/FeedLikeTargetValidator.java`
 - `feed/infra/query/FeedQueryAdapter.java`
 - `feed/infra/query/jdbc/FeedJdbcRepositoryImpl.java`
 - `feed/infra/query/jdbc/mapper/FeedSummaryRowMapper.java`
 - `feed/presentation/FeedController.java`
 - `feed/presentation/swagger/FeedSwagger.java`
-- 테스트 파일들 (`*Test.java`)
+- `global/exception/ErrorCode.java`
+- 테스트 파일들 (`*Test.java`), `schema.sql`, `sql/feed/data.sql`
 
 ### 영향 받는 파일
-- `global/exception/ErrorCode.java` (필요시 새 에러 코드 추가)
 - `community/presentation/CommunityController.java` (커뮤니티 상세 페이지에서 피드 조회 시)
 
 ---

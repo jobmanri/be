@@ -122,6 +122,14 @@ class FeedJdbcRepositoryIntegrationTest extends AbstractMySqlContainerTest {
             assertThat(secondPage).hasSize(1);
             assertThat(secondPage.getFirst().id()).isLessThan(nextCursor);
         }
+
+        @Test
+        @DisplayName("커멘티별 피드를 다음 페이지 존재 여부 확인을 위해 size+1로 조회할 수 있다")
+        void canFetchSizePlusOne() {
+            List<FeedSummary> fetched = feedJdbcRepository.findByCommunityIdWithCursor(1L, null, 2);
+
+            assertThat(fetched).hasSize(2);
+        }
     }
 
     @Nested

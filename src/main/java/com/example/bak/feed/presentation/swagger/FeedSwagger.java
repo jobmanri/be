@@ -211,7 +211,7 @@ public interface FeedSwagger {
 
     @Operation(
             summary = "커뮤니티 피드 목록 조회",
-            description = "특정 커뮤니티에 속한 피드를 페이지네이션 형태로 조회합니다."
+            description = "특정 커뮤니티에 속한 피드를 페이지네이션 형태로 조회합니다. 응답에는 nextCursor와 hasNext가 포함됩니다."
     )
     ResponseEntity<ApiResponse> getFeedsByCommunity(
             @Parameter(description = "커뮤니티 ID", required = true, example = "1")

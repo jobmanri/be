@@ -46,14 +46,19 @@ public class FeedQueryService {
 
     public FeedCommunityPageResult getFeedsByCommunity(Long communityId, Long cursor, int size) {
         int sanitizedSize = Math.max(1, size);
-        List<FeedSummary> feeds = feedQueryPort.findByCommunityIdWithCursor(communityId, cursor,
-                        sanitizedSize)
-                .stream()
+        int fetchSize = sanitizedSize + 1;
+
+        List<FeedSummary> fetched = feedQueryPort.findByCommunityIdWithCursor(communityId, cursor,
+                fetchSize);
+        boolean hasNext = fetched.size() > sanitizedSize;
+
+        List<FeedSummary> feeds = fetched.stream()
+                .limit(sanitizedSize)
                 .map(this::applyContentPreviewLimit)
                 .toList();
 
         Long nextCursor = feeds.isEmpty() ? null : feeds.getLast().id();
-        return new FeedCommunityPageResult(feeds, nextCursor);
+        return new FeedCommunityPageResult(feeds, nextCursor, hasNext);
     }
 
     public List<FeedCommunityTitleSection> getCommunityTitleSectionsForMainPage(

@@ -6,10 +6,11 @@ import java.util.List;
 
 public record CommunityFeedsResponse(
         List<FeedSummary> feeds,
-        Long nextCursor
+        Long nextCursor,
+        boolean hasNext
 ) {
 
     public static CommunityFeedsResponse from(FeedCommunityPageResult result) {
-        return new CommunityFeedsResponse(result.feeds(), result.nextCursor());
+        return new CommunityFeedsResponse(result.feeds(), result.nextCursor(), result.hasNext());
     }
 }

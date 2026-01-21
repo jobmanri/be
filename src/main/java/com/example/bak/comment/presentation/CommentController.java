@@ -9,9 +9,12 @@ import com.example.bak.global.common.response.ApiResponse;
 import com.example.bak.global.common.response.ApiResponseFactory;
 import com.example.bak.global.common.utils.UriUtils;
 import com.example.bak.global.security.annotation.AuthUser;
+import com.example.bak.like.application.command.LikeCommandService;
+import com.example.bak.like.domain.LikeTargetType;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,6 +30,7 @@ public class CommentController implements FeedCommentSwagger {
 
     private final CommentCommandService commentCommandService;
     private final CommentQueryService commentQueryService;
+    private final LikeCommandService likeCommandService;
 
     @Override
     @PostMapping("/feeds/{feedId}/comments")
@@ -62,6 +66,28 @@ public class CommentController implements FeedCommentSwagger {
     ) {
         commentCommandService.updateComment(commentId, request.content(), userId);
         ApiResponse response = ApiResponseFactory.successVoid("댓글을 성공적으로 수정하였습니다.");
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @PostMapping("/comments/{commentId}/likes")
+    public ResponseEntity<ApiResponse> likeComment(
+            @AuthUser Long userId,
+            @PathVariable Long commentId
+    ) {
+        likeCommandService.like(LikeTargetType.COMMENT, commentId, userId);
+        ApiResponse response = ApiResponseFactory.successVoid("댓글에 좋아요를 추가했습니다.");
+        return ResponseEntity.ok(response);
+    }
+
+    @Override
+    @DeleteMapping("/comments/{commentId}/likes")
+    public ResponseEntity<ApiResponse> unlikeComment(
+            @AuthUser Long userId,
+            @PathVariable Long commentId
+    ) {
+        likeCommandService.unlike(LikeTargetType.COMMENT, commentId, userId);
+        ApiResponse response = ApiResponseFactory.successVoid("댓글 좋아요를 취소했습니다.");
         return ResponseEntity.ok(response);
     }
 }

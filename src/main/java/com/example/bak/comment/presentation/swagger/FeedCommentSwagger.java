@@ -294,4 +294,158 @@ public interface FeedCommentSwagger {
             @Parameter(hidden = true, description = "인증된 사용자 ID", required = true)
             Long userId
     );
+
+    @Operation(
+            summary = "댓글 좋아요",
+            description = "특정 댓글에 좋아요를 추가합니다."
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "댓글 좋아요 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiResponse.class),
+                            examples = @ExampleObject(
+                                    name = "CommentLikeSuccess",
+                                    summary = "좋아요 성공",
+                                    value = """
+                                            {
+                                                \"status\": \"SUCCESS\",
+                                                \"message\": \"댓글에 좋아요를 추가했습니다.\",
+                                                \"data\": null
+                                            }
+                                            """
+                            )
+                    )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "400",
+                    description = "이미 좋아요를 누른 상태",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "CommentLikeAlreadyExists",
+                                    summary = "중복 좋아요",
+                                    value = """
+                                            {
+                                                \"status\": \"ERROR\",
+                                                \"message\": \"이미 좋아요를 누른 상태입니다.\",
+                                                \"data\": null
+                                            }
+                                            """
+                            )
+                    )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "CommentLikeUnauthorized",
+                                    summary = "토큰 없음",
+                                    value = """
+                                            {
+                                                \"status\": \"ERROR\",
+                                                \"message\": \"토큰이 없습니다.\",
+                                                \"data\": null
+                                            }
+                                            """
+                            )
+                    )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "404",
+                    description = "댓글을 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "CommentLikeNotFound",
+                                    summary = "댓글 미존재",
+                                    value = """
+                                            {
+                                                \"status\": \"ERROR\",
+                                                \"message\": \"댓글 리소스를 찾을 수 없습니다.\",
+                                                \"data\": null
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
+    ResponseEntity<ApiResponse> likeComment(
+            @Parameter(hidden = true, description = "인증된 사용자 ID", required = true)
+            Long userId,
+            @Parameter(description = "댓글 ID", required = true, example = "1")
+            @PathVariable Long commentId
+    );
+
+    @Operation(
+            summary = "댓글 좋아요 취소",
+            description = "특정 댓글의 좋아요를 취소합니다."
+    )
+    @ApiResponses(value = {
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "200",
+                    description = "댓글 좋아요 취소 성공",
+                    content = @Content(
+                            mediaType = "application/json",
+                            schema = @Schema(implementation = ApiResponse.class),
+                            examples = @ExampleObject(
+                                    name = "CommentUnlikeSuccess",
+                                    summary = "취소 성공",
+                                    value = """
+                                            {
+                                                \"status\": \"SUCCESS\",
+                                                \"message\": \"댓글 좋아요를 취소했습니다.\",
+                                                \"data\": null
+                                            }
+                                            """
+                            )
+                    )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "401",
+                    description = "인증 실패",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "CommentUnlikeUnauthorized",
+                                    summary = "토큰 없음",
+                                    value = """
+                                            {
+                                                \"status\": \"ERROR\",
+                                                \"message\": \"토큰이 없습니다.\",
+                                                \"data\": null
+                                            }
+                                            """
+                            )
+                    )
+            ),
+            @io.swagger.v3.oas.annotations.responses.ApiResponse(
+                    responseCode = "404",
+                    description = "댓글을 찾을 수 없음",
+                    content = @Content(
+                            mediaType = "application/json",
+                            examples = @ExampleObject(
+                                    name = "CommentUnlikeNotFound",
+                                    summary = "댓글 미존재",
+                                    value = """
+                                            {
+                                                \"status\": \"ERROR\",
+                                                \"message\": \"댓글 리소스를 찾을 수 없습니다.\",
+                                                \"data\": null
+                                            }
+                                            """
+                            )
+                    )
+            )
+    })
+    ResponseEntity<ApiResponse> unlikeComment(
+            @Parameter(hidden = true, description = "인증된 사용자 ID", required = true)
+            Long userId,
+            @Parameter(description = "댓글 ID", required = true, example = "1")
+            @PathVariable Long commentId
+    );
 }

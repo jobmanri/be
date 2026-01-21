@@ -70,6 +70,7 @@ public class FeedQueryService {
     public List<FeedCommunityTitleSection> getCommunityTitleSectionsForMainPage(
             int limitPerCommunity) {
         int sanitizedLimit = Math.max(1, limitPerCommunity);
+        
         List<FeedTitleOnly> titles = feedQueryPort.findTitleOnlyGroupedByCommunity(sanitizedLimit);
 
         return titles.stream()

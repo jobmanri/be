@@ -8,8 +8,6 @@ import com.example.bak.feed.infra.query.jdbc.FeedJdbcRepository;
 import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -44,12 +42,13 @@ public class FeedQueryAdapter implements FeedQueryPort {
     }
 
     @Override
-    public List<FeedTitleOnly> findTitleOnlyGroupedByCommunity(int limitPerCommunity) {
-        return feedJdbcRepository.findTitleOnlyGroupedByCommunity(limitPerCommunity);
+    public List<FeedTitleOnly> findLatestTitlesByCommunity(int limitPerCommunity) {
+        return feedJdbcRepository.findLatestTitlesByCommunity(limitPerCommunity);
     }
 
     @Override
-    public List<FeedSummary> findByCommunityIdWithCursor(Long communityId, Long cursorId, int size) {
+    public List<FeedSummary> findByCommunityIdWithCursor(Long communityId, Long cursorId,
+            int size) {
         return feedJdbcRepository.findByCommunityIdWithCursor(communityId, cursorId, size);
     }
 }

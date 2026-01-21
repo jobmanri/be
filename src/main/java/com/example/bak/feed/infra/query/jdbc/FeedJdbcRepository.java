@@ -17,7 +17,7 @@ public interface FeedJdbcRepository {
 
     List<FeedDetail> findTopDetails(int limit);
 
-    List<FeedTitleOnly> findTitleOnlyGroupedByCommunity(int limitPerCommunity);
+    List<FeedTitleOnly> findLatestTitlesByCommunity(int limitPerCommunity);
 
     List<FeedSummary> findByCommunityIdWithCursor(Long communityId, Long cursorId, int size);
 }

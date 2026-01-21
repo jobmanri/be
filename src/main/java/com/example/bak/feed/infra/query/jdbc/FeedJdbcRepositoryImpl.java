@@ -225,7 +225,7 @@ public class FeedJdbcRepositoryImpl implements FeedJdbcRepository {
     }
 
     @Override
-    public List<FeedTitleOnly> findTitleOnlyGroupedByCommunity(int limitPerCommunity) {
+    public List<FeedTitleOnly> findLatestTitlesByCommunity(int limitPerCommunity) {
         MapSqlParameterSource params = new MapSqlParameterSource()
                 .addValue("limit", limitPerCommunity);
 

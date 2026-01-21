@@ -133,13 +133,13 @@ class FeedJdbcRepositoryIntegrationTest extends AbstractMySqlContainerTest {
     }
 
     @Nested
-    @DisplayName("findTitleOnlyGroupedByCommunity")
+    @DisplayName("findLatestTitlesByCommunity")
     class FindTitleOnlyGroupedByCommunity {
 
         @Test
         @DisplayName("커뮤니티별로 제한 개수만큼 제목을 그룹핑해 조회한다")
         void success() {
-            List<FeedTitleOnly> titles = feedJdbcRepository.findTitleOnlyGroupedByCommunity(1);
+        List<FeedTitleOnly> titles = feedJdbcRepository.findLatestTitlesByCommunity(1);
 
             assertThat(titles)
                     .hasSize(2)

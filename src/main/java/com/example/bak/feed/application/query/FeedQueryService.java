@@ -1,20 +1,27 @@
 package com.example.bak.feed.application.query;
 
+import com.example.bak.community.application.query.dto.CommunityResult;
+import com.example.bak.feed.application.query.dto.FeedCommunityPageResult;
+import com.example.bak.feed.application.query.dto.FeedCommunityTitleSection;
 import com.example.bak.feed.application.query.dto.FeedDetail;
 import com.example.bak.feed.application.query.dto.FeedSummary;
+import com.example.bak.feed.application.query.dto.FeedTitleOnly;
 import com.example.bak.feed.application.query.port.FeedQueryPort;
 import com.example.bak.global.exception.BusinessException;
 import com.example.bak.global.exception.ErrorCode;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
 @RequiredArgsConstructor
 public class FeedQueryService {
+
+    private static final int CONTENT_PREVIEW_LIMIT = 100;
+    private static final int MIN_LIMIT = 1;
 
     private final FeedQueryPort feedQueryPort;
 
@@ -25,12 +32,80 @@ public class FeedQueryService {
 
     public FeedSummary getFeedSummary(Long feedId) {
         return feedQueryPort.findSummaryById(feedId)
+                .map(this::applyContentPreviewLimit)
                 .orElseThrow(() -> new BusinessException(ErrorCode.FEED_NOT_FOUND));
     }
 
-    public List<FeedSummary> getFeeds(int page, int size) {
-        Pageable pageable = PageRequest.of(page, size);
-        Page<FeedSummary> feedPage = feedQueryPort.findAll(pageable);
-        return feedPage.getContent();
+    public List<FeedSummary> getFeeds(int limit) {
+        int sanitizedLimit = sanitizeLimit(limit);
+        return feedQueryPort.findRecentSummaries(sanitizedLimit).stream()
+                .map(this::applyContentPreviewLimit)
+                .toList();
     }
+
+    public List<FeedDetail> getMainPageFeeds(int limit) {
+        int sanitizedLimit = sanitizeLimit(limit);
+        return feedQueryPort.findTopDetails(sanitizedLimit);
+    }
+
+    public FeedCommunityPageResult getFeedsByCommunity(Long communityId, Long cursor, int size) {
+        int sanitizedSize = sanitizeLimit(size);
+        List<FeedSummary> fetched = fetchCommunityFeeds(communityId, cursor, sanitizedSize + 1);
+        return buildCommunityFeedPageResult(fetched, sanitizedSize);
+    }
+
+    private List<FeedSummary> fetchCommunityFeeds(Long communityId, Long cursor, int fetchSize) {
+        return feedQueryPort.findByCommunityIdWithCursor(communityId, cursor, fetchSize);
+    }
+
+    private FeedCommunityPageResult buildCommunityFeedPageResult(List<FeedSummary> fetched,
+            int size) {
+        boolean hasNext = fetched.size() > size;
+
+        List<FeedSummary> feeds = fetched.stream()
+                .limit(size)
+                .map(this::applyContentPreviewLimit)
+                .toList();
+
+        Long nextCursor = feeds.isEmpty() ? null : feeds.getLast().id();
+        return new FeedCommunityPageResult(feeds, nextCursor, hasNext);
+    }
+
+    public List<FeedCommunityTitleSection> getCommunityTitleSectionsForMainPage(
+            int limitPerCommunity) {
+        int sanitizedLimit = sanitizeLimit(limitPerCommunity);
+        List<FeedTitleOnly> titles = feedQueryPort.findLatestTitlesByCommunity(sanitizedLimit);
+
+        Map<CommunityResult.Detail, List<FeedTitleOnly>> grouped = new LinkedHashMap<>();
+        for (FeedTitleOnly title : titles) {
+            grouped.computeIfAbsent(title.community(), key -> new ArrayList<>()).add(title);
+        }
+
+        return grouped.entrySet().stream()
+                .map(entry -> FeedCommunityTitleSection.of(entry.getKey(), entry.getValue()))
+                .toList();
+    }
+
+    public List<FeedTitleOnly> getFeedTitlesByCommunity(Long communityId, int limit) {
+        int sanitizedLimit = sanitizeLimit(limit);
+        return feedQueryPort.findTitleOnlyByCommunity(communityId, sanitizedLimit);
+    }
+
+    private int sanitizeLimit(int value) {
+        return Math.max(MIN_LIMIT, value);
+    }
+
+    private FeedSummary applyContentPreviewLimit(FeedSummary summary) {
+        String preview = summary.contentPreview();
+        if (preview == null) {
+            return summary.withContentPreview("");
+        }
+
+        if (preview.length() <= CONTENT_PREVIEW_LIMIT) {
+            return summary;
+        }
+
+        return summary.withContentPreview(preview.substring(0, CONTENT_PREVIEW_LIMIT));
+    }
+
 }

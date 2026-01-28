@@ -1,4 +1,6 @@
 DELETE
+FROM likes;
+DELETE
 FROM comments;
 DELETE
 FROM feeds;
@@ -37,3 +39,8 @@ INSERT INTO comments (id, content, author_id, author_nickname, feed_id)
 VALUES (1, 'c1', 2, 'nick2', 1),
        (2, 'c2', 3, 'nick3', 1),
        (3, 'c3', 1, 'nick1', 2);
+
+INSERT INTO likes (id, target_type, target_id, user_id)
+VALUES (1, 'FEED', 1, 2),
+       (2, 'FEED', 1, 3),
+       (3, 'FEED', 3, 1);

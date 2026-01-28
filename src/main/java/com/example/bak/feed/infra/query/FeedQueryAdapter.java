@@ -2,12 +2,12 @@ package com.example.bak.feed.infra.query;
 
 import com.example.bak.feed.application.query.dto.FeedDetail;
 import com.example.bak.feed.application.query.dto.FeedSummary;
+import com.example.bak.feed.application.query.dto.FeedTitleOnly;
 import com.example.bak.feed.application.query.port.FeedQueryPort;
 import com.example.bak.feed.infra.query.jdbc.FeedJdbcRepository;
+import java.util.List;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Repository;
 
 @Repository
@@ -17,8 +17,8 @@ public class FeedQueryAdapter implements FeedQueryPort {
     private final FeedJdbcRepository feedJdbcRepository;
 
     @Override
-    public Page<FeedSummary> findAll(Pageable pageable) {
-        return feedJdbcRepository.findAll(pageable);
+    public List<FeedSummary> findRecentSummaries(int limit) {
+        return feedJdbcRepository.findRecentSummaries(limit);
     }
 
     @Override
@@ -29,5 +29,26 @@ public class FeedQueryAdapter implements FeedQueryPort {
     @Override
     public Optional<FeedDetail> findDetailById(Long feedId) {
         return feedJdbcRepository.findDetailById(feedId);
+    }
+
+    @Override
+    public List<FeedTitleOnly> findTitleOnlyByCommunity(Long communityId, int limit) {
+        return feedJdbcRepository.findTitleOnlyByCommunity(communityId, limit);
+    }
+
+    @Override
+    public List<FeedDetail> findTopDetails(int limit) {
+        return feedJdbcRepository.findTopDetails(limit);
+    }
+
+    @Override
+    public List<FeedTitleOnly> findLatestTitlesByCommunity(int limitPerCommunity) {
+        return feedJdbcRepository.findLatestTitlesByCommunity(limitPerCommunity);
+    }
+
+    @Override
+    public List<FeedSummary> findByCommunityIdWithCursor(Long communityId, Long cursorId,
+            int size) {
+        return feedJdbcRepository.findByCommunityIdWithCursor(communityId, cursorId, size);
     }
 }

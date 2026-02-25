@@ -12,6 +12,7 @@ ext {
     jwtVersion = '0.13.0'
     passwordEncoderVersion = '6.4.5'
     swaggerUIVersion = '2.2.0'
+    flywayVersion = '11.19.0'
 }
 
 java {
@@ -74,6 +75,9 @@ dependencies {
 
     // * Swagger UI
     implementation "org.springdoc:springdoc-openapi-starter-webmvc-ui:${swaggerUIVersion}"
+
+    // * Flyway
+    implementation "org.flywaydb:flyway-mysql:${flywayVersion}"
 }
 
 tasks.named('test') {

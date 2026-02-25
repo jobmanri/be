@@ -26,6 +26,7 @@ public class Profile {
     @Column(nullable = false)
     private String nickname;
 
+    @Column(name = "user_id")
     private Long userId;
 
     private Profile(Long id, String name, String nickname) {

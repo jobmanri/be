@@ -30,6 +30,7 @@ public class User {
     @Column(nullable = false)
     private String password;
 
+    @Column(name = "profile_id")
     private Long profileId;
 
     @Enumerated(EnumType.STRING)
